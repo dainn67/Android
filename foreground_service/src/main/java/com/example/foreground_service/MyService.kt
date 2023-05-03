@@ -15,6 +15,11 @@ import com.example.foreground_service.MainActivity.Companion.TAG
 
 class MyService : Service() {
     private var mediaPlayer: MediaPlayer? = null
+    companion object {
+        private const val ACTION_PAUSE = 1
+        private const val ACTION_RESUME = 2
+        private const val ACTION_CLEAR = 3
+    }
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -48,6 +53,25 @@ class MyService : Service() {
         mediaPlayer?.start()
     }
 
+    private fun handleActionMusic(action: Int){
+        when (action){
+            ACTION_PAUSE -> pauseMusic()
+            ACTION_RESUME -> resumeMusic()
+            else -> clearMusic()
+        }
+    }
+
+    private fun clearMusic() {
+        TODO("Not yet implemented")
+    }
+
+    private fun resumeMusic() {
+        TODO("Not yet implemented")
+    }
+
+    private fun pauseMusic() {
+
+    }
 
     private fun sendNotification(song: Song) {
         var intent = Intent(this, MainActivity::class.java)
