@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         btnStartStop = findViewById(R.id.startStop)
         edtDataIntent = findViewById(R.id.etDataIntent)
 
+        //set on click button to start/stop music
+        //note: when restart app, started is false by default, so if music is playing -> need to click 2 times
         btnStartStop.setOnClickListener {
             if (!started) {
                 Log.i(TAG, "button start")
@@ -51,14 +53,13 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    //from Android O, we need to create a notification channel to display notification
     private fun createChannelNotification() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             channel = NotificationChannel(CHANNEL_ID, "My channel", NotificationManager.IMPORTANCE_HIGH)
             channel.setSound(null, null)
             channel.description = "My channel description"
-//            val notificationManager =
-//                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//            notificationManager.createNotificationChannel(channel)
+
             manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             if(manager != null) {
                 manager.createNotificationChannel(channel)

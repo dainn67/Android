@@ -6,7 +6,6 @@ import android.app.Service
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
-import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.widget.RemoteViews
@@ -27,51 +26,41 @@ class MyService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        //get the song and pass into startMusic & sendNotification
         if (intent != null) {
             var bundle = intent.extras!!
             if(bundle != null){
                 var song : Song = bundle.get("song1") as Song
-                Log.i(TAG, song.getTitle())
-                Log.i(TAG, song.getSinger())
 
                 if(song != null) {
-                    Log.i(TAG, "start music")
                     startMusic(song)
-                    Log.i(TAG, "OK")
                     sendNotification(song)
-                    Log.i(TAG, "GOOD")
                 }
             }
         }
         return START_NOT_STICKY
     }
 
+    //use mediaPlayer to start playing
     private fun startMusic(song: Song) {
-        if(mediaPlayer == null) {
-            Log.i(TAG, "Create media player")
-            mediaPlayer = MediaPlayer.create(applicationContext, song.getImgRes())
-        }
+        if(mediaPlayer == null) mediaPlayer = MediaPlayer.create(applicationContext, song.getImgRes())
         mediaPlayer?.start()
-        Log.i(TAG, "start media player")
     }
 
+
     private fun sendNotification(song: Song) {
-        Log.i(TAG, "0")
         var intent = Intent(this, MainActivity::class.java)
         var pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        Log.i(TAG, "1")
         var bitMap = BitmapFactory.decodeResource(resources, song.getImgRes())
-        Log.i(TAG, "TITLE: ${song.getTitle()}")
-        Log.i(TAG, "SINGERL ${song.getSinger()}")
         var remoteView = RemoteViews(packageName, R.layout.layout_custom_notification)
-        Log.i(TAG, "2")
         remoteView.setTextViewText(R.id.tv_title_song, song.getTitle())
         remoteView.setTextViewText(R.id.tv_singer_song, song.getSinger())
         remoteView.setImageViewBitmap(R.id.img_song, bitMap)
         remoteView.setImageViewResource(R.id.img_play_pause, R.drawable.pause)
-        Log.i(TAG, "3")
 
+        //build the notification using data received and add to Foreground
         var notification : Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_draft)
             .setContentIntent(pendingIntent)
@@ -80,10 +69,8 @@ class MyService : Service() {
             .setCustomContentView(remoteView)
             .setSound(null)
             .build()
-        Log.i(TAG, "4")
 
         startForeground(1, notification)
-        Log.i(TAG, "Start foreground")
     }
 
     override fun onDestroy() {
