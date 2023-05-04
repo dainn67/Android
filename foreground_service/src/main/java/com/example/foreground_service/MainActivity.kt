@@ -32,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         createChannelNotification()
 
         btnStartStop = findViewById(R.id.startStop)
-        edtDataIntent = findViewById(R.id.etDataIntent)
 
         //set on click button to start/stop music
         //note: when restart app, started is false by default, so if music is playing -> need to click 2 times
@@ -71,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startStringService() {
-        var song = Song("Nang tho", "Hoang Dung", R.raw.music)
+        var song = Song("Rain", "Lofi", R.raw.music, R.drawable.music_note)
 
         intent = Intent(this, MyService::class.java)
 //        intent.putExtra("intent_data", edtDataIntent.text.toString().trim())

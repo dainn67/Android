@@ -8,13 +8,6 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etDataIntent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Data intent"
-        />
-
     <Button
         android:id="@+id/startStop"
         android:layout_width="match_parent"
