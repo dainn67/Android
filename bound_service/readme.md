@@ -6,6 +6,8 @@ Create a bound service to play music.
 
 Note
 
-- The first folder is a bound service to play and stop music using MediaPlayer
+- The first folder is a bound service to play and stop music using by extending a Binder class
 - The second folder is a bound service to calculate a sum of 2 int entered from keyboard
-(download the 2nd src folder and rename it to src if needed)
+- The third folder is a bound service to play and stop music using Messenger approach
+
+(download the 2nd and 3rd src folder and rename it to 'src' if needed)
