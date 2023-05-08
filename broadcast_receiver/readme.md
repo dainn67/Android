@@ -15,7 +15,7 @@ Registered and unregistered programmatically at app's runtime (Eg: in MainActivi
 
 This receiver runs in the foreground when the app is running (DYNAMIC) and is used to handle events that depend on the app's state, such as button clicks or user input.
 
-### NOTE:
+## NOTE:
 
 - dynamic_br folder is a project, in which a dynamic broadcast receiver is created to listen to change in Wifi connection
 
