@@ -1,6 +1,6 @@
 ## Create a broadcast receiver to send and receive data from Android system and different apps
 
-# 2 main type of receiver: STATIC & DYNAMIC
+## 2 main type of receiver: STATIC & DYNAMIC
 
 + Static broadcast receiver:  
 
