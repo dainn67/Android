@@ -18,5 +18,7 @@ This receiver runs in the foreground when the app is running (DYNAMIC) and is us
 ## NOTE:
 
 - dynamic_br folder is a project, in which a dynamic broadcast receiver is created to listen to change in Wifi connection
+- custom_br folder is a project, in which a broadcast receiver is created to send data to local br and receive back
+- explicit_br folder is a project with a explicit broadcast receiver using an intent to send the data directly to the br, action key is not required. Explicit br can also be used to send data among multiple projects as shown in the code
 
-- download the folder, change to src and replace your src folder to run
+-> download the folder, change to src and replace your src folder to run
