@@ -1,0 +1,31 @@
+## Android basic L1
+
+# Main component of Android
+- Linux Kernel
+- Platform libraries
+- Android runtime
+- Application framework
+- Applications
+
+# Linux kernel
+- The heart of the android architecture, manages all drivers (camera, bluetooth, audio, ...)
+- An abstract layer between the device's hardware and other android components
+- Features:
+  + Security: handle the security between the system andapplications
+  + Memory management: efficiently manage memory, allocate memory when needed
+  + Process management: effectively manage the process of application
+  + Network StackL handle network communication
+  + Driver model: make sure the application run properly with the device's hardware
+
+# Platform library
+- Include core library and Java based library (Media, Graphics, ...) that support Android development
+
+# Application runtime
+- Contains core libraries, DVM, providing the base for frameworks and power the application with the help of core library
+
+# Application framework
+- Provide many services in form of Java classes so that developers can make use of these classes to build application easier and quicker
+- Example: Activity manager, Content provider, Resource manager, Notification manager, ...
+
+# Application
+- The complete application for user. Users can install and use the app at this level (Eg: Browsers, games, ...)
