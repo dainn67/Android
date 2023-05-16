@@ -1,0 +1,23 @@
+# Lifecycle of an Activity:
+
+- onCreate() :
+  + Triggered when the activity is first created, on activityCreation, the activity enters CREATED state
+  + In this method, initial and basic logic should be performed
+  
+- onStart() :
+  + Triggered when the activity enter Started state
+  + The activity now becomes visible to user
+  + When the activity is created, the app enter RESUMED state
+  
+- onResume() :
+  + When the activity enters Resumed state, it comes to Foreground, and can now be interacted by user
+  + The activity will turn to onPause if it is not focused on (another phone call, screen turns off, ...)
+  
+- onPause() :
+  + If users leave the activity, it comes to onPause, not destroyed and still visible in Multi-window
+  
+- onStop() :
+  + If the activity can't be seen by users, it enters onStop() (Eg: when a new activity shows up, user presses Home)
+  
+- onDestroy() :
+  + When the activity is finished using completely, onDestroy is called, terminate the activity and can not be resumed
