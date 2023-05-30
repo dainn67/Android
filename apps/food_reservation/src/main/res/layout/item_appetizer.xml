@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="10dp">
+
+    <ImageView
+        android:id="@+id/appetizerImg"
+        android:scaleType="centerCrop"
+        android:src="@drawable/appetizer_demo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+    <LinearLayout
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/appetizerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NAME"
+            android:textSize="20dp"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/appetizerDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Súp cua kèm cà rốt và khoai tây"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/appetizerPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PRICE: 200.000 vnd"
+            android:textSize="15dp"/>
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Order"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/restaurantFrag">
+
+    <fragment
+        android:id="@+id/restaurantFrag"
+        android:name="com.example.foodbookingapp.RestaurantFrag"
+        android:label="fragment_restaurant"
+        tools:layout="@layout/fragment_restaurant" >
+        <action
+            android:id="@+id/action_restaurantFrag_to_appetizerFrag"
+            app:destination="@id/appetizerFrag"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/appetizerFrag"
+        android:name="com.example.foodbookingapp.AppetizerFrag"
+        android:label="fragment_appetizer"
+        tools:layout="@layout/fragment_appetizer" >
+        <action
+            android:id="@+id/action_appetizerFrag_to_mainDishFrag"
+            app:destination="@id/mainDishFrag"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainDishFrag"
+        android:name="com.example.foodbookingapp.MainDishFrag"
+        android:label="fragment_main_dish"
+        tools:layout="@layout/fragment_main_dish" >
+        <action
+            android:id="@+id/action_mainDishFrag_to_dessertFrag"
+            app:destination="@id/dessertFrag"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/dessertFrag"
+        android:name="com.example.foodbookingapp.DessertFrag"
+        android:label="fragment_dessert"
+        tools:layout="@layout/fragment_dessert" >
+        <action
+            android:id="@+id/action_dessertFrag_to_resultFrag"
+            app:destination="@id/resultFrag"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultFrag"
+        android:name="com.example.foodbookingapp.resultFrag"
+        android:label="fragment_result"
+        tools:layout="@layout/fragment_result" >
+        <action
+            android:id="@+id/action_resultFrag_to_restaurantFrag"
+            app:destination="@id/restaurantFrag"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+</navigation>
