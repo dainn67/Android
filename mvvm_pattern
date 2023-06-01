@@ -1,0 +1,8 @@
+MVVM: Model View Viewmodel
+- A better model to adapt to the new Microsoft development platform than MVC and MVP
+
++ Model: contains data and handle logics (business logic)
+
++ View: the interface of the software to display data and interact with users (View in this pattern can respond back to users using binding and command)
+
++ ViewModel: the middle layer between View and Model, handles the data formatting, binding and command
