@@ -1,0 +1,8 @@
+MVC - Model View Controller
+
+- A method to divide elements (data, input, output) into seperated parts
+
+- Structure
++ Model: contains data and logic handler of the software (business logic).
++ View: represent/display the data from Model (form, widgets, ...).
++ Controller: input envent handler (control the input from mouse, keyboard, ... ).
