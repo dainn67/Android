@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
 import androidx.navigation.Navigation
@@ -13,10 +15,6 @@ import com.example.foodbookingapp.MainActivity.Companion.listAppetizer
 import com.example.foodbookingapp.adapter.AppetizerAdapter
 
 class AppetizerFrag : Fragment() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,8 +37,7 @@ class AppetizerFrag : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val btnNext = view.findViewById<Button>(R.id.btnAppetizerNext)
-        btnNext.setOnClickListener{
+        view.findViewById<Button>(R.id.btnAppetizerNext).setOnClickListener{
             Navigation.findNavController(view).navigate(R.id.action_appetizerFrag_to_mainDishFrag)
         }
     }

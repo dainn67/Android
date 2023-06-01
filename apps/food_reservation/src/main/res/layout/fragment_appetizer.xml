@@ -3,32 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RestaurantFrag"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/appetizerTitle"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Anything for starters ?"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
+        android:text="Anything for starters ?"
         android:textSize="20dp" />
 
     <ListView
         android:id="@+id/lvAppetizer"
-        android:paddingHorizontal="10dp"
         android:layout_width="match_parent"
-        android:layout_height="550dp"/>
+        android:layout_height="550dp"
+        android:paddingHorizontal="10dp" />
 
     <Button
         android:id="@+id/btnAppetizerNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"
-        android:layout_gravity="end"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"/>
+        android:layout_marginEnd="15dp"
+        android:layout_gravity="end"
+        android:text="Next" />
+
 
 </LinearLayout>

@@ -1,16 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DessertFrag">
+    tools:context=".MainActivity"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/dessertTitle"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Dessert picker"
-        android:gravity="center"
-        android:textSize="28dp"/>
+        android:layout_height="wrap_content"
+        android:text="And the dessert ?"
+        android:layout_marginBottom="10dp"
+        android:textSize="20dp" />
 
-</FrameLayout>
+    <ListView
+        android:id="@+id/lvDessert"
+        android:paddingHorizontal="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="550dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <Button
+            android:id="@+id/btnDessertBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"/>
+
+        <Button
+            android:id="@+id/btnDessertNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:layout_gravity="end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

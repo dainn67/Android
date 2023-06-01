@@ -14,7 +14,7 @@
         android:layout_marginHorizontal="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to Reservation app"
+        android:text="Reservation app"
         android:textStyle="bold"
         android:textSize="28dp"
         android:textColor="@android:color/holo_blue_dark"/>
