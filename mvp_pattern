@@ -1,0 +1,17 @@
+MVP: Model View Presenter
+
+- Another architecture pattern that supports better for unit testing than MVC, and have more differences between layers, specifically between data layer and presenter layer.
+
++ Model: contains data, handle logic (business logic).
+
++ View: what we see on screen, usually implemented by an Activity, Fragment, View, ...
+(View contain a attribute is the Presenter)
+
++ Presenter: a bridge between View and Model, it gets data from Model, formats them and gives to View for display. However, different from MVC (Controller), it also handle some logic.
+
+-> Advantages:
+- Better differentiation between layers. Views now can not contains any logic like in MVC
+
+- Better for testing (unit test) since only Model and Presenter handle the logic
+
+- Better, cleaner code format
