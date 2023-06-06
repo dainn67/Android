@@ -10,15 +10,16 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.foodbookingapp.R
+import com.example.foodbookingapp.model.Appetizer
+import com.example.foodbookingapp.model.Dish
 
-class Appetizer(private val img: Int, private val name: String, private val desc: String, private val price: Double){
-    fun getImg() = img
-    fun getName() = name
-    fun getDesc() = desc
-    fun  getPrice() = price
-}
 
-class AppetizerAdapter(private val context: Context, private val id: Int, private val list: List<Appetizer>): ArrayAdapter<Appetizer>(context, id, list) {
+
+class AppetizerAdapter(
+    private val context: Context,
+    private val id: Int,
+    private val list: List<Appetizer>
+) : ArrayAdapter<Appetizer>(context, id, list) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var amount = 1
 
@@ -40,21 +41,20 @@ class AppetizerAdapter(private val context: Context, private val id: Int, privat
 
         val checkBoxOrder = view.findViewById<CheckBox>(R.id.checkboxOrderAppetizer)
         val llAmount = view.findViewById<LinearLayout>(R.id.llAmountAppetizer)
-        checkBoxOrder.setOnCheckedChangeListener{
-            _, isChecked ->
-                if(isChecked) llAmount.visibility = View.VISIBLE
-                else llAmount.visibility = View.GONE
+        checkBoxOrder.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) llAmount.visibility = View.VISIBLE
+            else llAmount.visibility = View.GONE
         }
 
         val imgMinus = view.findViewById<ImageView>(R.id.imgMinusAppetizer)
         val tvAmount = view.findViewById<TextView>(R.id.tvAmountAppetizer)
         val imgPlus = view.findViewById<ImageView>(R.id.imgPlusAppetizer)
-        imgMinus.setOnClickListener{
-            if(amount > 0) amount--
+        imgMinus.setOnClickListener {
+            if (amount > 0) amount--
             tvAmount.text = amount.toString()
         }
-        imgPlus.setOnClickListener{
-            if(amount < 10) amount++
+        imgPlus.setOnClickListener {
+            if (amount < 10) amount++
             tvAmount.text = amount.toString()
         }
 

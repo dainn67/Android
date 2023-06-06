@@ -10,18 +10,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.foodbookingapp.R
+import com.example.foodbookingapp.model.Dessert
+import com.example.foodbookingapp.model.Dish
 
-class Dessert(
-    private val img: Int,
-    private val name: String,
-    private val desc: String,
-    private val price: Double
-) {
-    fun getImg() = img
-    fun getName() = name
-    fun getDesc() = desc
-    fun getPrice() = price
-}
+
 
 class DessertAdapter(
     private val context: Context,

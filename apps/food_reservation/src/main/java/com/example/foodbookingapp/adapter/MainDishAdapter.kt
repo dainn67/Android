@@ -10,13 +10,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.foodbookingapp.R
+import com.example.foodbookingapp.model.MainDish
 
-class MainDish(private val img: Int, private val name: String, private val desc: String, private val price: Double){
-    fun getImg() = img
-    fun getName() = name
-    fun getDesc() = desc
-    fun  getPrice() = price
-}
 
 class MainDishAdapter(private val context: Context, private val id: Int, private val list: List<MainDish>): ArrayAdapter<MainDish>(context, id, list) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
