@@ -18,21 +18,21 @@
         android:padding="10dp"/>
 
     <ListView
-        android:id="@+id/lvResult"
+        android:id="@+id/lvRes"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/tvTotal"
-        app:layout_constraintTop_toBottomOf="@+id/resultTitle"
-        app:layout_constraintVertical_bias="0.323"
-        tools:layout_editor_absoluteX="0dp" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnBack"
+        app:layout_constraintTop_toBottomOf="@+id/resultTitle" />
 
     <TextView
         android:id="@+id/tvTotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:paddingHorizontal="10dp"
+        android:paddingBottom="20dp"
         android:text="TOTAL: $100"
         android:textSize="24dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -50,11 +50,12 @@
         android:id="@+id/btnOrder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:text="ORDER"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="20dp"
-        android:textSize="15dp"/>
+        app:layout_constraintStart_toEndOf="@+id/btnBack" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

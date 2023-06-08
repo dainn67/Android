@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/appetizerFrag"
-        android:name="com.example.foodbookingapp.fragments.AppetizerFrag"
+        android:name="com.example.foodbookingapp.view.fragments.AppetizerFrag"
         android:label="fragment_appetizer"
         tools:layout="@layout/fragment_appetizer">
         <action
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/mainDishFrag"
-        android:name="com.example.foodbookingapp.fragments.MainDishFrag"
+        android:name="com.example.foodbookingapp.view.fragments.MainDishFrag"
         android:label="fragment_main_dish"
         tools:layout="@layout/fragment_main_dish">
         <action
@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/dessertFrag"
-        android:name="com.example.foodbookingapp.fragments.DessertFrag"
+        android:name="com.example.foodbookingapp.view.fragments.DessertFrag"
         android:label="fragment_dessert"
         tools:layout="@layout/fragment_dessert">
         <action
@@ -52,7 +52,7 @@
     </fragment>
     <fragment
         android:id="@+id/resultFrag"
-        android:name="com.example.foodbookingapp.fragments.ResultFrag"
+        android:name="com.example.foodbookingapp.view.fragments.ResultFrag"
         android:label="fragment_result"
         tools:layout="@layout/fragment_result">
         <action

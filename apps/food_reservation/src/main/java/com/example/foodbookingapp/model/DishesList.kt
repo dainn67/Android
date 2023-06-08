@@ -2,14 +2,15 @@ package com.example.foodbookingapp.model
 
 class DishesList {
     companion object{
-        private var listAppetizer = mutableListOf<Appetizer>()
-        private var listMainDish = mutableListOf<MainDish>()
-        private var listDessert = mutableListOf<Dessert>()
+        private var listAppetizer = mutableListOf<Dish>()
+        private var listMainDish = mutableListOf<Dish>()
+        private var listDessert = mutableListOf<Dish>()
 
         private var listResult = mutableListOf<Dish>()
 
-        fun getAppetizerList(): MutableList<Appetizer> = listAppetizer
-        fun getMainDishList(): MutableList<MainDish> = listMainDish
-        fun getDessertList(): MutableList<Dessert> = listDessert
+        fun getAppetizerList(): MutableList<Dish> = listAppetizer
+        fun getMainDishList(): MutableList<Dish> = listMainDish
+        fun getDessertList(): MutableList<Dish> = listDessert
+        fun getResultList(): MutableList<Dish> = listResult
     }
 }
