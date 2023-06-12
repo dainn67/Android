@@ -9,14 +9,12 @@ import android.widget.Button
 import android.widget.ListView
 import androidx.navigation.Navigation
 import com.example.foodbookingapp.FragmentType
+import com.example.foodbookingapp.MainActivity.Companion.myViewModel
 import com.example.foodbookingapp.R
+import com.example.foodbookingapp.model.DishesList
 import com.example.foodbookingapp.view.adapter.DishAdapter
-import com.example.foodbookingapp.viewModel.FragmentsViewModel
 
 class DessertFrag : Fragment() {
-
-    private val myDessertVM = FragmentsViewModel()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,16 +23,14 @@ class DessertFrag : Fragment() {
         // Inflate the layout for this fragment
         val rootView = inflater.inflate(R.layout.fragment_dessert, container, false)
 
-        //add dishes to the list
-        myDessertVM.addDessertsToList()
-
         //use custom adapter to display the list
         val dessertAdapter = DishAdapter(
             FragmentType.DESSERT,
-            myDessertVM,
+            this,
+            myViewModel,
             rootView.context,
             R.layout.item_dish,
-            myDessertVM.getDessertList()
+            myViewModel.getDessertList()
         )
         rootView.findViewById<ListView>(R.id.lvDessert).adapter = dessertAdapter
 
@@ -50,10 +46,6 @@ class DessertFrag : Fragment() {
 
         view.findViewById<Button>(R.id.btnDessertBack).setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_dessertFrag_to_mainDishFrag)
-
-            //after select all categories, add to result list
-            myDessertVM.addToResult()
-            //TODO: refactor the result list to store the list and the amount of list
         }
     }
 }

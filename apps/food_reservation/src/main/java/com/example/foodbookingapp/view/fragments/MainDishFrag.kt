@@ -9,14 +9,13 @@ import android.widget.Button
 import android.widget.ListView
 import androidx.navigation.Navigation
 import com.example.foodbookingapp.FragmentType
+import com.example.foodbookingapp.MainActivity.Companion.myViewModel
 import com.example.foodbookingapp.R
+import com.example.foodbookingapp.model.DishesList
 import com.example.foodbookingapp.view.adapter.DishAdapter
 import com.example.foodbookingapp.viewModel.FragmentsViewModel
 
 class MainDishFrag : Fragment() {
-
-    private val myMainDishVM = FragmentsViewModel()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -24,16 +23,15 @@ class MainDishFrag : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_main_dish, container, false)
 
-        //add dishes to list
-        myMainDishVM.addMainDishesToList()
 
         //use custom adapter to display the list
         val mainDishAdapter = DishAdapter(
             FragmentType.MAIN_DISH,
-            myMainDishVM,
+            this,
+            myViewModel,
             rootView.context,
             R.layout.item_dish,
-            myMainDishVM.getMainDishesList()
+            myViewModel.getMainDishList()
         )
         rootView.findViewById<ListView>(R.id.lvMainDish).adapter = mainDishAdapter
 

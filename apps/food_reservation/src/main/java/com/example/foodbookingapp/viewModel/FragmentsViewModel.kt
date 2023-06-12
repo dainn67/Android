@@ -1,33 +1,61 @@
 package com.example.foodbookingapp.viewModel
 
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.foodbookingapp.MainActivity.Companion.TAG
 import com.example.foodbookingapp.R
+import com.example.foodbookingapp.model.Data
 import com.example.foodbookingapp.model.Dish
 import com.example.foodbookingapp.model.DishesList
+import com.example.foodbookingapp.model.ResultDish
 
 class FragmentsViewModel : ViewModel() {
-    private var listAppetizer = DishesList.getAppetizerList()
-    private var listMainDish = DishesList.getMainDishList()
-    private var listDessert = DishesList.getDessertList()
+    private var appetizerList: MutableList<Dish>
+    private var mainDishList: MutableList<Dish>
+    private var dessertList: MutableList<Dish>
 
-    private var listResult = DishesList.getResultList()
+    private var liveDataMapAppetizer: MutableLiveData<MutableMap<Int, Int>>
+    private var liveDataMapMainDish: MutableLiveData<MutableMap<Int, Int>>
+    private var liveDataMapDessert: MutableLiveData<MutableMap<Int, Int>>
 
-    private var appetizerOrder: MutableMap<Int, Int> = mutableMapOf()
-    private var mainDishOrder: MutableMap<Int, Int> = mutableMapOf()
-    private var dessertOrder: MutableMap<Int, Int> = mutableMapOf()
+    init {
+        //initialize dishes to list and set all order amount to 0
+        addAppetizersToList()
+        addMainDishesToList()
+        addDessertsToList()
+        resetMap()
 
+        //bind value of lists
+        appetizerList = DishesList.getAppetizerList()
+        mainDishList = DishesList.getMainDishList()
+        dessertList = DishesList.getDessertList()
 
-    fun getAppetizerList(): List<Dish> = listAppetizer
-    fun getAppetizerOrderMap(): MutableMap<Int, Int> = appetizerOrder
+        //bind value if live data of maps
+        liveDataMapAppetizer = MutableLiveData()
+        liveDataMapAppetizer.value = DishesList.getMapAppetizer()
 
-    fun getDessertList(): List<Dish> = listDessert
-    fun getDessertOrderMap(): MutableMap<Int, Int> = dessertOrder
+        liveDataMapMainDish = MutableLiveData()
+        liveDataMapMainDish.value = DishesList.getMapMainDish()
 
-    fun getMainDishesList(): List<Dish> = listMainDish
-    fun getMainDishOrderMap(): MutableMap<Int, Int> = mainDishOrder
+        liveDataMapDessert = MutableLiveData()
+        liveDataMapDessert.value = DishesList.getMapDessert()
 
-    fun addAppetizersToList() {
-        listAppetizer.add(
+    }
+
+    //use for update dishes (manager)
+    fun getAppetizerList() = appetizerList
+    fun getMainDishList() = mainDishList
+    fun getDessertList() = dessertList
+
+    fun getLiveDataMapAppetizer() = liveDataMapAppetizer
+    fun getLiveDataMapMainDish() = liveDataMapMainDish
+    fun getLiveDataMapDessert() = liveDataMapDessert
+
+    //initialize list items & maps
+    private fun addAppetizersToList() {
+        var tmpList = DishesList.getAppetizerList()
+        tmpList.add(
             Dish(
                 R.drawable.chicken_nugget,
                 "Chicken nuggets",
@@ -35,7 +63,7 @@ class FragmentsViewModel : ViewModel() {
                 2.0
             )
         )
-        listAppetizer.add(
+        tmpList.add(
             Dish(
                 R.drawable.french_fries,
                 "French fries",
@@ -43,7 +71,7 @@ class FragmentsViewModel : ViewModel() {
                 2.5
             )
         )
-        listAppetizer.add(
+        tmpList.add(
             Dish(
                 R.drawable.onion_ring,
                 "Onion rings",
@@ -51,7 +79,7 @@ class FragmentsViewModel : ViewModel() {
                 1.8
             )
         )
-        listAppetizer.add(
+        tmpList.add(
             Dish(
                 R.drawable.fish_chip,
                 "Fish & Chips",
@@ -61,8 +89,9 @@ class FragmentsViewModel : ViewModel() {
         )
     }
 
-    fun addDessertsToList() {
-        listDessert.add(
+    private fun addDessertsToList() {
+        var tmpList = DishesList.getDessertList()
+        tmpList.add(
             Dish(
                 R.drawable.ice_cream,
                 "Ice cream",
@@ -70,7 +99,7 @@ class FragmentsViewModel : ViewModel() {
                 1.0
             )
         )
-        listDessert.add(
+        tmpList.add(
             Dish(
                 R.drawable.chocolate_cookies,
                 "Chocolate cookies",
@@ -78,7 +107,7 @@ class FragmentsViewModel : ViewModel() {
                 1.0
             )
         )
-        listDessert.add(
+        tmpList.add(
             Dish(
                 R.drawable.jelly,
                 "Jelly bowl",
@@ -86,7 +115,7 @@ class FragmentsViewModel : ViewModel() {
                 2.5
             )
         )
-        listDessert.add(
+        tmpList.add(
             Dish(
                 R.drawable.tiramisu,
                 "Tiramisu",
@@ -94,7 +123,7 @@ class FragmentsViewModel : ViewModel() {
                 1.0
             )
         )
-        listDessert.add(
+        tmpList.add(
             Dish(
                 R.drawable.flan,
                 "Flan cake",
@@ -104,8 +133,9 @@ class FragmentsViewModel : ViewModel() {
         )
     }
 
-    fun addMainDishesToList() {
-        listMainDish.add(
+    private fun addMainDishesToList() {
+        var tmpList = DishesList.getMainDishList()
+        tmpList.add(
             Dish(
                 R.drawable.fried_rice,
                 "Spicy fried rice",
@@ -113,7 +143,7 @@ class FragmentsViewModel : ViewModel() {
                 2.5
             )
         )
-        listMainDish.add(
+        tmpList.add(
             Dish(
                 R.drawable.drumsticks,
                 "Fried chicken drumstick",
@@ -121,7 +151,7 @@ class FragmentsViewModel : ViewModel() {
                 2.0
             )
         )
-        listMainDish.add(
+        tmpList.add(
             Dish(
                 R.drawable.wings,
                 "Chicken wings",
@@ -129,7 +159,7 @@ class FragmentsViewModel : ViewModel() {
                 4.0
             )
         )
-        listMainDish.add(
+        tmpList.add(
             Dish(
                 R.drawable.hamburger,
                 "Chicken hamburger",
@@ -137,7 +167,7 @@ class FragmentsViewModel : ViewModel() {
                 2.5
             )
         )
-        listMainDish.add(
+        tmpList.add(
             Dish(
                 R.drawable.burrito,
                 "Burrito",
@@ -147,9 +177,14 @@ class FragmentsViewModel : ViewModel() {
         )
     }
 
-    fun addToResult() {
-        for(id in listAppetizer.indices){
-            if(listAppetizer[id] != null) listResult.add(listAppetizer[id])
-        }
+    private fun resetMap() {
+        for (id in 0 until DishesList.getAppetizerList().size)
+            DishesList.getMapAppetizer()[id] = 0
+
+        for (id in 0 until DishesList.getMainDishList().size)
+            DishesList.getMapMainDish()[id] = 0
+
+        for (id in 0 until DishesList.getDessertList().size)
+            DishesList.getMapDessert()[id] = 0
     }
 }

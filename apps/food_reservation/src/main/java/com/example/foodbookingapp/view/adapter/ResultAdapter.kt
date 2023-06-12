@@ -9,8 +9,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.foodbookingapp.R
 import com.example.foodbookingapp.model.Dish
+import com.example.foodbookingapp.model.ResultDish
 
-class ResultAdapter (private val context: Context, private val id: Int, private val list: List<Dish>): ArrayAdapter<Dish>(context, id, list){
+class ResultAdapter(
+    private val context: Context,
+    private val id: Int,
+    private val list: List<ResultDish>
+) : ArrayAdapter<Dish>(context, id, list) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         val myInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -24,7 +29,7 @@ class ResultAdapter (private val context: Context, private val id: Int, private 
         tvDesc.text = dish.getDesc()
         tvDesc.isSelected = true
         view.findViewById<TextView>(R.id.tvResPrice).text = "$${dish.getPrice()}"
-        view.findViewById<TextView>(R.id.tvResNumber).text = "100"
+        view.findViewById<TextView>(R.id.tvResNumber).text = "Amount: ${dish.getAmount()}"
 
         return view
     }
