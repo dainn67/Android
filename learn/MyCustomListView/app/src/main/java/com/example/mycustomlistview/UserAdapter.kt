@@ -15,7 +15,7 @@ class UserAdapter(private val context: Context, private val id: Int, private val
         val user = list[position]
         view.findViewById<TextView>(R.id.tvName).text = "Name: ${user.getName()}"
         view.findViewById<TextView>(R.id.tvAge).text = "Age: ${user.getAge()}"
-        view.findViewById<TextView>(R.id.tvGender).text = "Gender: ${user.getGender()}"
+        view.findViewById<TextView>(R.id.tvGender).text = "Gender: ${user.getGender().toString().toLowerCase().capitalize()}"
 
         return view
     }
