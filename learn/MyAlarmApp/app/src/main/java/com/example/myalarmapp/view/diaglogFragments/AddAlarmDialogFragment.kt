@@ -1,13 +1,9 @@
-package com.example.myalarmapp.view
+package com.example.myalarmapp.view.diaglogFragments
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -15,6 +11,7 @@ import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
 import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
+import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.viewmodel.MyViewModel
 
 class AddAlarmDialogFragment(private val myViewModel: MyViewModel) : DialogFragment() {
@@ -31,11 +28,14 @@ class AddAlarmDialogFragment(private val myViewModel: MyViewModel) : DialogFragm
         val builder = AlertDialog.Builder(requireActivity())
         builder.setView(view)
 
+        //view binding
         timePicker = view.findViewById(R.id.timePicker)
         etContent = view.findViewById(R.id.etContent)
         btnCancel = view.findViewById(R.id.btnCancel)
         btnAdd = view.findViewById(R.id.btnAdd)
         checkboxRepeat = view.findViewById(R.id.checkboxRepeat)
+
+        timePicker.setIs24HourView(true)
 
         btnCancel.setOnClickListener{
             this.dismiss()
@@ -47,6 +47,7 @@ class AddAlarmDialogFragment(private val myViewModel: MyViewModel) : DialogFragm
             val isRepeated = checkboxRepeat.isChecked
 
             myViewModel.addToList(Alarm(hour, minute, content, isRepeated))
+            this.dismiss()
         }
 
         return builder.create()
