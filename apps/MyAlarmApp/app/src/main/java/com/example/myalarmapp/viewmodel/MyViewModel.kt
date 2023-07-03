@@ -23,9 +23,9 @@ class MyViewModel(
     fun getLiveDataList() = liveDataAlarmList
 
     fun addSampleAlarms() {
-        list.add(Alarm(9, 30, "Breakfast", false))
-        list.add(Alarm(14, 0,"School", true))
-        list.add(Alarm(19, 45, "Learn Japanese", false))
+        list.add(Alarm(9, 30, "Breakfast", false, isOn = false))
+        list.add(Alarm(14, 0,"School", true, isOn = true))
+        list.add(Alarm(19, 45, "Learn Japanese", false, isOn = false))
     }
 
     fun addToList(alarm: Alarm){

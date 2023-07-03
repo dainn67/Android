@@ -35,6 +35,7 @@ class AlarmAdapter(
         val myInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = myInflater.inflate(id, null, false)
 
+        //bind data
         llItem = view.findViewById(R.id.llItem)
         tvTime = view.findViewById(R.id.tvTime)
         tvContent = view.findViewById(R.id.tvContent)
@@ -48,6 +49,7 @@ class AlarmAdapter(
         tvTime.text = "$hourFormat:$minuteFormat"
         tvContent.text = myAlarm.getContent()
         tvRepeated.text = if(myAlarm.getRepeatable()) "Repeated" else ""
+        swOnOff.isChecked = myAlarm.getState()
 
         llItem.setOnClickListener{
             val dialog = EditAlarmDialogFragment(myAlarm, position, myViewModel)

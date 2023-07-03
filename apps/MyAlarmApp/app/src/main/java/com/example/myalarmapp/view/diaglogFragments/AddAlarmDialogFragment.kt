@@ -39,7 +39,7 @@ class AddAlarmDialogFragment(private val myViewModel: MyViewModel) : DialogFragm
 
         timePicker.setIs24HourView(true)
 
-        btnCancel.setOnClickListener{
+        btnCancel.setOnClickListener {
             this.dismiss()
         }
         btnAdd.setOnClickListener {
@@ -48,7 +48,9 @@ class AddAlarmDialogFragment(private val myViewModel: MyViewModel) : DialogFragm
             val content = etContent.text.toString()
             val isRepeated = checkboxRepeat.isChecked
 
-            myViewModel.addToList(Alarm(hour, minute, content, isRepeated))
+            val alarm = Alarm(hour, minute, content, isRepeated, true)
+            myViewModel.addToList(alarm)
+            myViewModel.getScheduler().schedule(alarm)
             this.dismiss()
         }
 

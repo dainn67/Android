@@ -6,8 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.myalarmapp.models.Alarm
+import com.example.myalarmapp.models.Constants.Companion.TAG
 import java.io.Serializable
 import java.time.ZoneId
 import java.util.Calendar
@@ -21,7 +23,7 @@ class AlarmScheduler(
     override fun schedule(alarm: Alarm) {
         val intent = Intent(context, AlarmReceiver::class.java)
         val bundle = Bundle()
-        bundle.putSerializable("alarm", alarm as Serializable)
+        bundle.putSerializable("alarm", alarm)
         intent.putExtras(bundle)
 
         alarmManager.setExactAndAllowWhileIdle(
@@ -34,6 +36,7 @@ class AlarmScheduler(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+        Log.i(TAG, "Scheduled")
     }
 
     override fun cancel(alarm: Alarm) {
@@ -45,6 +48,7 @@ class AlarmScheduler(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+        Log.i(TAG, "Cancelled")
     }
 
     private fun convertToMillis(hour: Int, minute: Int): Long{
