@@ -1,6 +1,7 @@
 package com.example.myalarmapp.view
 
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
-import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
@@ -29,6 +30,7 @@ class AlarmAdapter(
     private lateinit var tvRepeated: TextView
     private lateinit var swOnOff: Switch
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val myInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = myInflater.inflate(id, null, false)
@@ -59,8 +61,8 @@ class AlarmAdapter(
         }
 
         swOnOff.setOnCheckedChangeListener{_, isChecked ->
-            if(isChecked) Toast.makeText(context, "ON", Toast.LENGTH_SHORT).show()
-            else(Toast.makeText(context, "OFF", Toast.LENGTH_SHORT).show())
+            if(isChecked) myViewModel.getScheduler().schedule(list[position])
+            else myViewModel.getScheduler().cancel(list[position])
         }
 
         return view

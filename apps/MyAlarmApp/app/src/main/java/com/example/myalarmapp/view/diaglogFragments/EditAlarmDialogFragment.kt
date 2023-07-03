@@ -60,33 +60,28 @@ class EditAlarmDialogFragment(
         //if user change any data, they can update the alarm
         timePicker.setOnTimeChangedListener { _, hourOfDay, minute ->
             isTimeChanged = hourOfDay != myAlarm.getHour() || minute != myAlarm.getMinute()
-            btnAdd.isEnabled = isTimeChanged || isRepeatChanged || isContentChanged
+            checkEnableBtn()
         }
         etContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 isContentChanged = etContent.text.isNotEmpty()
-                btnAdd.isEnabled = isTimeChanged || isRepeatChanged || isContentChanged
+                checkEnableBtn()
             }
         })
         checkboxRepeat.setOnCheckedChangeListener{_, isChecked ->
             isRepeatChanged = isChecked != myAlarm.getRepeatable()
-            btnAdd.isEnabled = isTimeChanged || isRepeatChanged || isContentChanged
+            checkEnableBtn()
         }
 
         //buttons to change or cancel
-        btnCancel.setOnClickListener {
-            this.dismiss()
-        }
-
         btnAdd.setOnClickListener {
             //update the new information
-            if(timePicker.hour != myAlarm.getHour()) myAlarm.setHour(timePicker.hour)
-            if(timePicker.minute != myAlarm.getMinute()) myAlarm.setMinute(timePicker.minute)
-            Log.i(TAG, "${if(etContent.text.isEmpty()) "etContent empty" else etContent.text.toString()} - ${myAlarm.getContent()}")
+            myAlarm.setHour(timePicker.hour)
+            myAlarm.setMinute(timePicker.minute)
+            myAlarm.setRepeatable(checkboxRepeat.isChecked)
             if(etContent.text.isNotEmpty() && etContent.text.toString() != myAlarm.getContent()) myAlarm.setContent(etContent.text.toString())
-            if(checkboxRepeat.isChecked != myAlarm.getRepeatable()) myAlarm.setRepeatable(checkboxRepeat.isChecked)
 
             //update the alarm and its live data
             myViewModel.editList(myAlarm, position)
@@ -95,6 +90,11 @@ class EditAlarmDialogFragment(
             this.dismiss()
         }
 
+        btnCancel.setOnClickListener { this.dismiss() }
         return builder.create()
+    }
+
+    private fun checkEnableBtn(){
+        btnAdd.isEnabled = isTimeChanged || isRepeatChanged || isContentChanged
     }
 }

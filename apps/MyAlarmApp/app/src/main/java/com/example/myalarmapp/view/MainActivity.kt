@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //add sample data
-        myViewModel = MyViewModel()
+        myViewModel = MyViewModel(this)
         myViewModel.addSampleAlarms()
 
         //display to screen and listen to changes

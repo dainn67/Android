@@ -1,18 +1,24 @@
 package com.example.myalarmapp.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Data
 
-class MyViewModel: ViewModel() {
+class MyViewModel(
+    private val context: Context
+): ViewModel() {
     private var list = Data.getAlarmList()
     private var liveDataAlarmList = MutableLiveData<MutableList<Alarm>>()
+    private val alarmScheduler = AlarmScheduler(context)
 
     init {
         liveDataAlarmList = MutableLiveData()
         liveDataAlarmList.value = list
     }
+
+    fun getScheduler() = alarmScheduler
 
     fun getLiveDataList() = liveDataAlarmList
 
