@@ -16,5 +16,6 @@ class AlarmReceiver: BroadcastReceiver() {
         Toast.makeText(context, "${alarm.getHour()}: ${alarm.getMinute()} - ${alarm.getContent()} - ${alarm.getRepeatable()}", Toast.LENGTH_SHORT).show()
 
         //create notification here
+
     }
 }

@@ -1,9 +1,13 @@
 package com.example.myalarmapp.viewmodel
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myalarmapp.models.Alarm
+import com.example.myalarmapp.models.Constants
 import com.example.myalarmapp.models.Data
 
 class MyViewModel(
@@ -46,5 +50,18 @@ class MyViewModel(
     fun editList(alarm: Alarm, position: Int){
         list[position] = alarm
         liveDataAlarmList.value = list
+    }
+
+    fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                Constants.CHANNEL_ID,
+                "Foreground Service Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            channel.setSound(null, null)
+            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+        }
     }
 }
