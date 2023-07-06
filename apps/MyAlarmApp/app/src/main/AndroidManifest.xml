@@ -25,8 +25,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".viewmodel.AlarmReceiver" />
-        <receiver android:name=".viewmodel.KillReceiver" />
+        <receiver android:name=".viewmodel.receivers.AlarmReceiver" />
+        <receiver android:name=".viewmodel.receivers.KillReceiver" />
 
         <service android:name=".viewmodel.NotificationService" />
     </application>

@@ -10,8 +10,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants.Companion.TAG
-import java.io.Serializable
-import java.time.ZoneId
+import com.example.myalarmapp.viewmodel.receivers.AlarmReceiver
 import java.util.Calendar
 
 class AlarmScheduler(

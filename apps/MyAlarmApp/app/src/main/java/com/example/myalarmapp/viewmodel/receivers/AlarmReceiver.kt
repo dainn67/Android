@@ -1,4 +1,4 @@
-package com.example.myalarmapp.viewmodel
+package com.example.myalarmapp.viewmodel.receivers
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants.Companion.TAG
+import com.example.myalarmapp.viewmodel.NotificationService
 
 class AlarmReceiver : BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.O)

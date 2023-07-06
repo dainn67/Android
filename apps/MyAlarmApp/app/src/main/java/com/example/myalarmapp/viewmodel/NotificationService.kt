@@ -14,6 +14,7 @@ import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants.Companion.CHANNEL_ID
 import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.view.MainActivity
+import com.example.myalarmapp.viewmodel.receivers.KillReceiver
 
 class NotificationService : Service() {
     private lateinit var mediaPlayer: MediaPlayer
