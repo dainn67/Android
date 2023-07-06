@@ -36,7 +36,8 @@ class AlarmScheduler(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
-        Log.i(TAG, "Scheduled")
+
+        Log.i(TAG, "Scheduled at ${alarm.getHour()}:${alarm.getMinute()}")
     }
 
     override fun cancel(alarm: Alarm) {
@@ -48,7 +49,7 @@ class AlarmScheduler(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
-        Log.i(TAG, "Cancelled")
+        Log.i(TAG, "Cancelled ${alarm.getHour()}:${alarm.getMinute()}")
     }
 
     private fun convertToMillis(hour: Int, minute: Int): Long{

@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -23,7 +25,10 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".viewmodel.AlarmReceiver"/>
+        <receiver android:name=".viewmodel.AlarmReceiver" />
+        <receiver android:name=".viewmodel.KillReceiver" />
+
+        <service android:name=".viewmodel.NotificationService" />
     </application>
 
 </manifest>

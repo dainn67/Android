@@ -4,11 +4,15 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants
+import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.models.Data
+import java.time.LocalDateTime
 
 class MyViewModel(
     private val context: Context
@@ -26,10 +30,16 @@ class MyViewModel(
 
     fun getLiveDataList() = liveDataAlarmList
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun addSampleAlarms() {
         list.add(Alarm(9, 30, "Breakfast", false, isOn = false))
         list.add(Alarm(14, 0,"School", true, isOn = true))
         list.add(Alarm(19, 45, "Learn Japanese", false, isOn = false))
+
+        //testing
+        val testAlarm = Alarm(LocalDateTime.now().hour, LocalDateTime.now().minute + 1, "Testing", false, isOn = true)
+        list.add(testAlarm)
+        alarmScheduler.schedule(testAlarm)
     }
 
     fun addToList(alarm: Alarm){
@@ -62,6 +72,7 @@ class MyViewModel(
             channel.setSound(null, null)
             val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
+            Log.i(TAG, "Notification channel created")
         }
     }
 }
