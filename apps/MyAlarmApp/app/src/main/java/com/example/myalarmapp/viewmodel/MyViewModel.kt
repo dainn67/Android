@@ -33,7 +33,7 @@ class MyViewModel(
     @RequiresApi(Build.VERSION_CODES.O)
     fun addSampleAlarms() {
         list.add(Alarm(9, 30, "Breakfast", false, isOn = false))
-        list.add(Alarm(14, 0,"School", true, isOn = true))
+        list.add(Alarm(14, 0,"School", true, isOn = false))
         list.add(Alarm(19, 45, "Learn Japanese", false, isOn = false))
 
         //testing
@@ -53,6 +53,7 @@ class MyViewModel(
     }
 
     fun removeFromList(position: Int){
+        alarmScheduler.cancel(list[position])
         list.removeAt(position)
         liveDataAlarmList.value = list
     }

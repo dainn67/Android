@@ -56,9 +56,9 @@ class NotificationService : Service() {
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSound(null)
                 .setCustomContentView(remoteView)
+                .setContentIntent(homePendingIntent)    //when press the notification, go to home page
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setContentIntent(homePendingIntent)    //when press the notification, go to home page
                 .build()
 
             startForeground(1, notification)

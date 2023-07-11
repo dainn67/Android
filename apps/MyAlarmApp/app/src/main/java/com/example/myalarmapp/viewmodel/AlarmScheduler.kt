@@ -40,11 +40,17 @@ class AlarmScheduler(
     }
 
     override fun cancel(alarm: Alarm) {
+        //same pending intent when setting the alarm
+        val intent = Intent(context, AlarmReceiver::class.java)
+        val bundle = Bundle()
+        bundle.putSerializable("alarm", alarm)
+        intent.putExtras(bundle)
+
         alarmManager.cancel(
             PendingIntent.getBroadcast(
                 context,
                 alarm.hashCode(),
-                Intent(),
+                intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
