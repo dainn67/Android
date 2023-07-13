@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         btnAdd = findViewById(R.id.btnAdd)
         lvAlarm = findViewById(R.id.lvAlarm)
 
-
         //add button
         btnAdd.setOnClickListener {
             val dialog = AddAlarmDialogFragment(myViewModel)

@@ -46,7 +46,7 @@ class NotificationService : Service() {
                 this,
                 intent.hashCode(),
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_IMMUTABLE
             )
 
             val remoteView = RemoteViews(packageName, R.layout.notification_layout)
@@ -54,14 +54,15 @@ class NotificationService : Service() {
             remoteView.setOnClickPendingIntent(R.id.noti_delete, pendingDeleteIntent(this))
 
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSound(null)
-                .setCustomContentView(remoteView)
+                .setSmallIcon(R.drawable.alarm_icon)
                 .setContentIntent(homePendingIntent)    //when press the notification, go to home page
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setCustomContentView(remoteView)
+                .setSound(null)
                 .build()
 
-            startForeground(1, notification)
+            startForeground(notification.hashCode(), notification)
         }
 
         return START_STICKY
