@@ -3,14 +3,17 @@ package com.example.myalarmapp.view
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ListView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
+import com.example.myalarmapp.models.Constants
 import com.example.myalarmapp.models.Constants.Companion.HOUR_CODE
 import com.example.myalarmapp.view.diaglogFragments.AddAlarmDialogFragment
 import com.example.myalarmapp.viewmodel.MyViewModel
@@ -28,12 +31,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var myList: MutableList<Alarm>
 
     //receive turnoff signal from notification
-    private val broadcastReceiver = object : BroadcastReceiver(){
+    private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val bundle = intent?.extras
-            val position = bundle?.getInt(HOUR_CODE)
-            if(position != null && position != -1){
-
+            val hour = bundle?.getInt(HOUR_CODE, -1)
+            val minute = bundle?.getInt(Constants.MINUTE_CODE, -1)
+            if (hour != -1 && minute != -1) {
+                myViewModel.turnOff(hour ?: -1, minute ?: -1)
             }
         }
     }
@@ -42,6 +46,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //register broadcast to receive the turn off signal
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            broadcastReceiver, IntentFilter(
+                Constants.TURN_OFF_SWITCH_CODE
+            )
+        )
 
         btnAdd = findViewById(R.id.btnAdd)
         lvAlarm = findViewById(R.id.lvAlarm)
@@ -70,10 +81,21 @@ class MainActivity : AppCompatActivity() {
             myList = newData
 
             //set adapter
-            val alarmAdapter = AlarmAdapter(this, R.layout.alarm_item_layout, myList, myViewModel, supportFragmentManager)
+            val alarmAdapter = AlarmAdapter(
+                this,
+                R.layout.alarm_item_layout,
+                myList,
+                myViewModel,
+                supportFragmentManager
+            )
             lvAlarm.adapter = alarmAdapter
         }
 
         listLiveData.observe(this, myObserver)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
     }
 }

@@ -28,27 +28,9 @@ class MyViewModel(
     private var liveDataAlarmList = MutableLiveData<MutableList<Alarm>>()
     private val alarmScheduler = AlarmScheduler(context)
 
-    //receive kill intent from noti to turn off switch
-    private val broadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val bundle = intent?.extras
-            val hour = bundle?.getInt(HOUR_CODE, -1)
-            val minute = bundle?.getInt(MINUTE_CODE, -1)
-            if(hour != -1 && minute != -1){
-                turnOff(hour ?: -1, minute ?: -1)
-            }
-        }
-    }
-
     init {
         liveDataAlarmList = MutableLiveData()
         liveDataAlarmList.value = list
-
-        LocalBroadcastManager.getInstance(this.context).registerReceiver(
-            broadcastReceiver, IntentFilter(
-                TURN_OFF_SWITCH_CODE
-            )
-        )
     }
 
     fun getScheduler() = alarmScheduler
@@ -61,7 +43,7 @@ class MyViewModel(
         list.add(Alarm(14, 0, "School", true, isOn = false))
         list.add(Alarm(19, 45, "Learn Japanese", false, isOn = false))
 
-        //testing
+        //testing alarm 1 minute later
         val testAlarm = Alarm(
             LocalDateTime.now().hour,
             LocalDateTime.now().minute + 1,
@@ -94,10 +76,10 @@ class MyViewModel(
         liveDataAlarmList.value = list
     }
 
-    private fun turnOff(hour: Int, minute: Int) {
+    fun turnOff(hour: Int, minute: Int) {
         Log.i(TAG, "Turn off $hour:$minute")
-        for(alarm in list)
-            if(alarm.getHour() == hour && alarm.getMinute() == minute) alarm.setState(false)
+        for (alarm in list)
+            if (alarm.getHour() == hour && alarm.getMinute() == minute) alarm.setState(false)
         liveDataAlarmList.value = list
     }
 
