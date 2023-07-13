@@ -9,22 +9,26 @@ import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.myalarmapp.models.Alarm
+import com.example.myalarmapp.models.Constants.Companion.ALARM_CODE
+import com.example.myalarmapp.models.Constants.Companion.POSITION_CODE
 import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.viewmodel.receivers.AlarmReceiver
 import java.util.Calendar
 
 class AlarmScheduler(
     private val context: Context
-): InterfaceAlarmSchduler {
+): IAlarmScheduler {
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun schedule(alarm: Alarm) {
+    override fun schedule(alarm: Alarm, position: Int) {
         val intent = Intent(context, AlarmReceiver::class.java)
         val bundle = Bundle()
-        bundle.putSerializable("alarm", alarm)
+        bundle.putSerializable(ALARM_CODE, alarm)
+        bundle.putInt(POSITION_CODE, position)
         intent.putExtras(bundle)
 
+        //schedule the alarm and trigger the pending intent
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             convertToMillis(alarm.getHour(), alarm.getMinute()),
@@ -36,14 +40,14 @@ class AlarmScheduler(
             )
         )
 
-        Log.i(TAG, "Scheduled at ${alarm.getHour()}:${alarm.getMinute()}")
+        Log.i(TAG, "Scheduled at ${alarm.getHour()}:${alarm.getMinute()} - position $position")
     }
 
     override fun cancel(alarm: Alarm) {
         //same pending intent when setting the alarm
         val intent = Intent(context, AlarmReceiver::class.java)
         val bundle = Bundle()
-        bundle.putSerializable("alarm", alarm)
+        bundle.putSerializable(ALARM_CODE, alarm)
         intent.putExtras(bundle)
 
         alarmManager.cancel(

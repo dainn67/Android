@@ -5,38 +5,57 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
+import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
+import com.example.myalarmapp.models.Constants.Companion.ACTION_KILL
+import com.example.myalarmapp.models.Constants.Companion.BROADCAST_ALARM_CODE
 import com.example.myalarmapp.models.Constants.Companion.CHANNEL_ID
+import com.example.myalarmapp.models.Constants.Companion.KILL_CODE
+import com.example.myalarmapp.models.Constants.Companion.POSITION_CODE
 import com.example.myalarmapp.models.Constants.Companion.TAG
+import com.example.myalarmapp.models.Constants.Companion.TO_KILL_CODE
+import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_CODE
 import com.example.myalarmapp.view.MainActivity
-import com.example.myalarmapp.viewmodel.receivers.KillReceiver
+import com.example.myalarmapp.viewmodel.receivers.AlarmReceiver
 
 class NotificationService : Service() {
     private lateinit var mediaPlayer: MediaPlayer
-    private lateinit var alarm: Alarm
-    private var kill = false
+    private var alarm: Alarm? = null
+    private var kill = -1
+    private var position = -1
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i(TAG, "onStartCommand NotiService")
+
         val bundle = intent?.extras
 
         if (bundle != null) {
-            alarm = bundle.getSerializable("alarm_from_broadcast") as Alarm
-            kill = bundle.getBoolean("toKillOrNotToKill", false)
-            Log.i(TAG, "Noti received: ${alarm.getHour()}:${alarm.getMinute()} - Kill: $kill")
+            //only get alarm from AlarmReceiver
+            if(bundle.getSerializable(BROADCAST_ALARM_CODE) != null)
+                alarm = bundle.getSerializable(BROADCAST_ALARM_CODE) as Alarm
+
+            kill = bundle.getInt(TO_KILL_CODE, -1)
+            position = bundle.getInt(POSITION_CODE, -1)
+
+            //debug
+            alarm?.let {
+                Log.i(TAG, "Noti received: ${it.getHour()}:${it.getMinute()} - Kill: $kill - Position $position")
+            }
         }
 
         //check received intent to stop alarm
-        if (kill)
-            stopAlarm()
+        if (kill != -1)
+            stopAlarm(this)
         else {
             playAlarm(this)
 
@@ -49,10 +68,13 @@ class NotificationService : Service() {
                 PendingIntent.FLAG_IMMUTABLE
             )
 
+            //notification layout
             val remoteView = RemoteViews(packageName, R.layout.notification_layout)
-            remoteView.setTextViewText(R.id.noti_content, alarm.getContent())
+            remoteView.setTextViewText(R.id.noti_content, alarm?.getContent() ?: "Error")
+            remoteView.setTextViewText(R.id.noti_title, "Alarming at ${alarm?.getHour()}:${alarm?.getMinute()}")
             remoteView.setOnClickPendingIntent(R.id.noti_delete, pendingDeleteIntent(this))
 
+            //create notification
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.alarm_icon)
                 .setContentIntent(homePendingIntent)    //when press the notification, go to home page
@@ -65,7 +87,7 @@ class NotificationService : Service() {
             startForeground(notification.hashCode(), notification)
         }
 
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     private fun playAlarm(context: Context) {
@@ -74,21 +96,32 @@ class NotificationService : Service() {
         Log.i(TAG, "Alarm played")
     }
 
-    private fun stopAlarm() {
+    private fun stopAlarm(context: Context) {
         mediaPlayer?.let {
             it.release()
         }
+        stopSelf()
+        stopForeground(true)
+
+        //local broadcast to viewmodel to turn off the switch
+        val turnOffIntent = Intent(TURN_OFF_SWITCH_CODE)
+        turnOffIntent.putExtra(POSITION_CODE, position)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(turnOffIntent)
         Log.i(TAG, "Alarm stopped")
     }
 
     private fun pendingDeleteIntent(context: Context): PendingIntent? {
-        val intent = Intent(context, KillReceiver::class.java)
-        intent.putExtra("kill", true)
+        val deleteIntent = Intent(context, AlarmReceiver::class.java)
 
-        return PendingIntent.getActivity(
+        val bundle = Bundle()
+        bundle.putInt(KILL_CODE, ACTION_KILL)
+        bundle.putInt(POSITION_CODE, position)
+        deleteIntent.putExtras(bundle)
+
+        return PendingIntent.getBroadcast(
             context,
-            intent.hashCode(),
-            intent,
+            deleteIntent.hashCode(),
+            deleteIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }

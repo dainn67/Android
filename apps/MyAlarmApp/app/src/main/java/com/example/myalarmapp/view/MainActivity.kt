@@ -1,5 +1,8 @@
 package com.example.myalarmapp.view
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,8 +10,10 @@ import android.util.Log
 import android.widget.ListView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
+import com.example.myalarmapp.models.Constants.Companion.POSITION_CODE
 import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.view.diaglogFragments.AddAlarmDialogFragment
 import com.example.myalarmapp.viewmodel.MyViewModel
@@ -25,9 +30,19 @@ class MainActivity : AppCompatActivity() {
     //display list
     private lateinit var myList: MutableList<Alarm>
 
+    //receive turnoff signal from notification
+    private val broadcastReceiver = object : BroadcastReceiver(){
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val bundle = intent?.extras
+            val position = bundle?.getInt(POSITION_CODE)
+            if(position != null && position != -1){
+
+            }
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i(TAG, "MainActivity onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
