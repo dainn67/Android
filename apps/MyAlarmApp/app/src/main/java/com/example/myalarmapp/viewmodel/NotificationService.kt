@@ -17,7 +17,8 @@ import com.example.myalarmapp.models.Constants.Companion.ACTION_KILL
 import com.example.myalarmapp.models.Constants.Companion.BROADCAST_ALARM_CODE
 import com.example.myalarmapp.models.Constants.Companion.CHANNEL_ID
 import com.example.myalarmapp.models.Constants.Companion.KILL_CODE
-import com.example.myalarmapp.models.Constants.Companion.POSITION_CODE
+import com.example.myalarmapp.models.Constants.Companion.HOUR_CODE
+import com.example.myalarmapp.models.Constants.Companion.MINUTE_CODE
 import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.models.Constants.Companion.TO_KILL_CODE
 import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_CODE
@@ -28,7 +29,6 @@ class NotificationService : Service() {
     private lateinit var mediaPlayer: MediaPlayer
     private var alarm: Alarm? = null
     private var kill = -1
-    private var position = -1
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -45,11 +45,10 @@ class NotificationService : Service() {
                 alarm = bundle.getSerializable(BROADCAST_ALARM_CODE) as Alarm
 
             kill = bundle.getInt(TO_KILL_CODE, -1)
-            position = bundle.getInt(POSITION_CODE, -1)
 
             //debug
             alarm?.let {
-                Log.i(TAG, "Noti received: ${it.getHour()}:${it.getMinute()} - Kill: $kill - Position $position")
+                Log.i(TAG, "Noti received: ${it.getHour()}:${it.getMinute()} - Kill: $kill")
             }
         }
 
@@ -105,7 +104,8 @@ class NotificationService : Service() {
 
         //local broadcast to viewmodel to turn off the switch
         val turnOffIntent = Intent(TURN_OFF_SWITCH_CODE)
-        turnOffIntent.putExtra(POSITION_CODE, position)
+        turnOffIntent.putExtra(HOUR_CODE, alarm?.getHour())
+        turnOffIntent.putExtra(MINUTE_CODE, alarm?.getMinute())
         LocalBroadcastManager.getInstance(context).sendBroadcast(turnOffIntent)
         Log.i(TAG, "Alarm stopped")
     }
@@ -115,7 +115,7 @@ class NotificationService : Service() {
 
         val bundle = Bundle()
         bundle.putInt(KILL_CODE, ACTION_KILL)
-        bundle.putInt(POSITION_CODE, position)
+//        bundle.putInt(HOUR_CODE, position)
         deleteIntent.putExtras(bundle)
 
         return PendingIntent.getBroadcast(

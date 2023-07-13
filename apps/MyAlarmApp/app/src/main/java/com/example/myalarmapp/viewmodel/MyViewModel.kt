@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
@@ -15,7 +14,8 @@ import androidx.lifecycle.ViewModel
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants
-import com.example.myalarmapp.models.Constants.Companion.POSITION_CODE
+import com.example.myalarmapp.models.Constants.Companion.HOUR_CODE
+import com.example.myalarmapp.models.Constants.Companion.MINUTE_CODE
 import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_CODE
 import com.example.myalarmapp.models.Data
@@ -32,9 +32,10 @@ class MyViewModel(
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val bundle = intent?.extras
-            val position = bundle?.getInt(POSITION_CODE, -1)
-            if(position != null && position != -1){
-                turnOff(position)
+            val hour = bundle?.getInt(HOUR_CODE, -1)
+            val minute = bundle?.getInt(MINUTE_CODE, -1)
+            if(hour != -1 && minute != -1){
+                turnOff(hour ?: -1, minute ?: -1)
             }
         }
     }
@@ -69,7 +70,7 @@ class MyViewModel(
             isOn = true
         )
         list.add(testAlarm)
-        alarmScheduler.schedule(testAlarm, 3)
+        alarmScheduler.schedule(testAlarm)
     }
 
     fun addToList(alarm: Alarm) {
@@ -93,9 +94,10 @@ class MyViewModel(
         liveDataAlarmList.value = list
     }
 
-    private fun turnOff(position: Int) {
-        Log.i(TAG, "Turn off at position $position")
-        list[position].setState(false)
+    private fun turnOff(hour: Int, minute: Int) {
+        Log.i(TAG, "Turn off $hour:$minute")
+        for(alarm in list)
+            if(alarm.getHour() == hour && alarm.getMinute() == minute) alarm.setState(false)
         liveDataAlarmList.value = list
     }
 

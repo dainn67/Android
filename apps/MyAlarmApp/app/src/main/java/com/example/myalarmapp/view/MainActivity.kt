@@ -6,15 +6,12 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.ListView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
-import com.example.myalarmapp.models.Constants.Companion.POSITION_CODE
-import com.example.myalarmapp.models.Constants.Companion.TAG
+import com.example.myalarmapp.models.Constants.Companion.HOUR_CODE
 import com.example.myalarmapp.view.diaglogFragments.AddAlarmDialogFragment
 import com.example.myalarmapp.viewmodel.MyViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -34,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private val broadcastReceiver = object : BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
             val bundle = intent?.extras
-            val position = bundle?.getInt(POSITION_CODE)
+            val position = bundle?.getInt(HOUR_CODE)
             if(position != null && position != -1){
 
             }
