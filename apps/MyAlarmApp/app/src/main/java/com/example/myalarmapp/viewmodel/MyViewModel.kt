@@ -76,10 +76,13 @@ class MyViewModel(
         liveDataAlarmList.value = list
     }
 
-    fun turnOff(hour: Int, minute: Int) {
-        Log.i(TAG, "Turn off $hour:$minute")
-        for (alarm in list)
-            if (alarm.getHour() == hour && alarm.getMinute() == minute) alarm.setState(false)
+    fun turnOff(alarm: Alarm) {
+        Log.i(TAG, "Turn off ${alarm.getHour()}:${alarm.getMinute()}")
+        for (refAlarm in list)
+            if (refAlarm.getHour() == alarm.getHour() && refAlarm.getMinute() == alarm.getMinute())
+                refAlarm.setState(false)
+
+        //reset the livedata
         liveDataAlarmList.value = list
     }
 

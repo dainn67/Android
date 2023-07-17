@@ -16,8 +16,20 @@ import java.util.Calendar
 
 class AlarmScheduler(
     private val context: Context
-): IAlarmScheduler {
+) : IAlarmScheduler {
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
+
+    companion object{
+        fun convertToMillis(hour: Int, minute: Int): Long {
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, minute)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+
+            return calendar.timeInMillis
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun schedule(alarm: Alarm) {
@@ -38,6 +50,18 @@ class AlarmScheduler(
             )
         )
 
+//        alarmManager.setRepeating(
+//            AlarmManager.RTC_WAKEUP,
+//            convertToMillis(alarm.getHour(), alarm.getMinute()),
+//            AlarmManager.INTERVAL_DAY,
+//            PendingIntent.getBroadcast(
+//                context,
+//                alarm.hashCode(),
+//                intent,
+//                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//            )
+//        )
+
         Log.i(TAG, "Scheduled at ${alarm.getHour()}:${alarm.getMinute()}")
     }
 
@@ -57,15 +81,5 @@ class AlarmScheduler(
             )
         )
         Log.i(TAG, "Cancelled ${alarm.getHour()}:${alarm.getMinute()}")
-    }
-
-    private fun convertToMillis(hour: Int, minute: Int): Long{
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, hour)
-        calendar.set(Calendar.MINUTE, minute)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-
-        return calendar.timeInMillis
     }
 }

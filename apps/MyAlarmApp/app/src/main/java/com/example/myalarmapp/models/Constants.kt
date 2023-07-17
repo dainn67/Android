@@ -7,6 +7,7 @@ class Constants {
         const val ACTION_KILL = 1
 
         const val TURN_OFF_SWITCH_CODE = "TURNOFF_SWITCH"
+        const val TURN_OFF_SWITCH_ALARM_CODE = "TURNOFF_ALARM"
         const val HOUR_CODE = "HOUR"
         const val MINUTE_CODE = "MINUTE"
         const val ALARM_CODE = "ALARM_CODE"

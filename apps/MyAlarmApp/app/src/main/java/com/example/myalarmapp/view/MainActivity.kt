@@ -15,6 +15,7 @@ import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants
 import com.example.myalarmapp.models.Constants.Companion.HOUR_CODE
+import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_ALARM_CODE
 import com.example.myalarmapp.view.diaglogFragments.AddAlarmDialogFragment
 import com.example.myalarmapp.viewmodel.MyViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -34,10 +35,10 @@ class MainActivity : AppCompatActivity() {
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val bundle = intent?.extras
-            val hour = bundle?.getInt(HOUR_CODE, -1)
-            val minute = bundle?.getInt(Constants.MINUTE_CODE, -1)
-            if (hour != -1 && minute != -1) {
-                myViewModel.turnOff(hour ?: -1, minute ?: -1)
+            val receivedAlarm: Alarm? = bundle?.getSerializable(TURN_OFF_SWITCH_ALARM_CODE) as Alarm?
+            if (receivedAlarm != null) {
+                myViewModel.turnOff(receivedAlarm)
+                myViewModel.getScheduler().cancel(receivedAlarm)
             }
         }
     }
