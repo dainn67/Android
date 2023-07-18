@@ -2,22 +2,15 @@ package com.example.myalarmapp.viewmodel
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants
-import com.example.myalarmapp.models.Constants.Companion.HOUR_CODE
-import com.example.myalarmapp.models.Constants.Companion.MINUTE_CODE
 import com.example.myalarmapp.models.Constants.Companion.TAG
-import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_CODE
 import com.example.myalarmapp.models.Data
 import java.time.LocalDateTime
 
@@ -25,6 +18,8 @@ class MyViewModel(
     private val context: Context
 ) : ViewModel() {
     private var list = Data.getAlarmList()
+    private var activeList = Data.getActiveList()
+
     private var liveDataAlarmList = MutableLiveData<MutableList<Alarm>>()
     private val alarmScheduler = AlarmScheduler(context)
 
@@ -36,6 +31,7 @@ class MyViewModel(
     fun getScheduler() = alarmScheduler
 
     fun getLiveDataList() = liveDataAlarmList
+    fun getActiveList() = activeList
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addSampleAlarms() {
@@ -52,7 +48,11 @@ class MyViewModel(
             isOn = true
         )
         list.add(testAlarm)
+        activeList.add(testAlarm)
         alarmScheduler.schedule(testAlarm)
+
+        //debug
+        Log.i(TAG, "Active list: ${activeList.size}")
     }
 
     fun addToList(alarm: Alarm) {

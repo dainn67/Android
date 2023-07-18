@@ -29,6 +29,10 @@ class AlarmScheduler(
 
             return calendar.timeInMillis
         }
+
+        fun hashcodeAlarm(alarm: Alarm): Int{
+            return 10000 + alarm.getHour()*100 + alarm.getMinute()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -44,25 +48,14 @@ class AlarmScheduler(
             convertToMillis(alarm.getHour(), alarm.getMinute()),
             PendingIntent.getBroadcast(
                 context,
-                alarm.hashCode(),
+                hashcodeAlarm(alarm),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
 
-//        alarmManager.setRepeating(
-//            AlarmManager.RTC_WAKEUP,
-//            convertToMillis(alarm.getHour(), alarm.getMinute()),
-//            AlarmManager.INTERVAL_DAY,
-//            PendingIntent.getBroadcast(
-//                context,
-//                alarm.hashCode(),
-//                intent,
-//                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-//            )
-//        )
-
         Log.i(TAG, "Scheduled at ${alarm.getHour()}:${alarm.getMinute()}")
+        Log.i(TAG, "Schedule: ${hashcodeAlarm(alarm)}")
     }
 
     override fun cancel(alarm: Alarm) {
@@ -75,7 +68,7 @@ class AlarmScheduler(
         alarmManager.cancel(
             PendingIntent.getBroadcast(
                 context,
-                alarm.hashCode(),
+                hashcodeAlarm(alarm),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )

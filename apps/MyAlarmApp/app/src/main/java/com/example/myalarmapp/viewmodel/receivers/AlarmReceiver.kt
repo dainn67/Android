@@ -7,11 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants.Companion.ALARM_CODE
 import com.example.myalarmapp.models.Constants.Companion.BROADCAST_ALARM_CODE
 import com.example.myalarmapp.models.Constants.Companion.KILL_CODE
+import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.models.Constants.Companion.TO_KILL_CODE
 import com.example.myalarmapp.viewmodel.AlarmScheduler
 import com.example.myalarmapp.viewmodel.NotificationService
@@ -25,34 +27,47 @@ class AlarmReceiver : BroadcastReceiver() {
         val alarm = bundle?.getSerializable(ALARM_CODE) as Alarm?
         val kill = bundle?.getInt(KILL_CODE, -1)
 
+        if(alarm != null)
+            Log.i(TAG, "Alarm receiver: ${AlarmScheduler.hashcodeAlarm(alarm)}")
+        if(kill == 1) {
+            Log.i(TAG, "Alarm receiver: KILL")
+            if(alarm == null) Log.i(TAG, "No alarm received")
+            else Log.i(TAG, "Alarm receiver: ${alarm.getHour()}:${alarm.getMinute()}")
+        }
+
         //intent and bundle to start notification
-        val startNotiIntent = Intent(context, NotificationService::class.java)
-        val startNotiBundle = Bundle()
+        val sendToNotificationIntent = Intent(context, NotificationService::class.java)
+        val sendToNotificationBundle = Bundle()
 
-        if (alarm != null) startNotiBundle.putSerializable(BROADCAST_ALARM_CODE, alarm)
-        if (kill != null) startNotiBundle.putInt(TO_KILL_CODE, kill)
+        if (alarm != null) sendToNotificationBundle.putSerializable(BROADCAST_ALARM_CODE, alarm)
+        if (kill != null) sendToNotificationBundle.putInt(TO_KILL_CODE, kill)
 
-        startNotiIntent.putExtras(startNotiBundle)
+        sendToNotificationIntent.putExtras(sendToNotificationBundle)
 
         //start the notification
-        context?.startService(startNotiIntent)
+        context?.startService(sendToNotificationIntent)
 
         //set the next alarm
-        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AlarmReceiver::class.java)
-        var nextAlarmTime: Long = 0
-        if (alarm != null) nextAlarmTime =
-            AlarmScheduler.convertToMillis(alarm.getHour(), alarm.getMinute()) + 5000
+        if(kill != 1){
+            val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(context, AlarmReceiver::class.java)
+            var nextAlarmTime: Long = 0
+            if (alarm != null) nextAlarmTime = AlarmScheduler.convertToMillis(alarm.getHour(), alarm.getMinute()) + 1000000
 
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            nextAlarmTime,
-            PendingIntent.getBroadcast(
-                context,
-                alarm.hashCode(),
-                intent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        )
+            if(alarm != null){
+                Log.i(TAG, "Set new repeat alarm: ${AlarmScheduler.hashcodeAlarm(alarm)}")
+
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    nextAlarmTime,
+                    PendingIntent.getBroadcast(
+                        context,
+                        AlarmScheduler.hashcodeAlarm(alarm),
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE
+                    )
+                )
+            }
+        }
     }
 }
