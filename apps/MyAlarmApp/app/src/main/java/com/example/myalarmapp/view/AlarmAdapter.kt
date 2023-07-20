@@ -48,7 +48,7 @@ class AlarmAdapter(
         val minuteFormat: String = if(myAlarm.getMinute() < 10) "0${myAlarm.getMinute()}" else myAlarm.getMinute().toString()
         tvTime.text = "$hourFormat:$minuteFormat"
         tvContent.text = myAlarm.getContent()
-        tvRepeated.text = if(myAlarm.getRepeatable()) "Repeated" else ""
+        tvRepeated.text = if(myAlarm.getRepeat()) "Everyday" else ""
         swOnOff.isChecked = myAlarm.getState()
 
         llItem.setOnClickListener{
@@ -57,7 +57,7 @@ class AlarmAdapter(
         }
 
         llItem.setOnLongClickListener {
-            val dialog = DeleteAlarmDialogFragment(myViewModel, position)
+            val dialog = DeleteAlarmDialogFragment(myAlarm, myViewModel, position)
             dialog.show(supportFragmentManager, "deleteDialog")
             true
         }

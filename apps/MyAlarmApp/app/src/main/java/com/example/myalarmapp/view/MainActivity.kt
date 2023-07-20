@@ -20,6 +20,7 @@ import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_ALARM_C
 import com.example.myalarmapp.view.diaglogFragments.AddAlarmDialogFragment
 import com.example.myalarmapp.viewmodel.MyViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
     //views
@@ -37,12 +38,8 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val bundle = intent?.extras
             val receivedAlarm: Alarm? = bundle?.getSerializable(TURN_OFF_SWITCH_ALARM_CODE) as Alarm?
-            if (receivedAlarm != null) {
-                Log.i(TAG, "Main received kill command")
-                myViewModel.turnOff(receivedAlarm)
-                myViewModel.getScheduler().cancel(receivedAlarm)
-            }else{
-                Log.i(TAG, "Main: Alarm not received")
+            receivedAlarm?.let {
+                myViewModel.turnOff(it)
             }
         }
     }

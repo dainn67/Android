@@ -43,18 +43,15 @@ class AddAlarmDialogFragment(private val myViewModel: MyViewModel) : DialogFragm
             this.dismiss()
         }
         btnAdd.setOnClickListener {
-            val hour = timePicker.currentHour
-            val minute = timePicker.currentMinute
+            val hour = timePicker.hour
+            val minute = timePicker.minute
             val content = etContent.text.toString()
             val isRepeated = checkboxRepeat.isChecked
 
             val alarm = Alarm(hour, minute, content, isRepeated, true)
             myViewModel.addToList(alarm)
 
-//            myViewModel.getLiveDataList().value?.let {
-                myViewModel.getScheduler().schedule(alarm)
-                myViewModel.getActiveList().add(alarm)
-//            }
+            myViewModel.getScheduler().schedule(alarm)
             this.dismiss()
         }
 

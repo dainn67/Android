@@ -18,7 +18,6 @@ class MyViewModel(
     private val context: Context
 ) : ViewModel() {
     private var list = Data.getAlarmList()
-    private var repeatList = Data.getRepeatList()
 
     private var liveDataAlarmList = MutableLiveData<MutableList<Alarm>>()
     private val alarmScheduler = AlarmScheduler(context)
@@ -31,7 +30,6 @@ class MyViewModel(
     fun getScheduler() = alarmScheduler
 
     fun getLiveDataList() = liveDataAlarmList
-    fun getActiveList() = repeatList
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addSampleAlarms() {
@@ -48,17 +46,11 @@ class MyViewModel(
             isOn = true
         )
         list.add(testAlarm)
-        repeatList.add(testAlarm)
         alarmScheduler.schedule(testAlarm)
-
-        //debug
-        Log.i(TAG, "Repeat list: ${repeatList.size}")
     }
 
     fun addToList(alarm: Alarm) {
         list.add(alarm)
-        repeatList.add(alarm)
-        Log.i(TAG, "Repeat list: ${repeatList.size}")
 
         //sort the list after adding new alarm
         list.sortWith(compareBy({ it.getHour() }, { it.getMinute() }))
@@ -80,11 +72,13 @@ class MyViewModel(
 
     fun turnOff(alarm: Alarm) {
         Log.i(TAG, "Turn off ${alarm.getHour()}:${alarm.getMinute()}")
+
+        //this alarm is already check if repeat or not -> kill without checking
         for (refAlarm in list)
             if (refAlarm.getHour() == alarm.getHour() && refAlarm.getMinute() == alarm.getMinute())
                 refAlarm.setState(false)
 
-        //reset the livedata
+        //update the livedata
         liveDataAlarmList.value = list
     }
 
