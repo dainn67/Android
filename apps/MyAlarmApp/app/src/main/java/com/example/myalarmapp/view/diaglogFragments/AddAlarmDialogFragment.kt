@@ -51,9 +51,10 @@ class AddAlarmDialogFragment(private val myViewModel: MyViewModel) : DialogFragm
             val alarm = Alarm(hour, minute, content, isRepeated, true)
             myViewModel.addToList(alarm)
 
-            myViewModel.getLiveDataList().value?.let {
+//            myViewModel.getLiveDataList().value?.let {
                 myViewModel.getScheduler().schedule(alarm)
-            }
+                myViewModel.getActiveList().add(alarm)
+//            }
             this.dismiss()
         }
 

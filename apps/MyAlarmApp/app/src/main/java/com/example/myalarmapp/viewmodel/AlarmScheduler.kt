@@ -16,8 +16,24 @@ import java.util.Calendar
 
 class AlarmScheduler(
     private val context: Context
-): IAlarmScheduler {
+) : IAlarmScheduler {
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
+
+    companion object{
+        fun convertToMillis(hour: Int, minute: Int): Long {
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, minute)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+
+            return calendar.timeInMillis
+        }
+
+        fun hashcodeAlarm(alarm: Alarm): Int{
+            return convertToMillis(alarm.getHour(), alarm.getMinute()).toInt()
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun schedule(alarm: Alarm) {
@@ -32,13 +48,14 @@ class AlarmScheduler(
             convertToMillis(alarm.getHour(), alarm.getMinute()),
             PendingIntent.getBroadcast(
                 context,
-                alarm.hashCode(),
+                hashcodeAlarm(alarm),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
 
         Log.i(TAG, "Scheduled at ${alarm.getHour()}:${alarm.getMinute()}")
+        Log.i(TAG, "Schedule: ${hashcodeAlarm(alarm)}")
     }
 
     override fun cancel(alarm: Alarm) {
@@ -51,21 +68,11 @@ class AlarmScheduler(
         alarmManager.cancel(
             PendingIntent.getBroadcast(
                 context,
-                alarm.hashCode(),
+                hashcodeAlarm(alarm),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
         Log.i(TAG, "Cancelled ${alarm.getHour()}:${alarm.getMinute()}")
-    }
-
-    private fun convertToMillis(hour: Int, minute: Int): Long{
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, hour)
-        calendar.set(Calendar.MINUTE, minute)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-
-        return calendar.timeInMillis
     }
 }

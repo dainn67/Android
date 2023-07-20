@@ -7,14 +7,16 @@ import android.content.IntentFilter
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ListView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
-import com.example.myalarmapp.models.Constants
-import com.example.myalarmapp.models.Constants.Companion.HOUR_CODE
+import com.example.myalarmapp.models.Constants.Companion.NOTI_SERVICE_TO_MAIN
+import com.example.myalarmapp.models.Constants.Companion.TAG
+import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_ALARM_CODE
 import com.example.myalarmapp.view.diaglogFragments.AddAlarmDialogFragment
 import com.example.myalarmapp.viewmodel.MyViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -31,13 +33,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var myList: MutableList<Alarm>
 
     //receive turnoff signal from notification
-    private val broadcastReceiver = object : BroadcastReceiver() {
+    private val turnoffBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val bundle = intent?.extras
-            val hour = bundle?.getInt(HOUR_CODE, -1)
-            val minute = bundle?.getInt(Constants.MINUTE_CODE, -1)
-            if (hour != -1 && minute != -1) {
-                myViewModel.turnOff(hour ?: -1, minute ?: -1)
+            val receivedAlarm: Alarm? = bundle?.getSerializable(TURN_OFF_SWITCH_ALARM_CODE) as Alarm?
+            if (receivedAlarm != null) {
+                Log.i(TAG, "Main received kill command")
+                myViewModel.turnOff(receivedAlarm)
+                myViewModel.getScheduler().cancel(receivedAlarm)
+            }else{
+                Log.i(TAG, "Main: Alarm not received")
             }
         }
     }
@@ -49,9 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         //register broadcast to receive the turn off signal
         LocalBroadcastManager.getInstance(this).registerReceiver(
-            broadcastReceiver, IntentFilter(
-                Constants.TURN_OFF_SWITCH_CODE
-            )
+            turnoffBroadcastReceiver, IntentFilter(NOTI_SERVICE_TO_MAIN)
         )
 
         btnAdd = findViewById(R.id.btnAdd)
@@ -96,6 +99,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(turnoffBroadcastReceiver)
     }
 }

@@ -14,14 +14,14 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants.Companion.ACTION_KILL
+import com.example.myalarmapp.models.Constants.Companion.ALARM_CODE
 import com.example.myalarmapp.models.Constants.Companion.BROADCAST_ALARM_CODE
 import com.example.myalarmapp.models.Constants.Companion.CHANNEL_ID
 import com.example.myalarmapp.models.Constants.Companion.KILL_CODE
-import com.example.myalarmapp.models.Constants.Companion.HOUR_CODE
-import com.example.myalarmapp.models.Constants.Companion.MINUTE_CODE
+import com.example.myalarmapp.models.Constants.Companion.NOTI_SERVICE_TO_MAIN
 import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.models.Constants.Companion.TO_KILL_CODE
-import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_CODE
+import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_ALARM_CODE
 import com.example.myalarmapp.view.MainActivity
 import com.example.myalarmapp.viewmodel.receivers.AlarmReceiver
 
@@ -35,8 +35,6 @@ class NotificationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i(TAG, "onStartCommand NotiService")
-
         val bundle = intent?.extras
 
         if (bundle != null) {
@@ -92,22 +90,27 @@ class NotificationService : Service() {
     private fun playAlarm(context: Context) {
         mediaPlayer = MediaPlayer.create(context, R.raw.ringtone)
         mediaPlayer?.start()
-        Log.i(TAG, "Alarm played")
+
+        Log.i(TAG, "Alarm ${alarm?.getHour()}:${alarm?.getMinute()} played")
     }
 
     private fun stopAlarm(context: Context) {
         mediaPlayer?.let {
             it.release()
         }
-        stopSelf()
-        stopForeground(true)
 
         //local broadcast to viewmodel to turn off the switch
-        val turnOffIntent = Intent(TURN_OFF_SWITCH_CODE)
-        turnOffIntent.putExtra(HOUR_CODE, alarm?.getHour())
-        turnOffIntent.putExtra(MINUTE_CODE, alarm?.getMinute())
+        val turnOffIntent = Intent(NOTI_SERVICE_TO_MAIN)
+        val turnOffBundle = Bundle()
+        turnOffBundle.putSerializable(TURN_OFF_SWITCH_ALARM_CODE, alarm)
+        turnOffIntent.putExtras(turnOffBundle)
+
+        Log.i(TAG, "Alarm ${alarm?.getHour()}:${alarm?.getMinute()} stopped")
+
         LocalBroadcastManager.getInstance(context).sendBroadcast(turnOffIntent)
-        Log.i(TAG, "Alarm stopped")
+
+        stopSelf()
+        stopForeground(true)
     }
 
     private fun pendingDeleteIntent(context: Context): PendingIntent? {
@@ -115,7 +118,7 @@ class NotificationService : Service() {
 
         val bundle = Bundle()
         bundle.putInt(KILL_CODE, ACTION_KILL)
-//        bundle.putInt(HOUR_CODE, position)
+        bundle.putSerializable(ALARM_CODE, alarm)
         deleteIntent.putExtras(bundle)
 
         return PendingIntent.getBroadcast(

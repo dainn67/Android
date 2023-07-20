@@ -2,22 +2,15 @@ package com.example.myalarmapp.viewmodel
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants
-import com.example.myalarmapp.models.Constants.Companion.HOUR_CODE
-import com.example.myalarmapp.models.Constants.Companion.MINUTE_CODE
 import com.example.myalarmapp.models.Constants.Companion.TAG
-import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_CODE
 import com.example.myalarmapp.models.Data
 import java.time.LocalDateTime
 
@@ -25,6 +18,8 @@ class MyViewModel(
     private val context: Context
 ) : ViewModel() {
     private var list = Data.getAlarmList()
+    private var repeatList = Data.getRepeatList()
+
     private var liveDataAlarmList = MutableLiveData<MutableList<Alarm>>()
     private val alarmScheduler = AlarmScheduler(context)
 
@@ -36,6 +31,7 @@ class MyViewModel(
     fun getScheduler() = alarmScheduler
 
     fun getLiveDataList() = liveDataAlarmList
+    fun getActiveList() = repeatList
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addSampleAlarms() {
@@ -48,15 +44,21 @@ class MyViewModel(
             LocalDateTime.now().hour,
             LocalDateTime.now().minute + 1,
             "Testing",
-            false,
+            true,
             isOn = true
         )
         list.add(testAlarm)
+        repeatList.add(testAlarm)
         alarmScheduler.schedule(testAlarm)
+
+        //debug
+        Log.i(TAG, "Repeat list: ${repeatList.size}")
     }
 
     fun addToList(alarm: Alarm) {
         list.add(alarm)
+        repeatList.add(alarm)
+        Log.i(TAG, "Repeat list: ${repeatList.size}")
 
         //sort the list after adding new alarm
         list.sortWith(compareBy({ it.getHour() }, { it.getMinute() }))
@@ -76,10 +78,13 @@ class MyViewModel(
         liveDataAlarmList.value = list
     }
 
-    fun turnOff(hour: Int, minute: Int) {
-        Log.i(TAG, "Turn off $hour:$minute")
-        for (alarm in list)
-            if (alarm.getHour() == hour && alarm.getMinute() == minute) alarm.setState(false)
+    fun turnOff(alarm: Alarm) {
+        Log.i(TAG, "Turn off ${alarm.getHour()}:${alarm.getMinute()}")
+        for (refAlarm in list)
+            if (refAlarm.getHour() == alarm.getHour() && refAlarm.getMinute() == alarm.getMinute())
+                refAlarm.setState(false)
+
+        //reset the livedata
         liveDataAlarmList.value = list
     }
 
