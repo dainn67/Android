@@ -42,7 +42,7 @@ class MyViewModel(
             LocalDateTime.now().hour,
             LocalDateTime.now().minute + 1,
             "Testing",
-            true,
+            false,
             isOn = true
         )
         list.add(testAlarm)

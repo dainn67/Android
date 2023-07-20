@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.ListView
 import androidx.annotation.RequiresApi
@@ -20,7 +21,6 @@ import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_ALARM_C
 import com.example.myalarmapp.view.diaglogFragments.AddAlarmDialogFragment
 import com.example.myalarmapp.viewmodel.MyViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
     //views
@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Handler().postDelayed({ Log.i(TAG, "ABC")}, 3000)
 
         //register broadcast to receive the turn off signal
         LocalBroadcastManager.getInstance(this).registerReceiver(

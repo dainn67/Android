@@ -4,11 +4,15 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.res.AssetFileDescriptor
+import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
 import android.util.Log
 import android.widget.RemoteViews
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myalarmapp.R
@@ -88,6 +92,11 @@ class NotificationService : Service() {
     private fun playAlarm(context: Context) {
         mediaPlayer = MediaPlayer.create(context, R.raw.ringtone)
         mediaPlayer?.start()
+
+        //stop the service when alarm is done playing
+        Handler().postDelayed({
+            stopAlarm(context)
+        }, mediaPlayer.duration.toLong())
 
         Log.i(TAG, "Alarm ${alarm?.getHour()}:${alarm?.getMinute()} played")
     }
