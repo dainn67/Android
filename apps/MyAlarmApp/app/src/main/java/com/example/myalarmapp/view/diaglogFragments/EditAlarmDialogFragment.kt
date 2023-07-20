@@ -85,7 +85,6 @@ class EditAlarmDialogFragment(
 
             //update the alarm and its live data
             myViewModel.editList(myAlarm, position)
-            myViewModel.getLiveDataList().value
 
             this.dismiss()
         }

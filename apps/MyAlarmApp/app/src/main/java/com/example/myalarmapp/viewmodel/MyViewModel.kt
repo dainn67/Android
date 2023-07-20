@@ -65,8 +65,18 @@ class MyViewModel(
         liveDataAlarmList.value = list
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun editList(alarm: Alarm, position: Int) {
+        //edit the alarm, cancel the old one if on and schedule the new one
+        if(list[position].getState()) alarmScheduler.cancel(list[position])
+
         list[position] = alarm
+        list[position].setState(true)
+
+        alarmScheduler.schedule(list[position])
+
+        //update the livedata
+        list.sortWith(compareBy({ it.getHour() }, { it.getMinute() }))
         liveDataAlarmList.value = list
     }
 

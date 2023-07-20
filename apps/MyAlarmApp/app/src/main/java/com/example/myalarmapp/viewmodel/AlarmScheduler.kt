@@ -55,7 +55,6 @@ class AlarmScheduler(
         )
 
         Log.i(TAG, "Scheduled at ${alarm.getHour()}:${alarm.getMinute()}")
-        Log.i(TAG, "Schedule: ${hashcodeAlarm(alarm)}")
     }
 
     override fun cancel(alarm: Alarm) {
