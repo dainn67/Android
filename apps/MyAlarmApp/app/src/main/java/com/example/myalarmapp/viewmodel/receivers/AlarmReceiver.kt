@@ -17,6 +17,7 @@ import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.models.Constants.Companion.TO_KILL_CODE
 import com.example.myalarmapp.viewmodel.AlarmScheduler
 import com.example.myalarmapp.viewmodel.NotificationService
+import java.util.Calendar
 
 class AlarmReceiver : BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -27,9 +28,9 @@ class AlarmReceiver : BroadcastReceiver() {
         val alarm = bundle?.getSerializable(ALARM_CODE) as Alarm?
         val kill = bundle?.getInt(KILL_CODE, -1)
 
-        if(alarm != null)
+        if (alarm != null)
             Log.i(TAG, "Alarm receiver: ${AlarmScheduler.hashcodeAlarm(alarm)}")
-        if(kill == 1)
+        if (kill == 1)
             Log.i(TAG, "Alarm receiver: KILL")
 
         //intent and bundle to start notification
@@ -47,26 +48,24 @@ class AlarmReceiver : BroadcastReceiver() {
         context?.startService(sendToNotificationIntent)
 
         //set the next alarm
-        if(kill != 1){
+        if (kill != 1 && alarm != null && alarm.getRepeat()) {
             val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(context, AlarmReceiver::class.java)
-            var nextAlarmTime: Long = 0
-            if (alarm != null) nextAlarmTime = AlarmScheduler.convertToMillis(alarm.getHour(), alarm.getMinute())
+            val newAlarmIntent = Intent(context, AlarmReceiver::class.java)
 
-            if(alarm != null){
-                Log.i(TAG, "Set new repeat alarm: ${AlarmScheduler.hashcodeAlarm(alarm)}")
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+//            calendar.add(Calendar.SECOND, 5)
 
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    nextAlarmTime,
-                    PendingIntent.getBroadcast(
-                        context,
-                        AlarmScheduler.hashcodeAlarm(alarm),
-                        intent,
-                        PendingIntent.FLAG_IMMUTABLE
-                    )
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                PendingIntent.getBroadcast(
+                    context,
+                    AlarmScheduler.hashcodeAlarm(alarm),
+                    newAlarmIntent,
+                    PendingIntent.FLAG_IMMUTABLE
                 )
-            }
+            )
         }
     }
 }

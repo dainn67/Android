@@ -73,6 +73,10 @@ class AlarmScheduler(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+
+        val stopNotiIntent = Intent(context, NotificationService::class.java)
+        context.stopService(stopNotiIntent)
+
         Log.i(TAG, "Cancelled ${alarm.getHour()}:${alarm.getMinute()}")
     }
 }

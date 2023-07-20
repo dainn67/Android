@@ -33,7 +33,7 @@ class EditAlarmDialogFragment(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         //debug
-        Log.i(TAG, "${myAlarm.getHour()}:${myAlarm.getMinute()} - ${myAlarm.getContent()} - ${myAlarm.getRepeatable()}")
+        Log.i(TAG, "${myAlarm.getHour()}:${myAlarm.getMinute()} - ${myAlarm.getContent()} - ${myAlarm.getRepeat()}")
 
         val myInflater = requireActivity().layoutInflater
         val view = myInflater.inflate(R.layout.fragment_add_alarm_dialog, null, false)
@@ -55,7 +55,7 @@ class EditAlarmDialogFragment(
         timePicker.currentHour = myAlarm.getHour()
         timePicker.currentMinute = myAlarm.getMinute()
         etContent.hint = myAlarm.getContent()
-        checkboxRepeat.isChecked = myAlarm.getRepeatable()
+        checkboxRepeat.isChecked = myAlarm.getRepeat()
 
         //if user change any data, they can update the alarm
         timePicker.setOnTimeChangedListener { _, hourOfDay, minute ->
@@ -71,7 +71,7 @@ class EditAlarmDialogFragment(
             }
         })
         checkboxRepeat.setOnCheckedChangeListener{_, isChecked ->
-            isRepeatChanged = isChecked != myAlarm.getRepeatable()
+            isRepeatChanged = isChecked != myAlarm.getRepeat()
             checkEnableBtn()
         }
 

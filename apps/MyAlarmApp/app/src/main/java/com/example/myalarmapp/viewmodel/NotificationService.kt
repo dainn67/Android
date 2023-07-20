@@ -38,16 +38,11 @@ class NotificationService : Service() {
         val bundle = intent?.extras
 
         if (bundle != null) {
-            //only get alarm from AlarmReceiver
-            if(bundle.getSerializable(BROADCAST_ALARM_CODE) != null)
-                alarm = bundle.getSerializable(BROADCAST_ALARM_CODE) as Alarm
-
             kill = bundle.getInt(TO_KILL_CODE, -1)
 
-            //debug
-            alarm?.let {
-                Log.i(TAG, "Noti received: ${it.getHour()}:${it.getMinute()} - Kill: $kill")
-            }
+            //only get alarm from AlarmReceiver
+            if (bundle.getSerializable(BROADCAST_ALARM_CODE) != null)
+                alarm = bundle.getSerializable(BROADCAST_ALARM_CODE) as Alarm
         }
 
         //check received intent to stop alarm
@@ -68,7 +63,10 @@ class NotificationService : Service() {
             //notification layout
             val remoteView = RemoteViews(packageName, R.layout.notification_layout)
             remoteView.setTextViewText(R.id.noti_content, alarm?.getContent() ?: "Error")
-            remoteView.setTextViewText(R.id.noti_title, "Alarming at ${alarm?.getHour()}:${alarm?.getMinute()}")
+            remoteView.setTextViewText(
+                R.id.noti_title,
+                "Alarming at ${alarm?.getHour()}:${alarm?.getMinute()}"
+            )
             remoteView.setOnClickPendingIntent(R.id.noti_delete, pendingDeleteIntent(this))
 
             //create notification
@@ -95,19 +93,22 @@ class NotificationService : Service() {
     }
 
     private fun stopAlarm(context: Context) {
-        mediaPlayer?.let {
-            it.release()
+        mediaPlayer?.release()
+
+        //only switch off the alarm if it is not repeat, else just kill the music
+        alarm?.let {
+            if (!it.getRepeat()) {
+                //local broadcast to viewmodel to turn off the switch
+                val turnOffIntent = Intent(NOTI_SERVICE_TO_MAIN)
+                val turnOffBundle = Bundle()
+                turnOffBundle.putSerializable(TURN_OFF_SWITCH_ALARM_CODE, it)
+                turnOffIntent.putExtras(turnOffBundle)
+
+                Log.i(TAG, "Alarm ${it.getHour()}:${it.getMinute()} stopped")
+
+                LocalBroadcastManager.getInstance(context).sendBroadcast(turnOffIntent)
+            }
         }
-
-        //local broadcast to viewmodel to turn off the switch
-        val turnOffIntent = Intent(NOTI_SERVICE_TO_MAIN)
-        val turnOffBundle = Bundle()
-        turnOffBundle.putSerializable(TURN_OFF_SWITCH_ALARM_CODE, alarm)
-        turnOffIntent.putExtras(turnOffBundle)
-
-        Log.i(TAG, "Alarm ${alarm?.getHour()}:${alarm?.getMinute()} stopped")
-
-        LocalBroadcastManager.getInstance(context).sendBroadcast(turnOffIntent)
 
         stopSelf()
         stopForeground(true)
