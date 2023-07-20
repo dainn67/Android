@@ -18,7 +18,7 @@ class MyViewModel(
     private val context: Context
 ) : ViewModel() {
     private var list = Data.getAlarmList()
-    private var activeList = Data.getActiveList()
+    private var repeatList = Data.getRepeatList()
 
     private var liveDataAlarmList = MutableLiveData<MutableList<Alarm>>()
     private val alarmScheduler = AlarmScheduler(context)
@@ -31,7 +31,7 @@ class MyViewModel(
     fun getScheduler() = alarmScheduler
 
     fun getLiveDataList() = liveDataAlarmList
-    fun getActiveList() = activeList
+    fun getActiveList() = repeatList
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addSampleAlarms() {
@@ -44,19 +44,21 @@ class MyViewModel(
             LocalDateTime.now().hour,
             LocalDateTime.now().minute + 1,
             "Testing",
-            false,
+            true,
             isOn = true
         )
         list.add(testAlarm)
-        activeList.add(testAlarm)
+        repeatList.add(testAlarm)
         alarmScheduler.schedule(testAlarm)
 
         //debug
-        Log.i(TAG, "Active list: ${activeList.size}")
+        Log.i(TAG, "Repeat list: ${repeatList.size}")
     }
 
     fun addToList(alarm: Alarm) {
         list.add(alarm)
+        repeatList.add(alarm)
+        Log.i(TAG, "Repeat list: ${repeatList.size}")
 
         //sort the list after adding new alarm
         list.sortWith(compareBy({ it.getHour() }, { it.getMinute() }))

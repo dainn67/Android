@@ -14,10 +14,9 @@ import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
-import com.example.myalarmapp.models.Constants
+import com.example.myalarmapp.models.Constants.Companion.NOTI_SERVICE_TO_MAIN
 import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_ALARM_CODE
-//import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_CODE
 import com.example.myalarmapp.view.diaglogFragments.AddAlarmDialogFragment
 import com.example.myalarmapp.viewmodel.MyViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         //register broadcast to receive the turn off signal
         LocalBroadcastManager.getInstance(this).registerReceiver(
-            turnoffBroadcastReceiver, IntentFilter(Constants.TURN_OFF_SWITCH_CODE)
+            turnoffBroadcastReceiver, IntentFilter(NOTI_SERVICE_TO_MAIN)
         )
 
         btnAdd = findViewById(R.id.btnAdd)

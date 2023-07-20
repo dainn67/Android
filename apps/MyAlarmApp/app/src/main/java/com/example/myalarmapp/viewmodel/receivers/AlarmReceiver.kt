@@ -29,18 +29,17 @@ class AlarmReceiver : BroadcastReceiver() {
 
         if(alarm != null)
             Log.i(TAG, "Alarm receiver: ${AlarmScheduler.hashcodeAlarm(alarm)}")
-        if(kill == 1) {
+        if(kill == 1)
             Log.i(TAG, "Alarm receiver: KILL")
-            if(alarm == null) Log.i(TAG, "No alarm received")
-            else Log.i(TAG, "Alarm receiver: ${alarm.getHour()}:${alarm.getMinute()}")
-        }
 
         //intent and bundle to start notification
         val sendToNotificationIntent = Intent(context, NotificationService::class.java)
         val sendToNotificationBundle = Bundle()
 
-        if (alarm != null) sendToNotificationBundle.putSerializable(BROADCAST_ALARM_CODE, alarm)
-        if (kill != null) sendToNotificationBundle.putInt(TO_KILL_CODE, kill)
+        if (kill == 1)
+            sendToNotificationBundle.putInt(TO_KILL_CODE, kill)
+        if (alarm != null)
+            sendToNotificationBundle.putSerializable(BROADCAST_ALARM_CODE, alarm)
 
         sendToNotificationIntent.putExtras(sendToNotificationBundle)
 
@@ -52,7 +51,7 @@ class AlarmReceiver : BroadcastReceiver() {
             val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, AlarmReceiver::class.java)
             var nextAlarmTime: Long = 0
-            if (alarm != null) nextAlarmTime = AlarmScheduler.convertToMillis(alarm.getHour(), alarm.getMinute()) + 1000000
+            if (alarm != null) nextAlarmTime = AlarmScheduler.convertToMillis(alarm.getHour(), alarm.getMinute())
 
             if(alarm != null){
                 Log.i(TAG, "Set new repeat alarm: ${AlarmScheduler.hashcodeAlarm(alarm)}")

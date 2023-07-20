@@ -31,7 +31,7 @@ class AlarmScheduler(
         }
 
         fun hashcodeAlarm(alarm: Alarm): Int{
-            return 10000 + alarm.getHour()*100 + alarm.getMinute()
+            return convertToMillis(alarm.getHour(), alarm.getMinute()).toInt()
         }
     }
 

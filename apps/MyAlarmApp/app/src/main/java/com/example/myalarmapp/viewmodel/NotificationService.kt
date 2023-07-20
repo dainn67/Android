@@ -18,10 +18,10 @@ import com.example.myalarmapp.models.Constants.Companion.ALARM_CODE
 import com.example.myalarmapp.models.Constants.Companion.BROADCAST_ALARM_CODE
 import com.example.myalarmapp.models.Constants.Companion.CHANNEL_ID
 import com.example.myalarmapp.models.Constants.Companion.KILL_CODE
+import com.example.myalarmapp.models.Constants.Companion.NOTI_SERVICE_TO_MAIN
 import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.models.Constants.Companion.TO_KILL_CODE
 import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_ALARM_CODE
-import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_CODE
 import com.example.myalarmapp.view.MainActivity
 import com.example.myalarmapp.viewmodel.receivers.AlarmReceiver
 
@@ -35,8 +35,6 @@ class NotificationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i(TAG, "onStartCommand NotiService")
-
         val bundle = intent?.extras
 
         if (bundle != null) {
@@ -93,7 +91,7 @@ class NotificationService : Service() {
         mediaPlayer = MediaPlayer.create(context, R.raw.ringtone)
         mediaPlayer?.start()
 
-        Log.i(TAG, "Alarm played")
+        Log.i(TAG, "Alarm ${alarm?.getHour()}:${alarm?.getMinute()} played")
     }
 
     private fun stopAlarm(context: Context) {
@@ -102,16 +100,17 @@ class NotificationService : Service() {
         }
 
         //local broadcast to viewmodel to turn off the switch
-        val turnOffIntent = Intent(TURN_OFF_SWITCH_CODE)
+        val turnOffIntent = Intent(NOTI_SERVICE_TO_MAIN)
         val turnOffBundle = Bundle()
         turnOffBundle.putSerializable(TURN_OFF_SWITCH_ALARM_CODE, alarm)
+        turnOffIntent.putExtras(turnOffBundle)
+
+        Log.i(TAG, "Alarm ${alarm?.getHour()}:${alarm?.getMinute()} stopped")
 
         LocalBroadcastManager.getInstance(context).sendBroadcast(turnOffIntent)
 
         stopSelf()
         stopForeground(true)
-
-        Log.i(TAG, "Alarm ${alarm?.getHour()}:${alarm?.getMinute()} stopped")
     }
 
     private fun pendingDeleteIntent(context: Context): PendingIntent? {
