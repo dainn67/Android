@@ -12,7 +12,6 @@ import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants
 import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.models.Data
-import java.time.LocalDateTime
 
 class MyViewModel(
     private val context: Context
@@ -38,15 +37,15 @@ class MyViewModel(
         list.add(Alarm(19, 45, "Learn Japanese", false, isOn = false))
 
         //testing alarm 1 minute later
-        val testAlarm = Alarm(
-            LocalDateTime.now().hour,
-            LocalDateTime.now().minute + 1,
-            "Testing",
-            false,
-            isOn = true
-        )
-        list.add(testAlarm)
-        alarmScheduler.schedule(testAlarm)
+//        val testAlarm = Alarm(
+//            LocalDateTime.now().hour,
+//            LocalDateTime.now().minute + 1,
+//            "Testing",
+//            false,
+//            isOn = true
+//        )
+//        list.add(testAlarm)
+//        alarmScheduler.schedule(testAlarm)
     }
 
     fun addToList(alarm: Alarm) {
