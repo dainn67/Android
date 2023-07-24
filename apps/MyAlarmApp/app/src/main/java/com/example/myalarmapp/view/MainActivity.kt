@@ -40,7 +40,8 @@ class MainActivity : AppCompatActivity() {
     private val turnoffBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val bundle = intent?.extras
-            val receivedAlarm: Alarm? = bundle?.getSerializable(TURN_OFF_SWITCH_ALARM_CODE) as Alarm?
+            val receivedAlarm: Alarm? =
+                bundle?.getSerializable(TURN_OFF_SWITCH_ALARM_CODE) as Alarm?
             receivedAlarm?.let {
                 myViewModel.turnOff(it)
             }
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             dialog.show(supportFragmentManager, "AddDialog")
         }
 
-        tvTitle.setOnClickListener{
+        tvTitle.setOnClickListener {
             myViewModel.clearAlarms()
         }
 
@@ -105,6 +106,5 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(turnoffBroadcastReceiver)
-        Log.i(TAG, "App terminated")
     }
 }

@@ -16,7 +16,6 @@ class KillReceiver: BroadcastReceiver() {
         val bundle = intent?.extras
 
         if(bundle != null) kill = bundle.getInt(KILL_CODE, 0)
-        Log.i(TAG, "KillReceiver receive: $kill")
 
         val sendBackToNotiServiceIntent = Intent(context, NotificationService::class.java)
         val sendBackBundle = Bundle()

@@ -68,7 +68,6 @@ class AlarmAdapter(
 
             myAlarm.setStatus(isChecked)
             myViewModel.getDatabase().editToggleSwitch(myAlarm, isChecked)
-//            myViewModel.editList(myAlarm, position)
         }
 
         return view

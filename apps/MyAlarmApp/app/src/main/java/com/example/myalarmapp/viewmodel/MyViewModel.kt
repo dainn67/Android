@@ -39,7 +39,6 @@ class MyViewModel(
         if (!dbList.contains(DB_NAME)) db.createDB()
 
         //load alarms
-        Log.i(TAG, "Loading...")
         list.clear()
         db.getAllAlarms(list)
 
@@ -72,8 +71,6 @@ class MyViewModel(
         //edit the alarm, cancel the old one if on and schedule the new one
         if (list[position].getStatus()) alarmScheduler.cancel(list[position])
 
-        Log.i(TAG, "${list[position]}")
-        Log.i(TAG, "$newAlarm")
         db.editAlarm(list[position], newAlarm)
 
         list[position] = newAlarm
@@ -94,8 +91,6 @@ class MyViewModel(
     }
 
     fun turnOff(alarm: Alarm) {
-        Log.i(TAG, "Turn off ${alarm.getHour()}:${alarm.getMinute()}")
-
         //this alarm is already check if repeat or not -> kill without checking
         for (refAlarm in list)
             if (refAlarm.getHour() == alarm.getHour() && refAlarm.getMinute() == alarm.getMinute())

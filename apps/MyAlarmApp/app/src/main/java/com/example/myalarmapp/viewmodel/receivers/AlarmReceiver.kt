@@ -28,11 +28,6 @@ class AlarmReceiver : BroadcastReceiver() {
         val alarm = bundle?.getSerializable(ALARM_CODE) as Alarm?
         val kill = bundle?.getInt(KILL_CODE, -1)
 
-        if (alarm != null)
-            Log.i(TAG, "Alarm receiver: ${AlarmScheduler.hashcodeAlarm(alarm)}")
-        if (kill == 1)
-            Log.i(TAG, "Alarm receiver: KILL")
-
         //intent and bundle to start notification
         val sendToNotificationIntent = Intent(context, NotificationService::class.java)
         val sendToNotificationBundle = Bundle()
@@ -54,7 +49,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
             val calendar = Calendar.getInstance()
             calendar.add(Calendar.DAY_OF_YEAR, 1)
-//            calendar.add(Calendar.SECOND, 5)
 
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
