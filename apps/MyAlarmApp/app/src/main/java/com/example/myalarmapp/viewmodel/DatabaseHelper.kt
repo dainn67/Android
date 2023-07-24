@@ -86,4 +86,21 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         db.delete(DB_NAME, null, null)
         db.close()
     }
+
+    //TODO: handle when user edit alarm or switch from AlarmAdapter
+    fun editAlarm(oldAlarm: Alarm, newAlarm: Alarm){
+        val db = this.writableDatabase
+        val updateQuery =
+            "UPDATE $DB_NAME " +
+                    "SET $KEY_HOUR = ${newAlarm.getHour()}," +
+                    "$KEY_MINUTE = ${newAlarm.getMinute()}," +
+                    "$KEY_CONTENT = ${newAlarm.getContent()}," +
+                    "$KEY_REPEAT = ${if(newAlarm.getRepeat()) 1 else 0}," +
+                    "$KEY_STATUS = ${if(newAlarm.getStatus()) 1 else 0}" +
+                    "WHERE $KEY_HOUR = ${oldAlarm.getHour()} AND $KEY_MINUTE = ${oldAlarm.getMinute()}"
+        db.execSQL(updateQuery)
+
+        Log.i(TAG, "Database updated")
+        db.close()
+    }
 }

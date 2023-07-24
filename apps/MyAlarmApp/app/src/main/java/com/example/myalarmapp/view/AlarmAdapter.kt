@@ -65,6 +65,10 @@ class AlarmAdapter(
         swOnOff.setOnCheckedChangeListener{_, isChecked ->
             if(isChecked) myViewModel.getScheduler().schedule(list[position])
             else myViewModel.getScheduler().cancel(list[position])
+
+            //TODO: Handle when switch the switch
+//            myAlarm.setStatus(isChecked)
+//            myViewModel.editList(myAlarm, position)
         }
 
         return view

@@ -27,7 +27,7 @@ class EditAlarmDialogFragment(
     private lateinit var etContent: EditText
     private lateinit var checkboxRepeat: CheckBox
     private lateinit var btnCancel: Button
-    private lateinit var btnAdd: Button
+    private lateinit var btnChange: Button
 
     private var isTimeChanged = false
     private var isContentChanged = false
@@ -50,9 +50,9 @@ class EditAlarmDialogFragment(
         etContent = view.findViewById(R.id.etContent)
         checkboxRepeat = view.findViewById(R.id.checkboxRepeat)
         btnCancel = view.findViewById(R.id.btnCancel)
-        btnAdd = view.findViewById(R.id.btnAdd)
-        btnAdd.text = "Change"
-        btnAdd.isEnabled = false
+        btnChange = view.findViewById(R.id.btnAdd)
+        btnChange.text = "Change"
+        btnChange.isEnabled = false
 
         //set timePicker to item's time
         timePicker.currentHour = myAlarm.getHour()
@@ -79,7 +79,7 @@ class EditAlarmDialogFragment(
         }
 
         //buttons to change or cancel
-        btnAdd.setOnClickListener {
+        btnChange.setOnClickListener {
             //update the new information
             myAlarm.setHour(timePicker.hour)
             myAlarm.setMinute(timePicker.minute)
@@ -97,6 +97,6 @@ class EditAlarmDialogFragment(
     }
 
     private fun checkEnableBtn(){
-        btnAdd.isEnabled = isTimeChanged || isRepeatChanged || isContentChanged
+        btnChange.isEnabled = isTimeChanged || isRepeatChanged || isContentChanged
     }
 }

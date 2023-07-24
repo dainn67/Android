@@ -27,7 +27,7 @@ class Alarm(
     fun setRepeatable(isRepeated: Boolean) {
         this.isRepeated = isRepeated
     }
-    fun setState(state: Boolean){
+    fun setStatus(state: Boolean){
         this.isOn = state
     }
 }

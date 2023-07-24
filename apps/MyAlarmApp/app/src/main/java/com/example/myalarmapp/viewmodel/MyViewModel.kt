@@ -29,8 +29,8 @@ class MyViewModel(
     }
 
     fun getScheduler() = alarmScheduler
-
     fun getLiveDataList() = liveDataAlarmList
+    fun getDatabase() = db
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun loadAlarmsData() {
@@ -77,8 +77,10 @@ class MyViewModel(
         //edit the alarm, cancel the old one if on and schedule the new one
         if (list[position].getStatus()) alarmScheduler.cancel(list[position])
 
+        //TODO: update the record in database first, red function means not update in database yet
+
         list[position] = alarm
-        list[position].setState(true)
+        list[position].setStatus(true)
 
         alarmScheduler.schedule(list[position])
 
@@ -100,7 +102,7 @@ class MyViewModel(
         //this alarm is already check if repeat or not -> kill without checking
         for (refAlarm in list)
             if (refAlarm.getHour() == alarm.getHour() && refAlarm.getMinute() == alarm.getMinute())
-                refAlarm.setState(false)
+                refAlarm.setStatus(false)
 
         //update the livedata
         liveDataAlarmList.value = list
