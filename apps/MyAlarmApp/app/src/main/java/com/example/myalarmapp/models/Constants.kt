@@ -13,7 +13,15 @@ class Constants {
         const val BROADCAST_ALARM_CODE = "ALARM_FROM_BROADCAST"
 
         const val KILL_CODE = "KILL"
-
         const val TO_KILL_CODE = "TO_KILL"
+
+        const val DB_NAME = "AlarmList"
+        const val DB_VERSION = 1
+        const val KEY_ID = "id"
+        const val KEY_HOUR = "hour"
+        const val KEY_MINUTE = "minute"
+        const val KEY_CONTENT = "content"
+        const val KEY_REPEAT = "repeat"
+        const val KEY_STATUS = "onStatus"
     }
 }

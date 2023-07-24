@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myalarmapp.models.Alarm
 import com.example.myalarmapp.models.Constants
+import com.example.myalarmapp.models.Constants.Companion.DB_NAME
 import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.models.Data
 
@@ -17,6 +18,7 @@ class MyViewModel(
     private val context: Context
 ) : ViewModel() {
     private var list = Data.getAlarmList()
+    private var db: DatabaseHelper = DatabaseHelper(context)
 
     private var liveDataAlarmList = MutableLiveData<MutableList<Alarm>>()
     private val alarmScheduler = AlarmScheduler(context)
@@ -31,25 +33,31 @@ class MyViewModel(
     fun getLiveDataList() = liveDataAlarmList
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun addSampleAlarms() {
-        list.add(Alarm(9, 30, "Breakfast", false, isOn = false))
-        list.add(Alarm(14, 0, "School", true, isOn = false))
-        list.add(Alarm(19, 45, "Learn Japanese", false, isOn = false))
+    fun loadAlarmsData() {
+        //create the DB if not exist yet
+        val dbList = context.databaseList()
+        if (!dbList.contains(DB_NAME)) db.createDB()
 
-        //testing alarm 1 minute later
-//        val testAlarm = Alarm(
-//            LocalDateTime.now().hour,
-//            LocalDateTime.now().minute + 1,
-//            "Testing",
-//            false,
-//            isOn = true
-//        )
-//        list.add(testAlarm)
-//        alarmScheduler.schedule(testAlarm)
+        //load alarms
+        db.getAllAlarms(list)
+
+        liveDataAlarmList.value = list
+    }
+
+    fun saveAlarmsData() {
+        //clear the DB before save then save
+        db.writableDatabase.delete(DB_NAME, null, null)
+
+        for (alarm: Alarm in list)
+            db.addAlarm(alarm)
+
+        list.clear()
+        db.close()
     }
 
     fun addToList(alarm: Alarm) {
         list.add(alarm)
+        db.addAlarm(alarm)
 
         //sort the list after adding new alarm
         list.sortWith(compareBy({ it.getHour() }, { it.getMinute() }))
@@ -67,7 +75,7 @@ class MyViewModel(
     @RequiresApi(Build.VERSION_CODES.O)
     fun editList(alarm: Alarm, position: Int) {
         //edit the alarm, cancel the old one if on and schedule the new one
-        if(list[position].getState()) alarmScheduler.cancel(list[position])
+        if (list[position].getStatus()) alarmScheduler.cancel(list[position])
 
         list[position] = alarm
         list[position].setState(true)
@@ -76,6 +84,13 @@ class MyViewModel(
 
         //update the livedata
         list.sortWith(compareBy({ it.getHour() }, { it.getMinute() }))
+        liveDataAlarmList.value = list
+    }
+
+    fun clearAlarms() {
+        list.clear()
+        db.clearAllAlarms()
+
         liveDataAlarmList.value = list
     }
 

@@ -13,7 +13,7 @@ class Alarm(
     fun getMinute() = minute
     fun getContent() = content
     fun getRepeat() = isRepeated
-    fun getState() = isOn
+    fun getStatus() = isOn
 
     fun setHour(hour: Int) {
         this.hour = hour

@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.ListView
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -19,6 +20,7 @@ import com.example.myalarmapp.models.Constants.Companion.NOTI_SERVICE_TO_MAIN
 import com.example.myalarmapp.models.Constants.Companion.TAG
 import com.example.myalarmapp.models.Constants.Companion.TURN_OFF_SWITCH_ALARM_CODE
 import com.example.myalarmapp.view.diaglogFragments.AddAlarmDialogFragment
+import com.example.myalarmapp.viewmodel.DatabaseHelper
 import com.example.myalarmapp.viewmodel.MyViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     //views
     private lateinit var lvAlarm: ListView
     private lateinit var btnAdd: FloatingActionButton
+    private lateinit var tvTitle: TextView
 
     //ViewModel
     private lateinit var myViewModel: MyViewModel
@@ -49,13 +52,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Handler().postDelayed({ Log.i(TAG, "ABC")}, 3000)
+        //load data
+        myViewModel = MyViewModel(this)
+        myViewModel.createNotificationChannel()
+        myViewModel.loadAlarmsData()
 
         //register broadcast to receive the turn off signal
         LocalBroadcastManager.getInstance(this).registerReceiver(
             turnoffBroadcastReceiver, IntentFilter(NOTI_SERVICE_TO_MAIN)
         )
 
+        tvTitle = findViewById(R.id.tvMainTitle)
         btnAdd = findViewById(R.id.btnAdd)
         lvAlarm = findViewById(R.id.lvAlarm)
 
@@ -65,10 +72,9 @@ class MainActivity : AppCompatActivity() {
             dialog.show(supportFragmentManager, "AddDialog")
         }
 
-        //add sample data
-        myViewModel = MyViewModel(this)
-        myViewModel.createNotificationChannel()
-        myViewModel.addSampleAlarms()
+        tvTitle.setOnClickListener{
+            myViewModel.clearAlarms()
+        }
 
         //display to screen and listen to changes
         observeAlarmList()
@@ -98,6 +104,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        myViewModel.saveAlarmsData()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(turnoffBroadcastReceiver)
     }
 }

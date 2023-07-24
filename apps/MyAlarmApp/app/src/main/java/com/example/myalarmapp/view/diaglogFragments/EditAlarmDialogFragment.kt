@@ -2,6 +2,7 @@ package com.example.myalarmapp.view.diaglogFragments
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,6 +11,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TimePicker
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
@@ -31,6 +33,7 @@ class EditAlarmDialogFragment(
     private var isContentChanged = false
     private var isRepeatChanged = false
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         //debug
         Log.i(TAG, "${myAlarm.getHour()}:${myAlarm.getMinute()} - ${myAlarm.getContent()} - ${myAlarm.getRepeat()}")

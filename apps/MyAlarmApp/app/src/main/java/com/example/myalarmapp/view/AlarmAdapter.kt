@@ -49,7 +49,7 @@ class AlarmAdapter(
         tvTime.text = "$hourFormat:$minuteFormat"
         tvContent.text = myAlarm.getContent()
         tvRepeated.text = if(myAlarm.getRepeat()) "Everyday" else ""
-        swOnOff.isChecked = myAlarm.getState()
+        swOnOff.isChecked = myAlarm.getStatus()
 
         llItem.setOnClickListener{
             val dialog = EditAlarmDialogFragment(myAlarm, position, myViewModel)
