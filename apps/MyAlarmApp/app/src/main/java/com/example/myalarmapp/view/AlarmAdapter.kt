@@ -66,8 +66,8 @@ class AlarmAdapter(
             if(isChecked) myViewModel.getScheduler().schedule(list[position])
             else myViewModel.getScheduler().cancel(list[position])
 
-            //TODO: Handle when switch the switch
-//            myAlarm.setStatus(isChecked)
+            myAlarm.setStatus(isChecked)
+            myViewModel.getDatabase().editToggleSwitch(myAlarm, isChecked)
 //            myViewModel.editList(myAlarm, position)
         }
 

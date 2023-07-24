@@ -39,20 +39,12 @@ class MyViewModel(
         if (!dbList.contains(DB_NAME)) db.createDB()
 
         //load alarms
+        Log.i(TAG, "Loading...")
+        list.clear()
         db.getAllAlarms(list)
 
+        list.sortWith(compareBy({ it.getHour() }, { it.getMinute() }))
         liveDataAlarmList.value = list
-    }
-
-    fun saveAlarmsData() {
-        //clear the DB before save then save
-        db.writableDatabase.delete(DB_NAME, null, null)
-
-        for (alarm: Alarm in list)
-            db.addAlarm(alarm)
-
-        list.clear()
-        db.close()
     }
 
     fun addToList(alarm: Alarm) {
@@ -68,18 +60,23 @@ class MyViewModel(
 
     fun removeFromList(position: Int) {
         alarmScheduler.cancel(list[position])
+
+        db.removeAlarm(list[position])
         list.removeAt(position)
+
         liveDataAlarmList.value = list
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun editList(alarm: Alarm, position: Int) {
+    fun editList(newAlarm: Alarm, position: Int) {
         //edit the alarm, cancel the old one if on and schedule the new one
         if (list[position].getStatus()) alarmScheduler.cancel(list[position])
 
-        //TODO: update the record in database first, red function means not update in database yet
+        Log.i(TAG, "${list[position]}")
+        Log.i(TAG, "$newAlarm")
+        db.editAlarm(list[position], newAlarm)
 
-        list[position] = alarm
+        list[position] = newAlarm
         list[position].setStatus(true)
 
         alarmScheduler.schedule(list[position])

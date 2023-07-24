@@ -80,14 +80,12 @@ class EditAlarmDialogFragment(
 
         //buttons to change or cancel
         btnChange.setOnClickListener {
-            //update the new information
-            myAlarm.setHour(timePicker.hour)
-            myAlarm.setMinute(timePicker.minute)
-            myAlarm.setRepeatable(checkboxRepeat.isChecked)
-            if(etContent.text.isNotEmpty() && etContent.text.toString() != myAlarm.getContent()) myAlarm.setContent(etContent.text.toString())
+            //create new alarm
+            val newContent = if(etContent.text.isNotEmpty() && etContent.text.toString() != myAlarm.getContent()) etContent.text.toString() else myAlarm.getContent()
+            val newAlarm = Alarm(timePicker.hour, timePicker.minute, newContent, checkboxRepeat.isChecked, true)
 
-            //update the alarm and its live data
-            myViewModel.editList(myAlarm, position)
+            Log.i(TAG, myAlarm.toString())
+            myViewModel.editList(newAlarm, position)
 
             this.dismiss()
         }

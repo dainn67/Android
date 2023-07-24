@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        myViewModel.saveAlarmsData()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(turnoffBroadcastReceiver)
+        Log.i(TAG, "App terminated")
     }
 }

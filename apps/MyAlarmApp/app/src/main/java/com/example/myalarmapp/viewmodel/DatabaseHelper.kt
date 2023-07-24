@@ -87,20 +87,34 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         db.close()
     }
 
-    //TODO: handle when user edit alarm or switch from AlarmAdapter
     fun editAlarm(oldAlarm: Alarm, newAlarm: Alarm){
         val db = this.writableDatabase
         val updateQuery =
             "UPDATE $DB_NAME " +
-                    "SET $KEY_HOUR = ${newAlarm.getHour()}," +
-                    "$KEY_MINUTE = ${newAlarm.getMinute()}," +
-                    "$KEY_CONTENT = ${newAlarm.getContent()}," +
-                    "$KEY_REPEAT = ${if(newAlarm.getRepeat()) 1 else 0}," +
-                    "$KEY_STATUS = ${if(newAlarm.getStatus()) 1 else 0}" +
+                    "SET $KEY_HOUR = ${newAlarm.getHour()}, " +
+                    "$KEY_MINUTE = ${newAlarm.getMinute()}, " +
+                    "$KEY_CONTENT = ${newAlarm.getContent().ifEmpty { "\"\"" }}, " +
+                    "$KEY_REPEAT = ${if(newAlarm.getRepeat()) 1 else 0}, " +
+                    "$KEY_STATUS = 1 " +
                     "WHERE $KEY_HOUR = ${oldAlarm.getHour()} AND $KEY_MINUTE = ${oldAlarm.getMinute()}"
         db.execSQL(updateQuery)
+        db.close()
+    }
 
-        Log.i(TAG, "Database updated")
+    fun editToggleSwitch(currentAlarm: Alarm, status: Boolean){
+        val db = this.writableDatabase
+        val updateQuery =
+            "UPDATE $DB_NAME " +
+                    "SET $KEY_STATUS = $status " +
+                    "WHERE $KEY_HOUR = ${currentAlarm.getHour()} AND $KEY_MINUTE = ${currentAlarm.getMinute()}"
+        db.execSQL(updateQuery)
+        db.close()
+    }
+
+    fun removeAlarm(alarm: Alarm){
+        val db = this.writableDatabase
+        db.delete(DB_NAME, "$KEY_HOUR = ${alarm.getHour()} AND $KEY_MINUTE = ${alarm.getMinute()}", null)
+
         db.close()
     }
 }
