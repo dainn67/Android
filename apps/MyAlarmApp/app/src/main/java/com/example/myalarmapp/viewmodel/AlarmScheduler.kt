@@ -53,6 +53,19 @@ class AlarmScheduler(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+
+//        val dayInMillis: Long = 24L * 60 * 60 * 1000
+//        alarmManager.setRepeating(
+//            AlarmManager.RTC_WAKEUP,
+//            convertToMillis(alarm.getHour(), alarm.getMinute()),
+//            dayInMillis,
+//            PendingIntent.getBroadcast(
+//                context,
+//                hashcodeAlarm(alarm),
+//                intent,
+//                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//            )
+//        )
     }
 
     override fun cancel(alarm: Alarm) {
@@ -73,5 +86,7 @@ class AlarmScheduler(
 
         val stopNotiIntent = Intent(context, NotificationService::class.java)
         context.stopService(stopNotiIntent)
+
+        Log.i(TAG, "Cancel $alarm")
     }
 }

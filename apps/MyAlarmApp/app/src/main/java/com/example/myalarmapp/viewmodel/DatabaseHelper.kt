@@ -58,7 +58,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
     }
 
     @SuppressLint("Range")
-    fun getAllAlarms(list: MutableList<Alarm>) {
+    fun getAllAlarms(list: MutableList<Alarm>, myViewModel: MyViewModel) {
         val db = this.readableDatabase
         val selectAllQuery = "SELECT * FROM $DB_NAME"
 
@@ -74,7 +74,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
                     val status = cursor.getInt(cursor.getColumnIndex(KEY_STATUS))
 
                     val alarm = Alarm(hour, minute, content, repeat == 1, status == 1)
-                    list.add(alarm)
+                    myViewModel.addToList(alarm)
                 } while (cursor.moveToNext())
 
         cursor?.close()

@@ -50,8 +50,9 @@ class NotificationService : Service() {
         }
 
         //check received intent to stop alarm
-        if (kill != -1)
-            stopAlarm(this)
+        if (kill != -1){
+            Log.i(TAG, "Stopping alarm")
+            stopAlarm(this)}
         else {
             playAlarm(this)
 

@@ -40,9 +40,10 @@ class MyViewModel(
 
         //load alarms
         list.clear()
-        db.getAllAlarms(list)
+        db.getAllAlarms(list, this)
 
         list.sortWith(compareBy({ it.getHour() }, { it.getMinute() }))
+
         liveDataAlarmList.value = list
     }
 

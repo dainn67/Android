@@ -1,7 +1,9 @@
 package com.example.myalarmapp.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +15,11 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import com.example.myalarmapp.R
 import com.example.myalarmapp.models.Alarm
+import com.example.myalarmapp.models.Constants
 import com.example.myalarmapp.view.diaglogFragments.DeleteAlarmDialogFragment
 import com.example.myalarmapp.view.diaglogFragments.EditAlarmDialogFragment
 import com.example.myalarmapp.viewmodel.MyViewModel
+import com.example.myalarmapp.viewmodel.receivers.AlarmReceiver
 
 class AlarmAdapter(
     private val context: Context,
@@ -65,6 +69,14 @@ class AlarmAdapter(
         swOnOff.setOnCheckedChangeListener{_, isChecked ->
             if(isChecked) myViewModel.getScheduler().schedule(list[position])
             else myViewModel.getScheduler().cancel(list[position])
+
+            val turnOffIntent = Intent(context, AlarmReceiver::class.java)
+            val bundle = Bundle()
+            bundle.putInt(Constants.KILL_CODE, Constants.ACTION_KILL)
+            bundle.putSerializable(Constants.ALARM_CODE, list[position])
+            turnOffIntent.putExtras(bundle)
+
+            context.startService(turnOffIntent)
 
             myAlarm.setStatus(isChecked)
             myViewModel.getDatabase().editToggleSwitch(myAlarm, isChecked)
