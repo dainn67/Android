@@ -87,21 +87,21 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         db.close()
     }
 
-    fun editAlarm(oldAlarm: Alarm, newAlarm: Alarm){
+    fun editAlarm(oldAlarm: Alarm, newAlarm: Alarm) {
         val db = this.writableDatabase
         val updateQuery =
             "UPDATE $DB_NAME " +
                     "SET $KEY_HOUR = ${newAlarm.getHour()}, " +
                     "$KEY_MINUTE = ${newAlarm.getMinute()}, " +
                     "$KEY_CONTENT = ${newAlarm.getContent().ifEmpty { "\"\"" }}, " +
-                    "$KEY_REPEAT = ${if(newAlarm.getRepeat()) 1 else 0}, " +
+                    "$KEY_REPEAT = ${if (newAlarm.getRepeat()) 1 else 0}, " +
                     "$KEY_STATUS = 1 " +
                     "WHERE $KEY_HOUR = ${oldAlarm.getHour()} AND $KEY_MINUTE = ${oldAlarm.getMinute()}"
         db.execSQL(updateQuery)
         db.close()
     }
 
-    fun editToggleSwitch(currentAlarm: Alarm, status: Boolean){
+    fun editToggleSwitch(currentAlarm: Alarm, status: Boolean) {
         val db = this.writableDatabase
         val updateQuery =
             "UPDATE $DB_NAME " +
@@ -111,9 +111,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         db.close()
     }
 
-    fun removeAlarm(alarm: Alarm){
+    fun removeAlarm(alarm: Alarm) {
         val db = this.writableDatabase
-        db.delete(DB_NAME, "$KEY_HOUR = ${alarm.getHour()} AND $KEY_MINUTE = ${alarm.getMinute()}", null)
+        db.delete(
+            DB_NAME,
+            "$KEY_HOUR = ${alarm.getHour()} AND $KEY_MINUTE = ${alarm.getMinute()}",
+            null
+        )
 
         db.close()
     }
