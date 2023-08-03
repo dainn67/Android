@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainActivity">
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -26,6 +26,7 @@
         tools:layout_editor_absoluteX="10dp" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recView"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
