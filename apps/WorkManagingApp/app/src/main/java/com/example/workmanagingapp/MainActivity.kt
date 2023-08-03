@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
-import com.example.workmanagingapp.view.MyAdapter
+import com.example.workmanagingapp.view.works.MyAdapter
 import com.example.workmanagingapp.viewmodel.MyViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var tvTitle: TextView
 
+    private lateinit var recyclerViewDays: RecyclerView
     private lateinit var recyclerViewCurrent: RecyclerView
     private lateinit var recyclerViewUpcoming: RecyclerView
     private lateinit var myViewModel: MyViewModel
@@ -32,6 +33,10 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "add...")
             myViewModel.addSampleWorks()
         }
+
+        recyclerViewDays = findViewById(R.id.recViewDays)
+        recyclerViewDays.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerViewDays.adapter = MyAdapter(this, myViewModel.getDayList())
 
         recyclerViewCurrent = findViewById(R.id.recViewCurrent)
         recyclerViewCurrent.layoutManager = LinearLayoutManager(this)

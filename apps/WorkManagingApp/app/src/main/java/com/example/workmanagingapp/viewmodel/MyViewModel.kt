@@ -11,10 +11,12 @@ class MyViewModel: ViewModel() {
 
     //get the list and use livedata to update
     private var workList = data.getWorkList()
+    private val dayList = data.getDayList()
     private var workListLiveData = MutableLiveData<MutableList<Work>>()
 
     //getters
     fun getWorkList() = workList
+    fun getDayList() = dayList
     fun setWorkList(list: MutableList<Work>) {workList = list}
     fun getWorkListLiveData() = workListLiveData
 
@@ -28,6 +30,8 @@ class MyViewModel: ViewModel() {
         workList.add(Work("Go home 1", Date(), "kaerimashou 1"))
         workList.add(Work("Go home 2", Date(), "kaerimashou 2"))
         workList.add(Work("Go home 3", Date(), "kaerimashou 3"))
+        workList.add(Work("Go home 4", Date(), "kaerimashou 4"))
+        workList.add(Work("Go home 5", Date(), "kaerimashou 5"))
 
         workListLiveData.value = workList
     }

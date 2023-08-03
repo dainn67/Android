@@ -1,4 +1,4 @@
-package com.example.workmanagingapp.view
+package com.example.workmanagingapp.view.works
 
 import android.content.Context
 import android.util.Log
