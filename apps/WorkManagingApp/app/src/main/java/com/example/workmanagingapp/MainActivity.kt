@@ -11,12 +11,12 @@ import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.view.MyAdapter
 import com.example.workmanagingapp.viewmodel.MyViewModel
-import com.google.android.material.tabs.TabLayout.TabGravity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var tvTitle: TextView
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerViewCurrent: RecyclerView
+    private lateinit var recyclerViewUpcoming: RecyclerView
     private lateinit var myViewModel: MyViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +33,13 @@ class MainActivity : AppCompatActivity() {
             myViewModel.addSampleWorks()
         }
 
-        recyclerView = findViewById(R.id.recView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = MyAdapter(this, myViewModel.getWorkList())
+        recyclerViewCurrent = findViewById(R.id.recViewCurrent)
+        recyclerViewCurrent.layoutManager = LinearLayoutManager(this)
+        recyclerViewCurrent.adapter = MyAdapter(this, myViewModel.getWorkList())
+
+        recyclerViewUpcoming = findViewById(R.id.recViewUpcoming)
+        recyclerViewUpcoming.layoutManager = LinearLayoutManager(this)
+        recyclerViewUpcoming.adapter = MyAdapter(this, myViewModel.getWorkList())
 
         observeList()
     }
@@ -44,12 +48,14 @@ class MainActivity : AppCompatActivity() {
         val workListLiveData = myViewModel.getWorkListLiveData()
 
         val observer = Observer<MutableList<Work>>{newList ->
+            //update the list
             myViewModel.setWorkList(newList)
 
             //reset the adapter
-            recyclerView.adapter = MyAdapter(this, myViewModel.getWorkList())
+            recyclerViewCurrent.adapter = MyAdapter(this, myViewModel.getWorkList())
         }
 
+        //observer will observe the list that is inside the value of its Livedata
         workListLiveData.observe(this, observer)
     }
 }
