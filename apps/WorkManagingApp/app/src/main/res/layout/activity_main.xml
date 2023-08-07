@@ -75,21 +75,20 @@
                     android:id="@+id/tvCurrent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Today's works"
+                    android:text="TODAY'S WORK"
                     app:layout_constraintStart_toStartOf="parent"
                     android:textStyle="bold"
                     android:textSize="20dp"
                     android:layout_margin="10dp"
                     android:layout_weight="1"/>
 
-                <TextView
+                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="View all"
-                    android:layout_weight="0.1"
-                    android:textSize="16dp"
-                    android:textColor="@color/blue"
-                    android:layout_gravity="center"/>
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_gravity="center"
+                    android:textSize="16dp"/>
 
             </LinearLayout>
 
@@ -117,21 +116,20 @@
                     android:id="@+id/tvUpcoming"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Upcoming works"
+                    android:text="UPCOMING WORK"
                     app:layout_constraintStart_toStartOf="parent"
                     android:textStyle="bold"
                     android:textSize="20dp"
                     android:layout_margin="10dp"
                     android:layout_weight="1"/>
 
-                <TextView
+                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="View all"
-                    android:layout_weight="0.1"
-                    android:textSize="16dp"
-                    android:textColor="@color/blue"
-                    android:layout_gravity="center"/>
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_gravity="center"
+                    android:textSize="16dp"/>
 
             </LinearLayout>
 
