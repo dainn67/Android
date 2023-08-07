@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
+import com.example.workmanagingapp.view.days.MyDayAdapter
 import com.example.workmanagingapp.view.works.MyAdapter
 import com.example.workmanagingapp.viewmodel.MyViewModel
 
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         recyclerViewDays = findViewById(R.id.recViewDays)
         recyclerViewDays.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewDays.adapter = MyAdapter(this, myViewModel.getDayList())
+        recyclerViewDays.adapter = MyDayAdapter(this, myViewModel.getDayList())
 
         recyclerViewCurrent = findViewById(R.id.recViewCurrent)
         recyclerViewCurrent.layoutManager = LinearLayoutManager(this)

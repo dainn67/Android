@@ -7,6 +7,15 @@
     android:gravity="center">
 
     <TextView
+        android:id="@+id/tvDot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\u2022"
+        android:textStyle="bold"
+        android:textColor="@color/red"
+        android:textSize="20dp"/>
+
+    <TextView
         android:id="@+id/tvDayInWeek"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

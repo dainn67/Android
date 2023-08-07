@@ -3,6 +3,7 @@ package com.example.workmanagingapp.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.workmanagingapp.model.Data
+import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
 import java.util.Date
 
