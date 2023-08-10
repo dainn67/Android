@@ -1,17 +1,19 @@
 package com.example.workmanagingapp
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.view.days.MyDayAdapter
-import com.example.workmanagingapp.view.works.MyAdapter
+import com.example.workmanagingapp.view.todayWorks.MyTodayAdapter
+import com.example.workmanagingapp.view.upcomingWorks.MyUpcomingAdapter
 import com.example.workmanagingapp.viewmodel.MyViewModel
+import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
     private lateinit var tvTitle: TextView
@@ -21,6 +23,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerViewUpcoming: RecyclerView
     private lateinit var myViewModel: MyViewModel
 
+    private lateinit var tvTodayWork: TextView
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -31,9 +36,11 @@ class MainActivity : AppCompatActivity() {
 
         tvTitle = findViewById(R.id.tvTitle)
         tvTitle.setOnClickListener{
-            Log.i(TAG, "add...")
             myViewModel.addSampleWorks()
         }
+
+        tvTodayWork = findViewById(R.id.tvCurrent)
+        tvTodayWork.text = "TODAY'S WORK - ${LocalDate.now().dayOfMonth}/${LocalDate.now().month.value}"
 
         recyclerViewDays = findViewById(R.id.recViewDays)
         recyclerViewDays.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -41,11 +48,11 @@ class MainActivity : AppCompatActivity() {
 
         recyclerViewCurrent = findViewById(R.id.recViewCurrent)
         recyclerViewCurrent.layoutManager = LinearLayoutManager(this)
-        recyclerViewCurrent.adapter = MyAdapter(this, myViewModel.getWorkList())
+        recyclerViewCurrent.adapter = MyTodayAdapter(this, myViewModel.getWorkList())
 
         recyclerViewUpcoming = findViewById(R.id.recViewUpcoming)
         recyclerViewUpcoming.layoutManager = LinearLayoutManager(this)
-        recyclerViewUpcoming.adapter = MyAdapter(this, myViewModel.getWorkList())
+        recyclerViewUpcoming.adapter = MyUpcomingAdapter(this, myViewModel.getWorkList())
 
         observeList()
     }
@@ -58,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             myViewModel.setWorkList(newList)
 
             //reset the adapter
-            recyclerViewCurrent.adapter = MyAdapter(this, myViewModel.getWorkList())
+            recyclerViewCurrent.adapter = MyTodayAdapter(this, myViewModel.getWorkList())
         }
 
         //observer will observe the list that is inside the value of its Livedata
