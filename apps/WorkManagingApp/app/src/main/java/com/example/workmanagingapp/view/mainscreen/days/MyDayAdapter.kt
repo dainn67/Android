@@ -1,4 +1,4 @@
-package com.example.workmanagingapp.view.days
+package com.example.workmanagingapp.view.mainscreen.days
 
 import android.content.Context
 import android.os.Build

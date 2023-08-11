@@ -1,4 +1,4 @@
-package com.example.workmanagingapp.view.todayWorks
+package com.example.workmanagingapp.view.mainscreen.upcomingWorks
 
 import android.view.View
 import android.widget.CheckBox
@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.R
 import com.example.workmanagingapp.model.Work
 
-class MyTodayViewHolder(
-    itemView: View,
-) : RecyclerView.ViewHolder(itemView) {
+class MyUpcomingViewHolder(
+    itemView: View
+): RecyclerView.ViewHolder(itemView) {
     private val tvTitle: TextView
     private val tvTime: TextView
     private val cbCheckDone: CheckBox
@@ -24,8 +24,11 @@ class MyTodayViewHolder(
         val displayHour = if(work.getTime().hours < 10) "0${work.getTime().hours}" else work.getTime().hours
         val displayMinute = if(work.getTime().minutes < 10) "0${work.getTime().minutes}" else work.getTime().minutes
 
+        val day = work.getTime().date
+        val month = work.getTime().month + 1    //0 based
+
         tvTitle.text = work.getTitle()
-        tvTime.text = "$displayHour:$displayMinute"
+        tvTime.text = "$day/$month - $displayHour:$displayMinute"
         cbCheckDone.isChecked = work.getStatus()
     }
 }

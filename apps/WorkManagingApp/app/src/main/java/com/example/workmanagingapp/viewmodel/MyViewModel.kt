@@ -1,12 +1,14 @@
 package com.example.workmanagingapp.viewmodel
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.workmanagingapp.model.Data
-import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
 import java.util.Date
 
+@RequiresApi(Build.VERSION_CODES.O)
 class MyViewModel: ViewModel() {
     private val data = Data()
 

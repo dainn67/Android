@@ -1,4 +1,4 @@
-package com.example.workmanagingapp.view.todayWorks
+package com.example.workmanagingapp.view.mainscreen.todayWorks
 
 import android.content.Context
 import android.view.LayoutInflater
