@@ -11,6 +11,7 @@ class AddScreen : AppCompatActivity() {
     private lateinit var etName: EditText
     private lateinit var etContent: EditText
     private lateinit var btnChooseDate: Button
+    private lateinit var btnChooseTime: Button
     private lateinit var btnAdd: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +23,19 @@ class AddScreen : AppCompatActivity() {
 
         etName = findViewById(R.id.etName)
         etContent = findViewById(R.id.etContent)
+
         btnChooseDate = findViewById(R.id.btnChooseDate)
+        btnChooseDate.setOnClickListener{
+            val dateDialog = DialogChooseDate()
+            dateDialog.show(supportFragmentManager, "dateDialog")
+        }
+
+        btnChooseTime = findViewById(R.id.btnChooseTime)
+        btnChooseTime.setOnClickListener{
+            val timeDialog = DialogChooseTime()
+            timeDialog.show(supportFragmentManager, "timeDialog")
+        }
+
         btnAdd = findViewById(R.id.btnConfirmAdd)
     }
 }

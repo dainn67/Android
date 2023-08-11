@@ -73,6 +73,14 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/dropDownToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\u25B2"
+                    android:layout_margin="5dp"
+                    android:textSize="18dp"/>
+
+                <TextView
                     android:id="@+id/tvCurrent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -84,6 +92,7 @@
                     android:layout_weight="1"/>
 
                 <Button
+                    android:id="@+id/btnViewAllToday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="View all"
@@ -114,6 +123,14 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/dropDownUpcoming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="\u25B2"
+                    android:textSize="18dp"/>
+
+                <TextView
                     android:id="@+id/tvUpcoming"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -125,6 +142,7 @@
                     android:layout_weight="1"/>
 
                 <Button
+                    android:id="@+id/btnViewAllUpcoming"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="View all"
@@ -137,7 +155,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recViewUpcoming"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="500dp"
                 android:layout_margin="10dp"
                 android:orientation="vertical"/>
 
