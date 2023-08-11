@@ -8,8 +8,10 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.R
 import com.example.workmanagingapp.model.Day
+import com.example.workmanagingapp.view.mainscreen.OnItemClickListener
 
 class MyDayAdapter(
+    private val listener: OnItemClickListener,
     private val context: Context,
     private val list: MutableList<Day>
 ): RecyclerView.Adapter<MyDayViewHolder>() {
@@ -20,6 +22,10 @@ class MyDayAdapter(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MyDayViewHolder, position: Int) {
         holder.bind(list[position])
+
+        holder.itemView.setOnClickListener{
+            listener.onItemClick(position)
+        }
     }
 
     override fun getItemCount(): Int {

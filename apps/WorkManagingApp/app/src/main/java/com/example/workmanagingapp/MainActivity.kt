@@ -16,24 +16,23 @@ import com.example.workmanagingapp.model.Constants
 import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.view.addscreen.AddScreen
-import com.example.workmanagingapp.view.addscreen.DialogChooseDate
 import com.example.workmanagingapp.view.mainscreen.days.MyDayAdapter
-import com.example.workmanagingapp.view.mainscreen.todayWorks.DialogViewAll
+import com.example.workmanagingapp.view.mainscreen.DialogViewAll
+import com.example.workmanagingapp.view.mainscreen.OnItemClickListener
 import com.example.workmanagingapp.view.mainscreen.todayWorks.MyTodayAdapter
 import com.example.workmanagingapp.view.mainscreen.upcomingWorks.MyUpcomingAdapter
 import com.example.workmanagingapp.viewmodel.MyViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.tabs.TabLayout.TabGravity
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var tvTitle: TextView
 
     private lateinit var tvTodayWork: TextView
 
     private lateinit var btnAdd: FloatingActionButton
-    private lateinit var btnViewAllToday: Button
-    private lateinit var btnViewAllUpcoming: Button
     private lateinit var dropdownToday: TextView
     private lateinit var dropdownUpcoming: TextView
 
@@ -69,12 +68,6 @@ class MainActivity : AppCompatActivity() {
         tvTodayWork.text =
             "TODAY'S WORK - ${LocalDate.now().dayOfMonth}/${LocalDate.now().month.value}"
 
-        //view all buttons
-        btnViewAllToday = findViewById(R.id.btnViewAllToday)
-        btnViewAllUpcoming = findViewById(R.id.btnViewAllUpcoming)
-        setViewAllButtons(btnViewAllToday, Constants.Companion.ViewAllType.TODAY)
-        setViewAllButtons(btnViewAllUpcoming, Constants.Companion.ViewAllType.UPCOMING)
-
         //set recyclerViews
         setRecyclerViews()
 
@@ -84,22 +77,11 @@ class MainActivity : AppCompatActivity() {
         observeList()
     }
 
-    private fun setViewAllButtons(btn: Button, type: Constants.Companion.ViewAllType) {
-        val title =
-            if (type == Constants.Companion.ViewAllType.TODAY) "TODAY'S WORK - ${LocalDate.now().dayOfMonth}/${LocalDate.now().month.value}"
-            else "UPCOMING'S WORK"
-        btn.setOnClickListener {
-            //TODO: Need to pass the corresponding work also
-            val dialog = DialogViewAll(title)
-            dialog.show(supportFragmentManager, "viewAllDialog")
-        }
-    }
-
     private fun setRecyclerViews() {
         recyclerViewDays = findViewById(R.id.recViewDays)
         recyclerViewDays.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewDays.adapter = MyDayAdapter(this, myViewModel.getDayList())
+        recyclerViewDays.adapter = MyDayAdapter(this,this, myViewModel.getDayList())
 
         recyclerViewCurrent = findViewById(R.id.recViewCurrent)
         recyclerViewCurrent.layoutManager = LinearLayoutManager(this)
@@ -146,6 +128,10 @@ class MainActivity : AppCompatActivity() {
 
         //observer will observe the list that is inside the value of its Livedata
         workListLiveData.observe(this, observer)
+    }
+
+    override fun onItemClick(position: Int) {
+        Log.i(TAG, "Pressed position $position")
     }
 
 }

@@ -91,14 +91,14 @@
                     android:layout_margin="10dp"
                     android:layout_weight="1"/>
 
-                <Button
-                    android:id="@+id/btnViewAllToday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View all"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_gravity="center"
-                    android:textSize="16dp"/>
+<!--                <Button-->
+<!--                    android:id="@+id/btnViewAllToday"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="View all"-->
+<!--                    style="?android:attr/buttonBarButtonStyle"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:textSize="16dp"/>-->
 
             </LinearLayout>
 
@@ -141,14 +141,14 @@
                     android:layout_margin="10dp"
                     android:layout_weight="1"/>
 
-                <Button
-                    android:id="@+id/btnViewAllUpcoming"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="View all"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_gravity="center"
-                    android:textSize="16dp"/>
+<!--                <Button-->
+<!--                    android:id="@+id/btnViewAllUpcoming"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="View all"-->
+<!--                    style="?android:attr/buttonBarButtonStyle"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:textSize="16dp"/>-->
 
             </LinearLayout>
 

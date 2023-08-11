@@ -1,4 +1,4 @@
-package com.example.workmanagingapp.view.mainscreen.todayWorks
+package com.example.workmanagingapp.view.mainscreen
 
 import android.app.AlertDialog
 import android.app.Dialog
