@@ -1,11 +1,14 @@
 package com.example.workmanagingapp.view.mainscreen.todayWorks
 
+import android.os.Build
 import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.R
 import com.example.workmanagingapp.model.Work
+import com.example.workmanagingapp.viewmodel.MyViewModel.Companion.displayTime
 
 class MyTodayViewHolder(
     itemView: View,
@@ -20,12 +23,10 @@ class MyTodayViewHolder(
         cbCheckDone = itemView.findViewById(R.id.cbCheckDone)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun bind(work: Work){
-        val displayHour = if(work.getTime().hours < 10) "0${work.getTime().hours}" else work.getTime().hours
-        val displayMinute = if(work.getTime().minutes < 10) "0${work.getTime().minutes}" else work.getTime().minutes
-
         tvTitle.text = work.getTitle()
-        tvTime.text = "$displayHour:$displayMinute"
+        tvTime.text = displayTime(work.getTime())
         cbCheckDone.isChecked = work.getStatus()
     }
 }

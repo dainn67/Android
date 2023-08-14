@@ -24,7 +24,7 @@ class MyDayAdapter(
         holder.bind(list[position])
 
         holder.itemView.setOnClickListener{
-            listener.onItemClick(position)
+            listener.onItemDayClick(position)
         }
     }
 

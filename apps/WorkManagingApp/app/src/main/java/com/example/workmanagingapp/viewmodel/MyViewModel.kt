@@ -29,6 +29,15 @@ class MyViewModel: ViewModel() {
         workListLiveData.value = workList
     }
 
+    companion object{
+        fun displayTime(date: Date): String{
+            val displayHour = if(date.hours < 10) "0${date.hours}" else date.hours
+            val displayMinute = if(date.minutes < 10) " 0${date.minutes}" else date.minutes
+
+            return  "$displayHour:$displayMinute"
+        }
+    }
+
     fun addSampleWorks(){
         workList.add(Work("Go home 1", Date(), "kaerimashou 1"))
         workList.add(Work("Go home 2", Date(), "kaerimashou 2"))

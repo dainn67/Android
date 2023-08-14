@@ -13,4 +13,8 @@ class Work(
     fun getTime() = time
     fun getContent() = content
     fun getStatus() = isDone
+
+    override fun toString(): String {
+        return "$title: ${time.hours}:${time.minutes} - $content - $isDone"
+    }
 }

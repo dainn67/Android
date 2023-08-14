@@ -1,13 +1,18 @@
 package com.example.workmanagingapp.view.mainscreen.todayWorks
 
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.R
 import com.example.workmanagingapp.model.Work
+import com.example.workmanagingapp.view.mainscreen.OnItemClickListener
 
 class MyTodayAdapter(
+    private val listener: OnItemClickListener,
     private val context: Context,
     private val list: MutableList<Work>
 ) : RecyclerView.Adapter<MyTodayViewHolder>() {
@@ -17,8 +22,16 @@ class MyTodayAdapter(
         return MyTodayViewHolder(itemView)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MyTodayViewHolder, position: Int) {
         holder.bind(list[position])
+        holder.itemView.setOnClickListener{
+            listener.onItemTodayClick(position)
+        }
+        holder.itemView.setOnLongClickListener {
+            listener.onItemLongClick(position)
+            true
+        }
     }
 
     override fun getItemCount(): Int {

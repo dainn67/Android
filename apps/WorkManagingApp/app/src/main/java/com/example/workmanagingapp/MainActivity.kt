@@ -6,24 +6,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.workmanagingapp.model.Constants
 import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.view.addscreen.AddScreen
+import com.example.workmanagingapp.view.mainscreen.DialogViewDetail
 import com.example.workmanagingapp.view.mainscreen.days.MyDayAdapter
-import com.example.workmanagingapp.view.mainscreen.DialogViewAll
 import com.example.workmanagingapp.view.mainscreen.OnItemClickListener
 import com.example.workmanagingapp.view.mainscreen.todayWorks.MyTodayAdapter
 import com.example.workmanagingapp.view.mainscreen.upcomingWorks.MyUpcomingAdapter
 import com.example.workmanagingapp.viewmodel.MyViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.tabs.TabLayout.TabGravity
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -85,11 +82,11 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         recyclerViewCurrent = findViewById(R.id.recViewCurrent)
         recyclerViewCurrent.layoutManager = LinearLayoutManager(this)
-        recyclerViewCurrent.adapter = MyTodayAdapter(this, myViewModel.getWorkList())
+        recyclerViewCurrent.adapter = MyTodayAdapter(this, this, myViewModel.getWorkList())
 
         recyclerViewUpcoming = findViewById(R.id.recViewUpcoming)
         recyclerViewUpcoming.layoutManager = LinearLayoutManager(this)
-        recyclerViewUpcoming.adapter = MyUpcomingAdapter(this, myViewModel.getWorkList())
+        recyclerViewUpcoming.adapter = MyUpcomingAdapter(this, this, myViewModel.getWorkList())
     }
 
     private fun setDropDownButtons() {
@@ -123,15 +120,28 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             myViewModel.setWorkList(newList)
 
             //reset the adapter
-            recyclerViewCurrent.adapter = MyTodayAdapter(this, myViewModel.getWorkList())
+            recyclerViewCurrent.adapter = MyTodayAdapter(this, this, myViewModel.getWorkList())
         }
 
         //observer will observe the list that is inside the value of its Livedata
         workListLiveData.observe(this, observer)
     }
 
-    override fun onItemClick(position: Int) {
-        Log.i(TAG, "Pressed position $position")
+    override fun onItemDayClick(position: Int) {
+        Log.i(TAG, "Pressed ${myViewModel.getDayList()[position]}")
     }
 
+    override fun onItemTodayClick(position: Int) {
+        Log.i(TAG, "Pressed ${myViewModel.getWorkList()[position]}")
+        val dialog = DialogViewDetail(myViewModel.getWorkList()[position])
+        dialog.show(supportFragmentManager, "detailToday")
+    }
+
+    override fun onItemUpcomingClick(position: Int) {
+        Log.i(TAG, "Pressed ${myViewModel.getWorkList()[position]}")
+    }
+
+    override fun onItemLongClick(position: Int) {
+        Log.i(TAG, "Long pressed ${myViewModel.getWorkList()[position]}")
+    }
 }
