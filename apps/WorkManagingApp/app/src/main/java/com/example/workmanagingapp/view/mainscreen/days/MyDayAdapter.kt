@@ -7,24 +7,34 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.R
-import com.example.workmanagingapp.model.Day
-import com.example.workmanagingapp.view.mainscreen.OnItemClickListener
+import com.example.workmanagingapp.viewmodel.OnItemClickListener
+import com.example.workmanagingapp.viewmodel.MyViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 class MyDayAdapter(
     private val listener: OnItemClickListener,
     private val context: Context,
-    private val list: MutableList<Day>
+    private val myViewModel: MyViewModel
+//    private val list: MutableList<Day>
 ): RecyclerView.Adapter<MyDayViewHolder>() {
+    private val list = myViewModel.getDayList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyDayViewHolder {
-        return MyDayViewHolder(LayoutInflater.from(context).inflate(R.layout.day_item_layout, parent, false))
+        return MyDayViewHolder(LayoutInflater.from(context).inflate(R.layout.item_layout_day, parent, false))
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MyDayViewHolder, position: Int) {
         holder.bind(list[position])
 
         holder.itemView.setOnClickListener{
             listener.onItemDayClick(position)
+
+            //set selected day
+            holder.itemView.setBackgroundResource(R.drawable.rounded_border_day_selected)
+            for(item in list) item.setIsSelected(false)
+            list[position].setIsSelected(true)
+
+            //update the livedata to refresh the list
+            myViewModel.getDayListLiveData().value = list
         }
     }
 

@@ -4,7 +4,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="15dp"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@drawable/rounded_border_day"
+    android:layout_margin="8dp">
 
     <TextView
         android:id="@+id/tvDot"

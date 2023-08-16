@@ -21,6 +21,7 @@ class Data {
             localDate = localDate.plusDays(1)
         }
 
+        dayList[0].setIsSelected(true)
         dayList[1].setHasWork(true)
         dayList[3].setHasWork(true)
         dayList[4].setHasWork(true)

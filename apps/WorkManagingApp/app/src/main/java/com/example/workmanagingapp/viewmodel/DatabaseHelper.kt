@@ -53,7 +53,7 @@ class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DB_NAME, null,
                 val title = cursor.getString(cursor.getColumnIndex(KEY_TITLE))
                 val timeString = cursor.getString(cursor.getColumnIndex(KEY_TIME))
                 val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                var time: Date = Date()
+                var time = Date()
                 try {
                     time = sdf.parse(timeString)
                 }catch (e: ParseException){

@@ -7,7 +7,6 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.R
 import com.example.workmanagingapp.model.Day
-import java.time.DayOfWeek
 
 class MyDayViewHolder(
     itemView: View
@@ -27,5 +26,7 @@ class MyDayViewHolder(
         tvDayInWeek.text = day.getDayOfWeek().toUpperCase()
         tvDate.text = day.getDate()
         tvDot.text = if(day.checkHasWork()) "\u2022" else ""
+        if(day.getIsSelected()) this.itemView.setBackgroundResource(R.drawable.rounded_border_day_selected)
+        else this.itemView.setBackgroundResource(R.drawable.rounded_border_day)
     }
 }

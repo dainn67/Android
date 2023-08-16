@@ -1,4 +1,4 @@
-package com.example.workmanagingapp.view.mainscreen
+package com.example.workmanagingapp.viewmodel
 
 interface OnItemClickListener {
     fun onItemDayClick(position: Int)

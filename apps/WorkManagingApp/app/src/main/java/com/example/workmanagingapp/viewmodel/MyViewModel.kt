@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.workmanagingapp.model.Data
+import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
 import java.util.Date
 
@@ -14,19 +15,29 @@ class MyViewModel: ViewModel() {
 
     //get the list and use livedata to update
     private var workList = data.getWorkList()
-    private val dayList = data.getDayList()
+    private var dayList = data.getDayList()
+
     private var workListLiveData = MutableLiveData<MutableList<Work>>()
+    private var dayListLiveData = MutableLiveData<MutableList<Day>>()
 
     //getters
     fun getWorkList() = workList
     fun getDayList() = dayList
+
     fun setWorkList(list: MutableList<Work>) {workList = list}
+    fun setDayList(list: MutableList<Day>) {dayList = list}
+
+    //livedata
     fun getWorkListLiveData() = workListLiveData
+    fun getDayListLiveData() = dayListLiveData
 
     //livedata needs to be initialized and assigned its value
     init {
         workListLiveData = MutableLiveData()
         workListLiveData.value = workList
+
+        dayListLiveData = MutableLiveData()
+        dayListLiveData.value = dayList
     }
 
     companion object{
@@ -36,6 +47,17 @@ class MyViewModel: ViewModel() {
 
             return  "$displayHour:$displayMinute"
         }
+
+        fun displayDate(date: Date): String{
+            return "${date.date}/${date.month+1}"
+        }
+    }
+
+    fun selectDay(position: Int){
+        //set isSelected
+        for(day in getDayList()) day.setIsSelected(false)
+        getDayList()[position].setIsSelected(true)
+
     }
 
     fun addSampleWorks(){

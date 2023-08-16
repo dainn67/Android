@@ -1,4 +1,4 @@
-package com.example.workmanagingapp.view.mainscreen
+package com.example.workmanagingapp.view.mainscreen.works
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -20,6 +20,7 @@ class DialogViewDetail(
 
     private lateinit var btnEditDate: Button
     private lateinit var btnEditTime: Button
+    private lateinit var btnEditContent: Button
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val myInflater = requireActivity().layoutInflater
@@ -39,6 +40,7 @@ class DialogViewDetail(
 
         btnEditDate = view.findViewById(R.id.btnEditDate)
         btnEditTime = view.findViewById(R.id.btnEditTime)
+        btnEditContent = view.findViewById(R.id.btnEditContent)
 
         return builder.create()
     }

@@ -12,7 +12,7 @@ class Constants {
         const val KEY_CONTENT = "content"
         const val KEY_STATUS = "status"
 
-        enum class ViewAllType{
+        enum class ViewDetailType{
             TODAY, UPCOMING
         }
     }
