@@ -15,8 +15,10 @@ class Day(
     private var isSelected: Boolean = false
 ) {
     fun getDayOfWeek(): String = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+    fun getDayOfWeekFull(): String = dayOfWeek.toString()
 
-    fun getDate() = "${date.dayOfMonth}/${date.month.value}"
+    fun getDate() = date
+    fun getDateFormatted() = "${date.dayOfMonth}/${date.month.value}"
 
     fun getIsSelected() = isSelected
     fun checkHasWork() = hasWork

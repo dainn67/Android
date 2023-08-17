@@ -15,7 +15,6 @@ class WorkContentProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
         dbHelper = DatabaseHelper(context!!)
-        Log.i(TAG, "onCreate ContentProvider")
         return true
     }
 

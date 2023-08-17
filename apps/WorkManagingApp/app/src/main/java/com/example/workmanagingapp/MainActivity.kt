@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -12,7 +11,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.model.Constants
-import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.view.addscreen.AddScreen
@@ -47,7 +45,9 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         myViewModel = MyViewModel(this)
 
         //TODO: load data from SQLite using content provider here
-        myViewModel.loadWorkList()
+//        myViewModel.loadWorkList(LocalDate.now(), Constants.Companion.ViewDetailType.TODAY)
+//        myViewModel.loadWorkList(LocalDate.now(), Constants.Companion.ViewDetailType.UPCOMING)
+        myViewModel.loadWorkList(LocalDate.now(), Constants.Companion.ViewDetailType.ALL)
 
         //debug: Title: Work managing app
         tvTitle = findViewById(R.id.tvTitle)
@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         setDropDownButtons()
 
         observeDayList()
+        observeCurrentTitle()
         observeWorkList()
     }
 
@@ -83,11 +84,11 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         recyclerViewCurrent = findViewById(R.id.recViewCurrent)
         recyclerViewCurrent.layoutManager = LinearLayoutManager(this)
-        recyclerViewCurrent.adapter = MyWorkListAdapter(this, this, myViewModel.getWorkList(), Constants.Companion.ViewDetailType.TODAY)
+        recyclerViewCurrent.adapter = MyWorkListAdapter(this, this, myViewModel.getAllWorkList(), Constants.Companion.ViewDetailType.TODAY)
 
         recyclerViewUpcoming = findViewById(R.id.recViewUpcoming)
         recyclerViewUpcoming.layoutManager = LinearLayoutManager(this)
-        recyclerViewUpcoming.adapter = MyWorkListAdapter(this, this, myViewModel.getWorkList(), Constants.Companion.ViewDetailType.UPCOMING)
+        recyclerViewUpcoming.adapter = MyWorkListAdapter(this, this, myViewModel.getAllWorkList(), Constants.Companion.ViewDetailType.UPCOMING)
     }
 
     private fun setDropDownButtons() {
@@ -125,37 +126,47 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         //observe changes
         dayListLiveData.observe(this, observer)
     }
+
+    private fun observeCurrentTitle(){
+        val currentTitleLiveData = myViewModel.getCurrentTitleLiveData()
+
+        val observer = Observer<String> {newTitle ->
+            tvTodayWork.text = newTitle
+        }
+
+        currentTitleLiveData.observe(this, observer)
+    }
     private fun observeWorkList() {
-        val workListLiveData = myViewModel.getWorkListLiveData()
+        val currentWorkListLiveData = myViewModel.getCurrentWorkListLiveData()
+        val upcomingWorkListLiveData = myViewModel.getUpcomingWorkListLiveData()
 
-        val observer = Observer<MutableList<Work>> { newList ->
-            //update the list
-            myViewModel.setWorkList(newList)
-
-            //reset the adapter
-            recyclerViewCurrent.adapter = MyWorkListAdapter(this, this, myViewModel.getWorkList(), Constants.Companion.ViewDetailType.TODAY)
+        val observerCurrent = Observer<MutableList<Work>> {newList ->
+            myViewModel.setCurrentWorkList(newList)
+            recyclerViewCurrent.adapter = MyWorkListAdapter(this, this, myViewModel.getCurrentWorkList(), Constants.Companion.ViewDetailType.TODAY)
+        }
+        val observerUpcoming = Observer<MutableList<Work>> {newList ->
+            myViewModel.setUpcomingWorkList(newList)
+            recyclerViewUpcoming.adapter = MyWorkListAdapter(this, this, myViewModel.getUpcomingWorkList(), Constants.Companion.ViewDetailType.TODAY)
         }
 
         //observer will observe the list that is inside the value of its Livedata
-        workListLiveData.observe(this, observer)
+        currentWorkListLiveData.observe(this, observerCurrent)
+        upcomingWorkListLiveData.observe(this, observerUpcoming)
     }
 
+    //implement the click listener of items
     override fun onItemDayClick(position: Int) {
-        Log.i(TAG, "Pressed ${myViewModel.getDayList()[position]}")
-
         //set the selected day to change the background only
-        myViewModel.selectDay(position)
+        myViewModel.selectDayAndDisplayWork(position)
     }
 
     override fun onItemWorkClick(position: Int) {
-        Log.i(TAG, "Pressed ${myViewModel.getWorkList()[position]}")
-        val dialog = DialogViewDetail(myViewModel.getWorkList()[position])
+        val dialog = DialogViewDetail(myViewModel.getAllWorkList()[position])
         dialog.show(supportFragmentManager, "detailToday")
     }
 
-    override fun onItemLongClick(position: Int) {
-        Log.i(TAG, "Long pressed ${myViewModel.getWorkList()[position]}")
-        val dialog = DialogDelete(myViewModel.getWorkList()[position])
+    override fun onItemWorkLongClick(position: Int) {
+        val dialog = DialogDelete(myViewModel.getAllWorkList()[position])
         dialog.show(supportFragmentManager, "dialog_delete")
     }
 }

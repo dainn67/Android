@@ -35,7 +35,7 @@ class MyWorkListAdapter(
             listener.onItemWorkClick(position)
         }
         holder.itemView.setOnLongClickListener {
-            listener.onItemLongClick(position)
+            listener.onItemWorkLongClick(position)
             true
         }
     }

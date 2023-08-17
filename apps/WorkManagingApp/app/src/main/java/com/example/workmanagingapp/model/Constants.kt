@@ -25,7 +25,7 @@ class Constants {
         }
 
         enum class ViewDetailType{
-            TODAY, UPCOMING
+            TODAY, UPCOMING, ALL
         }
     }
 }

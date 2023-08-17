@@ -24,7 +24,7 @@ class MyDayViewHolder(
     @RequiresApi(Build.VERSION_CODES.O)
     fun bind(day: Day){
         tvDayInWeek.text = day.getDayOfWeek().toUpperCase()
-        tvDate.text = day.getDate()
+        tvDate.text = day.getDateFormatted()
         tvDot.text = if(day.checkHasWork()) "\u2022" else ""
         if(day.getIsSelected()) this.itemView.setBackgroundResource(R.drawable.rounded_border_day_selected)
         else this.itemView.setBackgroundResource(R.drawable.rounded_border_day)
