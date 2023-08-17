@@ -1,16 +1,28 @@
 package com.example.workmanagingapp.model
 
+import android.content.Context
+import android.net.Uri
+
 class Constants {
     companion object{
         const val TAG = "aaa"
 
-        const val DB_NAME = "WORK_DATABASE"
-        const val DB_VERSION = 1
+        object DatabaseContract{
+            const val DATABASE_NAME = "work_database.db"
+            const val DATABASE_VERSION = 1
+        }
+
+        const val TABLE_NAME = "WORK_TABLE"
         const val KEY_ID = "id"
         const val KEY_TITLE = "title"
         const val KEY_TIME = "time"
         const val KEY_CONTENT = "content"
         const val KEY_STATUS = "status"
+        val TABLE_URI: Uri = Uri.parse("content://com.example.workmanagingapp/$TABLE_NAME")
+
+        fun getDBPath(context: Context): Uri{
+            return Uri.parse(context.getDatabasePath(DatabaseContract.DATABASE_NAME).absolutePath)
+        }
 
         enum class ViewDetailType{
             TODAY, UPCOMING

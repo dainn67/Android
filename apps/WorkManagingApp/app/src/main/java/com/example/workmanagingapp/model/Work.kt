@@ -15,6 +15,11 @@ class Work(
     fun getStatus() = isDone
 
     override fun toString(): String {
-        return "$title: ${time.hours}:${time.minutes} - $content - $isDone"
+        return "$title: ${time.hours}:${time.minutes} - $content - $isDone\n${formatTime()}"
     }
+
+    fun formatTime(): String{
+        return "${time.year+1900}-${time.month+1}-${time.date} ${time.hours}:${time.minutes}:${time.seconds}"
+    }
+
 }

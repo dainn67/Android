@@ -44,16 +44,14 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        myViewModel = MyViewModel()
-        myViewModel.addSampleWorks()
+        myViewModel = MyViewModel(this)
 
-        //TODO: load data from SQLite here
+        //TODO: load data from SQLite using content provider here
+        myViewModel.loadWorkList()
 
-        //debug
+        //debug: Title: Work managing app
         tvTitle = findViewById(R.id.tvTitle)
-        tvTitle.setOnClickListener {
-            myViewModel.addSampleWorks()
-        }
+        tvTitle.setOnClickListener {}
 
         //add new work button
         btnAdd = findViewById(R.id.btnAdd)
@@ -149,13 +147,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         myViewModel.selectDay(position)
     }
 
-    override fun onItemTodayClick(position: Int) {
-        Log.i(TAG, "Pressed ${myViewModel.getWorkList()[position]}")
-        val dialog = DialogViewDetail(myViewModel.getWorkList()[position])
-        dialog.show(supportFragmentManager, "detailToday")
-    }
-
-    override fun onItemUpcomingClick(position: Int) {
+    override fun onItemWorkClick(position: Int) {
         Log.i(TAG, "Pressed ${myViewModel.getWorkList()[position]}")
         val dialog = DialogViewDetail(myViewModel.getWorkList()[position])
         dialog.show(supportFragmentManager, "detailToday")

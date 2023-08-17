@@ -25,6 +25,10 @@
             android:name=".view.addscreen.AddScreen"
             android:exported="true">
         </activity>
+        
+        <provider
+            android:authorities="com.example.workmanagingapp"
+            android:name=".viewmodel.WorkContentProvider"/>
     </application>
 
 </manifest>

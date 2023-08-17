@@ -32,7 +32,7 @@ class MyWorkListAdapter(
             holder.bindUpcomingLayout(list[position])
 
         holder.itemView.setOnClickListener {
-            listener.onItemUpcomingClick(position)
+            listener.onItemWorkClick(position)
         }
         holder.itemView.setOnLongClickListener {
             listener.onItemLongClick(position)
