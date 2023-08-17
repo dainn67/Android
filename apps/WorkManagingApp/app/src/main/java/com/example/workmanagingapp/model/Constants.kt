@@ -20,10 +20,6 @@ class Constants {
         const val KEY_STATUS = "status"
         val TABLE_URI: Uri = Uri.parse("content://com.example.workmanagingapp/$TABLE_NAME")
 
-        fun getDBPath(context: Context): Uri{
-            return Uri.parse(context.getDatabasePath(DatabaseContract.DATABASE_NAME).absolutePath)
-        }
-
         enum class ViewDetailType{
             TODAY, UPCOMING, ALL
         }

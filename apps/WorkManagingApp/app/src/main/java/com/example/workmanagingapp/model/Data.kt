@@ -22,9 +22,6 @@ class Data {
         }
 
         dayList[0].setIsSelected(true)
-        dayList[1].setHasWork(true)
-        dayList[3].setHasWork(true)
-        dayList[4].setHasWork(true)
     }
 
     fun getWorkList() = workList

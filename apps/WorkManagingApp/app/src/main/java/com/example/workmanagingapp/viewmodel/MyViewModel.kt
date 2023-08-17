@@ -1,6 +1,7 @@
 package com.example.workmanagingapp.viewmodel
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.os.Build
 import android.util.Log
@@ -104,29 +105,33 @@ class MyViewModel(
         //set isSelected
         for (day in dayList) day.setIsSelected(false)
         dayList[position].setIsSelected(true)
+        dayListLiveData.value = dayList
 
-        //display selected day's work
-        if (position == 0) {
+        //display corresponding title
+        val currentDay = dayList[position]
+        if (position == 0)
             currentWorkTitleLiveData.value =
-                "TODAY'S WORK - ${dayList[position].getDateFormatted()}"
-        } else {
-            val currentDay = dayList[position]
+                "TODAY'S WORK - ${currentDay.getDateFormatted()}"
+        else
             currentWorkTitleLiveData.value =
                 "${currentDay.getDayOfWeekFull()} - ${currentDay.getDateFormatted()}"
+
+        //display the corresponding work list
+        currentWorkList.clear()
+        allWorkList.forEach {work ->
+            if(work.getTime().date == currentDay.getDate().dayOfMonth && work.getTime().month + 1 == currentDay.getDate().month.value)
+                currentWorkList.add(work)
         }
-
-        //load the corresponding work list
-        loadWorkList(dayList[position].getDate(), Constants.Companion.ViewDetailType.TODAY)
-
-
-        dayListLiveData.value = dayList
+        currentWorkListLiveData.value = currentWorkList
     }
 
     fun loadWorkList(date: LocalDate, type: Constants.Companion.ViewDetailType) {
+        addSampleWorkToSQLite()
+
         Log.i(TAG, "Loading $type : ${date.dayOfMonth}/${date.month.value}")
         val projection = arrayOf(KEY_TITLE, KEY_TIME, KEY_CONTENT, KEY_STATUS)
-        var selection = ""
-        var selectionArgs = arrayOf<String>()
+        var selection: String?
+        var selectionArgs: Array<String>?
         when (type) {
             Constants.Companion.ViewDetailType.TODAY -> {
                 selection = "strftime('%d', $KEY_TIME) = ? AND strftime('%m', $KEY_TIME) = ?"
@@ -138,24 +143,20 @@ class MyViewModel(
                 selectionArgs = arrayOf(date.dayOfMonth.toString(), date.month.value.toString())
             }
 
-            else -> {}
+            else -> {
+                selection = null
+                selectionArgs = null
+            }
         }
         val sortOrder = KEY_TIME
 
         val tmpList = mutableListOf<Work>()
         val cursor =
-            if (type != Constants.Companion.ViewDetailType.ALL) context.contentResolver.query(
+            context.contentResolver.query(
                 TABLE_URI,
                 projection,
                 selection,
                 selectionArgs,
-                sortOrder
-            )
-            else context.contentResolver.query(
-                TABLE_URI,
-                projection,
-                null,
-                null,
                 sortOrder
             )
         if (cursor?.moveToFirst() == true) {
@@ -196,6 +197,7 @@ class MyViewModel(
 
             //strftime not working so I only query without whereClause
             filterWorks()
+            indicateRedDot()
         } else {
             Log.i(TAG, "Not found")
         }
@@ -212,5 +214,50 @@ class MyViewModel(
 
         currentWorkListLiveData.value = currentWorkList
         upcomingWorkListLiveData.value = upcomingWorkList
+    }
+
+    private fun indicateRedDot(){
+        dayList.forEach {day ->
+            allWorkList.forEach{work ->
+                if(day.getDate().dayOfMonth == work.getTime().date && day.getDate().month.value == work.getTime().month + 1){
+                    day.setHasWork(true)
+                }
+            }
+        }
+
+        dayListLiveData.value = dayList
+    }
+
+    private fun addSampleWorkToSQLite(){
+        context.contentResolver.delete(TABLE_URI, null, null)
+
+        var values = ContentValues().apply {
+            put(KEY_TITLE, "Today")
+            put(KEY_TIME, "2023-08-17 09:09:09")
+            put(KEY_CONTENT, "Content today")
+            put(KEY_STATUS, 0)
+        }
+        context.contentResolver.insert(TABLE_URI, values)
+        values = ContentValues().apply {
+            put(KEY_TITLE, "Still Today")
+            put(KEY_TIME, "2023-08-17 10:09:09")
+            put(KEY_CONTENT, "Still content today")
+            put(KEY_STATUS, 1)
+        }
+        context.contentResolver.insert(TABLE_URI, values)
+        values = ContentValues().apply {
+            put(KEY_TITLE, "Tomorrow")
+            put(KEY_TIME, "2023-08-18 09:09:09")
+            put(KEY_CONTENT, "Content tomorrow")
+            put(KEY_STATUS, 0)
+        }
+        context.contentResolver.insert(TABLE_URI, values)
+        values = ContentValues().apply {
+            put(KEY_TITLE, "The day after tomorrow")
+            put(KEY_TIME, "2023-08-19 09:09:09")
+            put(KEY_CONTENT, "Content the day after tomorrow")
+            put(KEY_STATUS, 1)
+        }
+        context.contentResolver.insert(TABLE_URI, values)
     }
 }
