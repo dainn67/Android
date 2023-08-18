@@ -37,18 +37,21 @@ class MyViewModel(
     private var currentWorkList = mutableListOf<Work>()
     private var upcomingWorkList = mutableListOf<Work>()
 
+    //livedata
+    private var dayListLiveData = MutableLiveData<MutableList<Day>>()
+    private var currentWorkTitleLiveData = MutableLiveData<String>()
+    private var addNewDateTVLiveData = MutableLiveData<String>()
+    private var addNewTimeTVLiveData = MutableLiveData<String>()
+
     private var allWorkListLiveData = MutableLiveData<MutableList<Work>>()
     private var currentWorkListLiveData = MutableLiveData<MutableList<Work>>()
     private var upcomingWorkListLiveData = MutableLiveData<MutableList<Work>>()
-    private var dayListLiveData = MutableLiveData<MutableList<Day>>()
-    private var currentWorkTitleLiveData = MutableLiveData<String>()
 
     //getters
     fun getAllWorkList() = allWorkList
     fun getCurrentWorkList() = currentWorkList
     fun getUpcomingWorkList() = upcomingWorkList
     fun getDayList() = dayList
-
     fun setAllWorkList(list: MutableList<Work>) {
         allWorkList = list
     }
@@ -71,27 +74,40 @@ class MyViewModel(
     fun getUpcomingWorkListLiveData() = upcomingWorkListLiveData
     fun getDayListLiveData() = dayListLiveData
     fun getCurrentTitleLiveData() = currentWorkTitleLiveData
+    fun getAddNewDateTVLiveData() = addNewDateTVLiveData
+    fun getAddNewTimeTVLiveData() = addNewTimeTVLiveData
 
     //livedata needs to be initialized and assigned its value
     init {
+        dayListLiveData = MutableLiveData()
+        dayListLiveData.value = dayList
+
         allWorkListLiveData = MutableLiveData()
         allWorkListLiveData.value = allWorkList
 
         currentWorkListLiveData = MutableLiveData()
         upcomingWorkListLiveData = MutableLiveData()
 
-        dayListLiveData = MutableLiveData()
-        dayListLiveData.value = dayList
-
         currentWorkTitleLiveData = MutableLiveData()
         currentWorkTitleLiveData.value =
             "TODAY'S WORK - ${LocalDate.now().dayOfMonth}/${LocalDate.now().month.value}"
+
+        addNewDateTVLiveData = MutableLiveData()
+        addNewDateTVLiveData.value =
+            "Date: ${if (LocalDate.now().dayOfMonth < 10) "0${LocalDate.now().dayOfMonth}" else LocalDate.now().dayOfMonth}/${if (LocalDate.now().month.value < 10) "0${LocalDate.now().month.value}" else LocalDate.now().month.value}/${LocalDate.now().year}"
     }
 
     companion object {
         fun displayTime(date: Date): String {
             val displayHour = if (date.hours < 10) "0${date.hours}" else date.hours
             val displayMinute = if (date.minutes < 10) " 0${date.minutes}" else date.minutes
+
+            return "$displayHour:$displayMinute"
+        }
+
+        fun displayTime(hour: Int, minute: Int): String {
+            val displayHour = if (hour < 10) "0$hour" else hour
+            val displayMinute = if (minute < 10) " 0$minute" else minute
 
             return "$displayHour:$displayMinute"
         }
@@ -118,8 +134,8 @@ class MyViewModel(
 
         //display the corresponding work list
         currentWorkList.clear()
-        allWorkList.forEach {work ->
-            if(work.getTime().date == currentDay.getDate().dayOfMonth && work.getTime().month + 1 == currentDay.getDate().month.value)
+        allWorkList.forEach { work ->
+            if (work.getTime().date == currentDay.getDate().dayOfMonth && work.getTime().month + 1 == currentDay.getDate().month.value)
                 currentWorkList.add(work)
         }
         currentWorkListLiveData.value = currentWorkList
@@ -185,10 +201,12 @@ class MyViewModel(
                     currentWorkList = tmpList
                     currentWorkListLiveData.value = tmpList
                 }
+
                 Constants.Companion.ViewDetailType.UPCOMING -> {
                     upcomingWorkList = tmpList
                     upcomingWorkListLiveData.value = tmpList
                 }
+
                 else -> {
                     allWorkList = tmpList
                     allWorkListLiveData.value = tmpList
@@ -203,11 +221,11 @@ class MyViewModel(
         }
     }
 
-    private fun filterWorks(){
-        allWorkList.forEach {work ->
+    private fun filterWorks() {
+        allWorkList.forEach { work ->
             val day = work.getTime().date
             val month = work.getTime().month + 1
-            if(day == LocalDate.now().dayOfMonth && month == LocalDate.now().month.value)
+            if (day == LocalDate.now().dayOfMonth && month == LocalDate.now().month.value)
                 currentWorkList.add(work)
             else upcomingWorkList.add(work)
         }
@@ -216,10 +234,10 @@ class MyViewModel(
         upcomingWorkListLiveData.value = upcomingWorkList
     }
 
-    private fun indicateRedDot(){
-        dayList.forEach {day ->
-            allWorkList.forEach{work ->
-                if(day.getDate().dayOfMonth == work.getTime().date && day.getDate().month.value == work.getTime().month + 1){
+    private fun indicateRedDot() {
+        dayList.forEach { day ->
+            allWorkList.forEach { work ->
+                if (day.getDate().dayOfMonth == work.getTime().date && day.getDate().month.value == work.getTime().month + 1) {
                     day.setHasWork(true)
                 }
             }
@@ -228,33 +246,33 @@ class MyViewModel(
         dayListLiveData.value = dayList
     }
 
-    private fun addSampleWorkToSQLite(){
+    private fun addSampleWorkToSQLite() {
         context.contentResolver.delete(TABLE_URI, null, null)
 
         var values = ContentValues().apply {
             put(KEY_TITLE, "Today")
-            put(KEY_TIME, "2023-08-17 09:09:09")
+            put(KEY_TIME, "2023-08-18 09:09:09")
             put(KEY_CONTENT, "Content today")
             put(KEY_STATUS, 0)
         }
         context.contentResolver.insert(TABLE_URI, values)
         values = ContentValues().apply {
             put(KEY_TITLE, "Still Today")
-            put(KEY_TIME, "2023-08-17 10:09:09")
+            put(KEY_TIME, "2023-08-18 10:09:09")
             put(KEY_CONTENT, "Still content today")
             put(KEY_STATUS, 1)
         }
         context.contentResolver.insert(TABLE_URI, values)
         values = ContentValues().apply {
             put(KEY_TITLE, "Tomorrow")
-            put(KEY_TIME, "2023-08-18 09:09:09")
+            put(KEY_TIME, "2023-08-19 09:09:09")
             put(KEY_CONTENT, "Content tomorrow")
             put(KEY_STATUS, 0)
         }
         context.contentResolver.insert(TABLE_URI, values)
         values = ContentValues().apply {
             put(KEY_TITLE, "The day after tomorrow")
-            put(KEY_TIME, "2023-08-19 09:09:09")
+            put(KEY_TIME, "2023-08-20 09:09:09")
             put(KEY_CONTENT, "Content the day after tomorrow")
             put(KEY_STATUS, 1)
         }
