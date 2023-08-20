@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.workmanagingapp.model.Constants.Companion.TAG
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 class Data {
@@ -12,7 +13,7 @@ class Data {
     private var dayList = mutableListOf<Day>()
 
     init {
-        var localDate = LocalDate.now()
+        var localDate = LocalDateTime.now()
         var dayOfWeek = localDate.dayOfWeek
 
         for(i in 2..8){

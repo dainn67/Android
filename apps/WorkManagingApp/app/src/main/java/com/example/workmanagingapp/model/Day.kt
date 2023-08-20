@@ -4,13 +4,14 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 class Day(
     private val dayOfWeek: DayOfWeek,
-    private val date: LocalDate,
+    private val date: LocalDateTime,
     private var hasWork: Boolean = false,
     private var isSelected: Boolean = false
 ) {

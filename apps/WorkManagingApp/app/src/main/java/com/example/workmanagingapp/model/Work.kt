@@ -1,11 +1,16 @@
 package com.example.workmanagingapp.model
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.io.Serializable
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.Date
 
+@RequiresApi(Build.VERSION_CODES.O)
 class Work(
     private val title: String,
-    private val time: Date,
+    private val time: LocalDateTime,
     private val content: String,
     private val isDone: Boolean = false
 ):Serializable {
@@ -15,11 +20,11 @@ class Work(
     fun getStatus() = isDone
 
     override fun toString(): String {
-        return "$title: ${time.hours}:${time.minutes} - $content - $isDone\n${formatTime()}"
+        return "$title: ${time.hour}:${time.minute} - $content - $isDone\n${formatTime()}"
     }
 
     private fun formatTime(): String{
-        return "${time.year+1900}-${time.month+1}-${time.date} ${time.hours}:${time.minutes}:${time.seconds}"
+        return "${time.year}-${time.month}-${time.dayOfMonth} ${time.hour}:${time.minute}"
     }
 
 }

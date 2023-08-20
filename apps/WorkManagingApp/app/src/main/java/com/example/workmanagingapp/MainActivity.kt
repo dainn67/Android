@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -11,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.model.Constants
+import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.view.addscreen.AddScreen
@@ -44,7 +46,14 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         myViewModel = MyViewModel(this)
 
-        //TODO: load data from SQLite using content provider here
+        //receive new work from add screen
+        val work = intent.getSerializableExtra("new_work") as Work?
+        work?.let {
+            Log.i(TAG, "Main received: $work")
+            myViewModel.addNewList(it)
+        }
+
+        //Load data from SQLite using content provider
 //        myViewModel.loadWorkList(LocalDate.now(), Constants.Companion.ViewDetailType.TODAY)
 //        myViewModel.loadWorkList(LocalDate.now(), Constants.Companion.ViewDetailType.UPCOMING)
         myViewModel.loadWorkList(LocalDate.now(), Constants.Companion.ViewDetailType.ALL)

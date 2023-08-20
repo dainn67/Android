@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.workmanagingapp.model.Constants.Companion.DatabaseContract.DATABASE_NAME
 import com.example.workmanagingapp.model.Constants.Companion.TABLE_NAME
 import com.example.workmanagingapp.model.Constants.Companion.DatabaseContract.DATABASE_VERSION
@@ -17,6 +19,8 @@ import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -67,6 +71,7 @@ class DatabaseHelper(
             Log.i(TAG, name)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("Range")
     fun loadList(list: MutableList<Work>) {
         val selectAllQuery = "SELECT * FROM $TABLE_NAME"
@@ -77,10 +82,10 @@ class DatabaseHelper(
             do {
                 val title = cursor.getString(cursor.getColumnIndex(KEY_TITLE))
                 val timeString = cursor.getString(cursor.getColumnIndex(KEY_TIME))
-                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                var time = Date()
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                var time = LocalDateTime.now()
                 try {
-                    time = sdf.parse(timeString)
+                    time = LocalDateTime.parse(timeString, formatter)
                 } catch (e: ParseException) {
                     e.printStackTrace()
                 }

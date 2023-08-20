@@ -33,8 +33,8 @@ class MyWorkListViewHolder(
 
     fun bindUpcomingLayout(work: Work){
         val displayTime = MyViewModel.displayTime(work.getTime())
-        val day = work.getTime().date
-        val month = work.getTime().month + 1    //0 based
+        val day = work.getTime().dayOfMonth
+        val month = work.getTime().month    //0 based
 
         tvTitle.text = work.getTitle()
         tvTime.text = "$day/$month - $displayTime"

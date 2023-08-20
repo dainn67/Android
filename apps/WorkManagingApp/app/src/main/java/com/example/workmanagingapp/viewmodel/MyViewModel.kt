@@ -21,6 +21,8 @@ import com.example.workmanagingapp.model.Work
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -98,9 +100,9 @@ class MyViewModel(
     }
 
     companion object {
-        fun displayTime(date: Date): String {
-            val displayHour = if (date.hours < 10) "0${date.hours}" else date.hours
-            val displayMinute = if (date.minutes < 10) " 0${date.minutes}" else date.minutes
+        fun displayTime(date: LocalDateTime): String {
+            val displayHour = if (date.hour < 10) "0${date.hour}" else date.hour
+            val displayMinute = if (date.minute < 10) " 0${date.minute}" else date.minute
 
             return "$displayHour:$displayMinute"
         }
@@ -112,8 +114,8 @@ class MyViewModel(
             return "$displayHour:$displayMinute"
         }
 
-        fun displayDate(date: Date): String {
-            return "${date.date}/${date.month + 1}"
+        fun displayDate(date: LocalDateTime): String {
+            return "${date.dayOfMonth}/${date.month}"
         }
     }
 
@@ -135,7 +137,7 @@ class MyViewModel(
         //display the corresponding work list
         currentWorkList.clear()
         allWorkList.forEach { work ->
-            if (work.getTime().date == currentDay.getDate().dayOfMonth && work.getTime().month + 1 == currentDay.getDate().month.value)
+            if (work.getTime().dayOfMonth == currentDay.getDate().dayOfMonth && work.getTime().month.value == currentDay.getDate().month.value)
                 currentWorkList.add(work)
         }
         currentWorkListLiveData.value = currentWorkList
@@ -180,10 +182,10 @@ class MyViewModel(
             do {
                 val title = cursor.getString(cursor.getColumnIndex(KEY_TITLE))
                 val timeString = cursor.getString(cursor.getColumnIndex(KEY_TIME))
-                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                var time = Date()
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                var time = LocalDateTime.now()
                 try {
-                    time = sdf.parse(timeString)
+                    time = LocalDateTime.parse(timeString, formatter)
                 } catch (e: ParseException) {
                     e.printStackTrace()
                 }
@@ -223,8 +225,8 @@ class MyViewModel(
 
     private fun filterWorks() {
         allWorkList.forEach { work ->
-            val day = work.getTime().date
-            val month = work.getTime().month + 1
+            val day = work.getTime().dayOfMonth
+            val month = work.getTime().month.value
             if (day == LocalDate.now().dayOfMonth && month == LocalDate.now().month.value)
                 currentWorkList.add(work)
             else upcomingWorkList.add(work)
@@ -237,13 +239,35 @@ class MyViewModel(
     private fun indicateRedDot() {
         dayList.forEach { day ->
             allWorkList.forEach { work ->
-                if (day.getDate().dayOfMonth == work.getTime().date && day.getDate().month.value == work.getTime().month + 1) {
+                if (day.getDate().dayOfMonth == work.getTime().dayOfMonth && day.getDate().month.value == work.getTime().month.value) {
                     day.setHasWork(true)
                 }
             }
         }
 
         dayListLiveData.value = dayList
+    }
+
+    fun addNewList(work: Work){
+        //add to corresponding list
+        Log.i(TAG, "add $work to list and DB")
+        if(work.getTime().dayOfMonth == LocalDateTime.now().dayOfMonth && work.getTime().month == LocalDateTime.now().month){
+            currentWorkList.add(work)
+            currentWorkListLiveData.value = currentWorkList
+        }else{
+            upcomingWorkList.add(work)
+            upcomingWorkListLiveData.value = upcomingWorkList
+        }
+
+        //add to database
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val values = ContentValues().apply {
+            put(KEY_TITLE, work.getTitle())
+            put(KEY_TIME, work.getTime().format(formatter))
+            put(KEY_CONTENT, work.getContent())
+        }
+
+        context.contentResolver.insert(TABLE_URI, values)
     }
 
     private fun addSampleWorkToSQLite() {

@@ -2,9 +2,11 @@ package com.example.workmanagingapp.view.mainscreen.works
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.R
@@ -22,6 +24,7 @@ class DialogViewDetail(
     private lateinit var btnEditTime: Button
     private lateinit var btnEditContent: Button
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val myInflater = requireActivity().layoutInflater
         val view = myInflater.inflate(R.layout.dialog_viewdetail, null, false)
@@ -33,7 +36,7 @@ class DialogViewDetail(
         tvTitle.text = work.getTitle()
 
         tvDetailDate = view.findViewById(R.id.tvDetailDate)
-        tvDetailDate.text = "Date: ${work.getTime().date}/${work.getTime().month + 1}"
+        tvDetailDate.text = "Date: ${work.getTime().dayOfMonth}/${work.getTime().month.value + 1}"
 
         tvDetailTime = view.findViewById(R.id.tvDetailTime)
         tvDetailContent = view.findViewById(R.id.tvDetailContent)

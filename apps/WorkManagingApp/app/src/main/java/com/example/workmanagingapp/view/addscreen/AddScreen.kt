@@ -1,5 +1,6 @@
 package com.example.workmanagingapp.view.addscreen
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -11,10 +12,12 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.example.workmanagingapp.MainActivity
 import com.example.workmanagingapp.R
 import com.example.workmanagingapp.model.Constants.Companion.TAG
+import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.viewmodel.MyViewModel
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -35,7 +38,7 @@ class AddScreen : AppCompatActivity() {
     //variables to store selected data
     private lateinit var title: String
     private lateinit var content: String
-    private lateinit var time: LocalDate
+    private lateinit var time: LocalDateTime
 
     private lateinit var newViewModel: MyViewModel
 
@@ -47,6 +50,9 @@ class AddScreen : AppCompatActivity() {
 
         btnBack = findViewById(R.id.btnBack)
         btnBack.setOnClickListener { onBackPressed() }
+
+        title = ""
+        content = ""
 
         etName = findViewById(R.id.etName)
         etName.addTextChangedListener(
@@ -95,10 +101,19 @@ class AddScreen : AppCompatActivity() {
             val tvTimeString = tvTime.text.toString()
             val timeString = "${tvDateString.replace("Date: ", "")} ${tvTimeString.replace("Time: ", "")}:00"
             val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-            time = LocalDate.parse(timeString, formatter)
+            time = LocalDateTime.parse(timeString, formatter)
             Log.i(TAG, time.toString())
 
-            //TODO: add to list and database
+            //TODO: ("add to list and database")
+            val newWork = Work(title, time, content)
+
+            val intent = Intent(this, MainActivity::class.java)
+            val bundle = Bundle()
+            bundle.putSerializable("new_work", newWork)
+            intent.putExtras(bundle)
+
+            startActivity(intent)
+
             finish()
         }
     }
