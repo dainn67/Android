@@ -86,18 +86,31 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun setRecyclerViews() {
+        //days tab
         recyclerViewDays = findViewById(R.id.recViewDays)
         recyclerViewDays.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewDays.adapter = MyDayAdapter(this,this, myViewModel)
+        recyclerViewDays.adapter = MyDayAdapter(this, this, myViewModel)
 
+        //current view
         recyclerViewCurrent = findViewById(R.id.recViewCurrent)
         recyclerViewCurrent.layoutManager = LinearLayoutManager(this)
-        recyclerViewCurrent.adapter = MyWorkListAdapter(this, this, myViewModel.getAllWorkList(), Constants.Companion.ViewDetailType.TODAY)
+        recyclerViewCurrent.adapter = MyWorkListAdapter(
+            this,
+            this,
+            myViewModel.getCurrentWorkList(),
+            Constants.Companion.ViewDetailType.TODAY
+        )
 
+        //upcoming view
         recyclerViewUpcoming = findViewById(R.id.recViewUpcoming)
         recyclerViewUpcoming.layoutManager = LinearLayoutManager(this)
-        recyclerViewUpcoming.adapter = MyWorkListAdapter(this, this, myViewModel.getAllWorkList(), Constants.Companion.ViewDetailType.UPCOMING)
+        recyclerViewUpcoming.adapter = MyWorkListAdapter(
+            this,
+            this,
+            myViewModel.getUpcomingWorkList(),
+            Constants.Companion.ViewDetailType.UPCOMING
+        )
     }
 
     private fun setDropDownButtons() {
@@ -123,10 +136,10 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         }
     }
 
-    private fun observeDayList(){
+    private fun observeDayList() {
         val dayListLiveData = myViewModel.getDayListLiveData()
 
-        val observer = Observer<MutableList<Day>> {newList ->
+        val observer = Observer<MutableList<Day>> { newList ->
             myViewModel.setDayList(newList)
 
             recyclerViewDays.adapter = MyDayAdapter(this, this, myViewModel)
@@ -136,26 +149,37 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         dayListLiveData.observe(this, observer)
     }
 
-    private fun observeCurrentTitle(){
+    private fun observeCurrentTitle() {
         val currentTitleLiveData = myViewModel.getCurrentTitleLiveData()
 
-        val observer = Observer<String> {newTitle ->
+        val observer = Observer<String> { newTitle ->
             tvTodayWork.text = newTitle
         }
 
         currentTitleLiveData.observe(this, observer)
     }
+
     private fun observeWorkList() {
         val currentWorkListLiveData = myViewModel.getCurrentWorkListLiveData()
         val upcomingWorkListLiveData = myViewModel.getUpcomingWorkListLiveData()
 
-        val observerCurrent = Observer<MutableList<Work>> {newList ->
+        val observerCurrent = Observer<MutableList<Work>> { newList ->
             myViewModel.setCurrentWorkList(newList)
-            recyclerViewCurrent.adapter = MyWorkListAdapter(this, this, myViewModel.getCurrentWorkList(), Constants.Companion.ViewDetailType.TODAY)
+            recyclerViewCurrent.adapter = MyWorkListAdapter(
+                this,
+                this,
+                myViewModel.getCurrentWorkList(),
+                Constants.Companion.ViewDetailType.TODAY
+            )
         }
-        val observerUpcoming = Observer<MutableList<Work>> {newList ->
+        val observerUpcoming = Observer<MutableList<Work>> { newList ->
             myViewModel.setUpcomingWorkList(newList)
-            recyclerViewUpcoming.adapter = MyWorkListAdapter(this, this, myViewModel.getUpcomingWorkList(), Constants.Companion.ViewDetailType.TODAY)
+            recyclerViewUpcoming.adapter = MyWorkListAdapter(
+                this,
+                this,
+                myViewModel.getUpcomingWorkList(),
+                Constants.Companion.ViewDetailType.UPCOMING
+            )
         }
 
         //observer will observe the list that is inside the value of its Livedata
@@ -169,13 +193,21 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         myViewModel.selectDayAndDisplayWork(position)
     }
 
-    override fun onItemWorkClick(position: Int) {
-        val dialog = DialogViewDetail(myViewModel.getAllWorkList()[position])
+    override fun onItemWorkClick(position: Int, type: Constants.Companion.ViewDetailType) {
+        Log.i(TAG, type.toString())
+        val dialog =
+            if (type == Constants.Companion.ViewDetailType.TODAY) DialogViewDetail(myViewModel.getCurrentWorkList()[position])
+            else DialogViewDetail(myViewModel.getUpcomingWorkList()[position])
         dialog.show(supportFragmentManager, "detailToday")
     }
 
-    override fun onItemWorkLongClick(position: Int) {
-        val dialog = DialogDelete(myViewModel.getAllWorkList()[position])
+    override fun onItemWorkLongClick(position: Int, type: Constants.Companion.ViewDetailType) {
+        val dialog =
+            if (type == Constants.Companion.ViewDetailType.TODAY) DialogDelete(
+                myViewModel.getCurrentWorkList()[position],
+                myViewModel
+            )
+            else DialogDelete(myViewModel.getUpcomingWorkList()[position], myViewModel)
         dialog.show(supportFragmentManager, "dialog_delete")
     }
 }

@@ -274,6 +274,29 @@ class MyViewModel(
         context.contentResolver.insert(TABLE_URI, values)
     }
 
+    fun removeFromList(work: Work){
+        //delete from database
+        val whereClause = "$KEY_TITLE = ? AND $KEY_CONTENT = ?"
+        val whereArgs = arrayOf(work.getTitle(), work.getContent())
+
+        context.contentResolver.delete(TABLE_URI, whereClause, whereArgs)
+
+        //remove from allWorkList and corresponding list
+        for (item in allWorkList)
+            if(item.getTitle() == work.getTitle() && item.getContent() == work.getContent()){
+                allWorkList.remove(item)
+                break
+            }
+
+        if(work.getTime().dayOfMonth == LocalDateTime.now().dayOfMonth && work.getTime().month == LocalDateTime.now().month) {
+            currentWorkList.remove(work)
+            currentWorkListLiveData.value = currentWorkList
+        }else{
+            upcomingWorkList.remove(work)
+            upcomingWorkListLiveData.value = upcomingWorkList
+        }
+    }
+
     private fun addSampleWorkToSQLite() {
         context.contentResolver.delete(TABLE_URI, null, null)
 
@@ -308,6 +331,15 @@ class MyViewModel(
             put(KEY_TITLE, "The day after tomorrow")
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             val time = LocalDateTime.now().plusDays(2).format(formatter)
+            put(KEY_TIME, time)
+            put(KEY_CONTENT, "Content the day after tomorrow")
+            put(KEY_STATUS, 1)
+        }
+        context.contentResolver.insert(TABLE_URI, values)
+        values = ContentValues().apply {
+            put(KEY_TITLE, "Still Tomorrow")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val time = LocalDateTime.now().plusDays(1).format(formatter)
             put(KEY_TIME, time)
             put(KEY_CONTENT, "Content the day after tomorrow")
             put(KEY_STATUS, 1)

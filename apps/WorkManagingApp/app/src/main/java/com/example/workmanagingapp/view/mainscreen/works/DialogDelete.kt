@@ -2,6 +2,7 @@ package com.example.workmanagingapp.view.mainscreen.works
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.widget.Button
@@ -9,12 +10,17 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.example.workmanagingapp.R
+import com.example.workmanagingapp.model.Constants.Companion.KEY_CONTENT
+import com.example.workmanagingapp.model.Constants.Companion.KEY_TITLE
+import com.example.workmanagingapp.model.Constants.Companion.TABLE_URI
 import com.example.workmanagingapp.model.Work
+import com.example.workmanagingapp.viewmodel.MyViewModel
 import com.example.workmanagingapp.viewmodel.MyViewModel.Companion.displayDate
 import com.example.workmanagingapp.viewmodel.MyViewModel.Companion.displayTime
 
 class DialogDelete(
-    private val work: Work
+    private val work: Work,
+    private val viewModel: MyViewModel
 ): DialogFragment() {
     private lateinit var tvTitle: TextView
     private lateinit var tvDate: TextView
@@ -53,6 +59,7 @@ class DialogDelete(
 
         btnRemove = view.findViewById(R.id.btnRemoveDone)
         btnRemove.setOnClickListener{
+            viewModel.removeFromList(work)
             this.dismiss()
         }
 
