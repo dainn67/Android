@@ -54,7 +54,7 @@ class DatabaseHelper(
                 "$KEY_TIME DATETIME," +
                 "$KEY_CONTENT TEXT," +
                 "$KEY_STATUS INTEGER )"
-        wDB.execSQL(createQuery)
+        db?.execSQL(createQuery)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {

@@ -99,13 +99,13 @@ class AddScreen : AppCompatActivity() {
         btnAdd.setOnClickListener{
             val tvDateString = tvDate.text.toString()
             val tvTimeString = tvTime.text.toString()
-            val timeString = "${tvDateString.replace("Date: ", "")} ${tvTimeString.replace("Time: ", "")}:00"
-            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+            val timeString = "${tvDateString.replace("Date: ", "")} ${tvTimeString.replace("Time: ", "")}:00".replace("/", "-")
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
             time = LocalDateTime.parse(timeString, formatter)
-            Log.i(TAG, time.toString())
 
             //TODO: ("add to list and database")
             val newWork = Work(title, time, content)
+
 
             val intent = Intent(this, MainActivity::class.java)
             val bundle = Bundle()

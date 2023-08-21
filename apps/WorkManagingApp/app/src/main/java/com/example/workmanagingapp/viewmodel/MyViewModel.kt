@@ -19,11 +19,9 @@ import com.example.workmanagingapp.model.Data
 import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
 import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
 import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -144,7 +142,7 @@ class MyViewModel(
     }
 
     fun loadWorkList(date: LocalDate, type: Constants.Companion.ViewDetailType) {
-        addSampleWorkToSQLite()
+//        addSampleWorkToSQLite()
 
         Log.i(TAG, "Loading $type : ${date.dayOfMonth}/${date.month.value}")
         val projection = arrayOf(KEY_TITLE, KEY_TIME, KEY_CONTENT, KEY_STATUS)
@@ -248,16 +246,21 @@ class MyViewModel(
         dayListLiveData.value = dayList
     }
 
-    fun addNewList(work: Work){
+    fun addNewToList(work: Work){
         //add to corresponding list
         Log.i(TAG, "add $work to list and DB")
         if(work.getTime().dayOfMonth == LocalDateTime.now().dayOfMonth && work.getTime().month == LocalDateTime.now().month){
             currentWorkList.add(work)
+            allWorkList.add(work)
             currentWorkListLiveData.value = currentWorkList
-        }else{
+        }else if(work.getTime().month > LocalDateTime.now().month
+            || (work.getTime().month == LocalDateTime.now().month && work.getTime().dayOfMonth > LocalDateTime.now().dayOfMonth)){
             upcomingWorkList.add(work)
             upcomingWorkListLiveData.value = upcomingWorkList
         }
+        allWorkList.add(work)
+        allWorkListLiveData.value = allWorkList     //add to correct list and eventually add to allWorkList
+        indicateRedDot()
 
         //add to database
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
@@ -265,6 +268,7 @@ class MyViewModel(
             put(KEY_TITLE, work.getTitle())
             put(KEY_TIME, work.getTime().format(formatter))
             put(KEY_CONTENT, work.getContent())
+            put(KEY_STATUS, 0)
         }
 
         context.contentResolver.insert(TABLE_URI, values)
@@ -275,28 +279,36 @@ class MyViewModel(
 
         var values = ContentValues().apply {
             put(KEY_TITLE, "Today")
-            put(KEY_TIME, "2023-08-18 09:09:09")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            LocalDateTime.now().format(formatter)
+            put(KEY_TIME, LocalDateTime.now().format(formatter))
             put(KEY_CONTENT, "Content today")
             put(KEY_STATUS, 0)
         }
         context.contentResolver.insert(TABLE_URI, values)
         values = ContentValues().apply {
             put(KEY_TITLE, "Still Today")
-            put(KEY_TIME, "2023-08-18 10:09:09")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val time = LocalDateTime.now().plusMinutes(30).format(formatter)
+            put(KEY_TIME, time)
             put(KEY_CONTENT, "Still content today")
             put(KEY_STATUS, 1)
         }
         context.contentResolver.insert(TABLE_URI, values)
         values = ContentValues().apply {
             put(KEY_TITLE, "Tomorrow")
-            put(KEY_TIME, "2023-08-19 09:09:09")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val time = LocalDateTime.now().plusDays(1).format(formatter)
+            put(KEY_TIME, time)
             put(KEY_CONTENT, "Content tomorrow")
             put(KEY_STATUS, 0)
         }
         context.contentResolver.insert(TABLE_URI, values)
         values = ContentValues().apply {
             put(KEY_TITLE, "The day after tomorrow")
-            put(KEY_TIME, "2023-08-20 09:09:09")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val time = LocalDateTime.now().plusDays(2).format(formatter)
+            put(KEY_TIME, time)
             put(KEY_CONTENT, "Content the day after tomorrow")
             put(KEY_STATUS, 1)
         }

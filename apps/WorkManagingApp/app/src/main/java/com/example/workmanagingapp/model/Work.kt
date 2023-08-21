@@ -20,11 +20,11 @@ class Work(
     fun getStatus() = isDone
 
     override fun toString(): String {
-        return "$title: ${time.hour}:${time.minute} - $content - $isDone\n${formatTime()}"
+        return "$title: ${time.hour}:${time.minute} - $content - $isDone ${formatTime()}"
     }
 
     private fun formatTime(): String{
-        return "${time.year}-${time.month}-${time.dayOfMonth} ${time.hour}:${time.minute}"
+        return "${time.year}-${time.month.value}-${time.dayOfMonth} ${time.hour}:${time.minute}"
     }
 
 }

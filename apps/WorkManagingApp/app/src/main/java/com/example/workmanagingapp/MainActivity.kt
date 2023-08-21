@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         val work = intent.getSerializableExtra("new_work") as Work?
         work?.let {
             Log.i(TAG, "Main received: $work")
-            myViewModel.addNewList(it)
+            myViewModel.addNewToList(it)
         }
 
         //Load data from SQLite using content provider
