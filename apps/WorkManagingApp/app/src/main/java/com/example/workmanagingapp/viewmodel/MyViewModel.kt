@@ -21,6 +21,7 @@ import com.example.workmanagingapp.model.Work
 import java.text.ParseException
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.Month
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -30,6 +31,7 @@ class MyViewModel(
     private val context: Context
 ) : ViewModel() {
     private val data = Data()
+    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
     //get the list and use livedata to update
     private var dayList = data.getDayList()
@@ -113,7 +115,10 @@ class MyViewModel(
         }
 
         fun displayDate(date: LocalDateTime): String {
-            return "${date.dayOfMonth}/${date.month}"
+            val displayDay = if (date.dayOfMonth < 10) "0${date.dayOfMonth}" else date.dayOfMonth
+            val displayMonth = if (date.month.value < 10) "0${date.month.value}" else date.month.value
+
+            return "$displayDay/$displayMonth/${LocalDateTime.now().year}"
         }
     }
 
@@ -263,7 +268,6 @@ class MyViewModel(
         indicateRedDot()
 
         //add to database
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val values = ContentValues().apply {
             put(KEY_TITLE, work.getTitle())
             put(KEY_TIME, work.getTime().format(formatter))
@@ -295,6 +299,20 @@ class MyViewModel(
             upcomingWorkList.remove(work)
             upcomingWorkListLiveData.value = upcomingWorkList
         }
+    }
+
+    fun updateWorkInList(newWork: Work, work: Work){
+        val whereClause = "$KEY_TITLE = ? AND $KEY_CONTENT = ?"
+        val whereArgs = arrayOf(work.getTitle(), work.getContent())
+
+        val values = ContentValues().apply {
+            put(KEY_TITLE, newWork.getTitle())
+            put(KEY_CONTENT, newWork.getContent())
+            put(KEY_TIME, newWork.getTime().format(formatter))
+            put(KEY_STATUS, newWork.getStatus())
+        }
+
+        context.contentResolver.update(TABLE_URI, values, whereClause, whereArgs)
     }
 
     private fun addSampleWorkToSQLite() {

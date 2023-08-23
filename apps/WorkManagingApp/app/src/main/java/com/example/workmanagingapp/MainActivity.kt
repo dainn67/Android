@@ -196,8 +196,8 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     override fun onItemWorkClick(position: Int, type: Constants.Companion.ViewDetailType) {
         Log.i(TAG, type.toString())
         val dialog =
-            if (type == Constants.Companion.ViewDetailType.TODAY) DialogViewDetail(myViewModel.getCurrentWorkList()[position])
-            else DialogViewDetail(myViewModel.getUpcomingWorkList()[position])
+            if (type == Constants.Companion.ViewDetailType.TODAY) DialogViewDetail(myViewModel.getCurrentWorkList()[position], myViewModel)
+            else DialogViewDetail(myViewModel.getUpcomingWorkList()[position], myViewModel)
         dialog.show(supportFragmentManager, "detailToday")
     }
 

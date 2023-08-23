@@ -90,16 +90,32 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp">
 
-            <TextView
-                android:id="@+id/tvDetailContent"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Move to Detroit with Beyonce"
-                android:textSize="18dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvDetailContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Move to Detroit with Beyonce"
+                    android:textSize="18dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:visibility="gone"
+                    android:id="@+id/etEditContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter new content"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp"/>
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btnEditContent"
@@ -114,6 +130,34 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_margin="10dp">
+
+        <Button
+            android:id="@+id/btnEditOK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/buttonBarButtonStyle"
+            android:text="OK"/>
+
+        <Button
+            android:id="@+id/btnEditChange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/buttonBarButtonStyle"
+            android:text="Change"/>
 
     </LinearLayout>
 

@@ -52,13 +52,13 @@ class WorkContentProvider : ContentProvider() {
     }
 
     override fun delete(uri: Uri, whereClause: String?, whereArgs: Array<out String>?): Int {
-        //TODO: Implement logic here
         dbHelper.getWDB().delete(TABLE_NAME, whereClause, whereArgs)
+        Log.i(TAG, "Delete successfully")
         return  0
     }
 
-    override fun update(p0: Uri, p1: ContentValues?, p2: String?, p3: Array<out String>?): Int {
-        //TODO: Not yet implemented
+    override fun update(uri: Uri, newValue: ContentValues?, whereClause: String?, whereArgs: Array<out String>?): Int {
+        dbHelper.getWDB().update(TABLE_NAME, newValue, whereClause, whereArgs)
         return 0
     }
 }
