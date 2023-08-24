@@ -67,20 +67,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/tvAddDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Date: 02/09/2023"
-            android:textSize="18dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginLeft="20dp"/>
-
-        <TextView
-            android:id="@+id/tvAddDate1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

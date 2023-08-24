@@ -102,23 +102,24 @@ class MyViewModel(
     companion object {
         fun displayTime(date: LocalDateTime): String {
             val displayHour = if (date.hour < 10) "0${date.hour}" else date.hour
-            val displayMinute = if (date.minute < 10) " 0${date.minute}" else date.minute
+            val displayMinute = if (date.minute < 10) "0${date.minute}" else date.minute
 
             return "$displayHour:$displayMinute"
         }
 
         fun displayTime(hour: Int, minute: Int): String {
             val displayHour = if (hour < 10) "0$hour" else hour
-            val displayMinute = if (minute < 10) " 0$minute" else minute
+            val displayMinute = if (minute < 10) "0$minute" else minute
 
             return "$displayHour:$displayMinute"
         }
 
         fun displayDate(date: LocalDateTime): String {
             val displayDay = if (date.dayOfMonth < 10) "0${date.dayOfMonth}" else date.dayOfMonth
-            val displayMonth = if (date.month.value < 10) "0${date.month.value}" else date.month.value
+            val displayMonth =
+                if (date.month.value < 10) "0${date.month.value}" else date.month.value
 
-            return "$displayDay/$displayMonth/${LocalDateTime.now().year}"
+            return "$displayDay/$displayMonth/${date.year}"
         }
     }
 
@@ -146,29 +147,10 @@ class MyViewModel(
         currentWorkListLiveData.value = currentWorkList
     }
 
-    fun loadWorkList(date: LocalDate, type: Constants.Companion.ViewDetailType) {
+    fun loadWorkList() {
 //        addSampleWorkToSQLite()
 
-        Log.i(TAG, "Loading $type : ${date.dayOfMonth}/${date.month.value}")
         val projection = arrayOf(KEY_TITLE, KEY_TIME, KEY_CONTENT, KEY_STATUS)
-        var selection: String?
-        var selectionArgs: Array<String>?
-        when (type) {
-            Constants.Companion.ViewDetailType.TODAY -> {
-                selection = "strftime('%d', $KEY_TIME) = ? AND strftime('%m', $KEY_TIME) = ?"
-                selectionArgs = arrayOf(date.dayOfMonth.toString(), date.month.value.toString())
-            }
-
-            Constants.Companion.ViewDetailType.UPCOMING -> {
-                selection = "strftime('%d', $KEY_TIME) > ? AND strftime('%m', $KEY_TIME) > ?"
-                selectionArgs = arrayOf(date.dayOfMonth.toString(), date.month.value.toString())
-            }
-
-            else -> {
-                selection = null
-                selectionArgs = null
-            }
-        }
         val sortOrder = KEY_TIME
 
         val tmpList = mutableListOf<Work>()
@@ -176,16 +158,19 @@ class MyViewModel(
             context.contentResolver.query(
                 TABLE_URI,
                 projection,
-                selection,
-                selectionArgs,
+                null,
+                null,
                 sortOrder
             )
+
+        //update the corresponding livedata
+        allWorkList.clear()
         if (cursor?.moveToFirst() == true) {
-            Log.i(TAG, cursor.toString())
             do {
                 val title = cursor.getString(cursor.getColumnIndex(KEY_TITLE))
                 val timeString = cursor.getString(cursor.getColumnIndex(KEY_TIME))
-                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                val formatter =
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 var time = LocalDateTime.now()
                 try {
                     time = LocalDateTime.parse(timeString, formatter)
@@ -196,27 +181,10 @@ class MyViewModel(
                 val statusInt = cursor.getInt(cursor.getColumnIndex(KEY_STATUS))
                 val status = (statusInt == 1)
 
-                tmpList.add(Work(title, time, content, status))
+                allWorkList.add(Work(title, time, content, status))
 
             } while (cursor.moveToNext())
-
-            //update the corresponding livedata
-            when (type) {
-                Constants.Companion.ViewDetailType.TODAY -> {
-                    currentWorkList = tmpList
-                    currentWorkListLiveData.value = tmpList
-                }
-
-                Constants.Companion.ViewDetailType.UPCOMING -> {
-                    upcomingWorkList = tmpList
-                    upcomingWorkListLiveData.value = tmpList
-                }
-
-                else -> {
-                    allWorkList = tmpList
-                    allWorkListLiveData.value = tmpList
-                }
-            }
+            allWorkListLiveData.value = tmpList
 
             //strftime not working so I only query without whereClause
             filterWorks()
@@ -227,14 +195,20 @@ class MyViewModel(
     }
 
     private fun filterWorks() {
+        currentWorkList.clear()
+        upcomingWorkList.clear()
         allWorkList.forEach { work ->
             val day = work.getTime().dayOfMonth
             val month = work.getTime().month.value
-            if (day == LocalDate.now().dayOfMonth && month == LocalDate.now().month.value)
+
+            if (day == LocalDateTime.now().dayOfMonth && month == LocalDateTime.now().month.value)
                 currentWorkList.add(work)
-            else upcomingWorkList.add(work)
+            else if (month == LocalDateTime.now().month.value && day > LocalDateTime.now().dayOfMonth)
+                upcomingWorkList.add(work)
         }
 
+        currentWorkList.sortedWith(compareBy(Work::getTime).thenBy(Work::getTitle))
+        upcomingWorkList.sortedWith(compareBy(Work::getTime).thenBy(Work::getTitle))
         currentWorkListLiveData.value = currentWorkList
         upcomingWorkListLiveData.value = upcomingWorkList
     }
@@ -251,21 +225,9 @@ class MyViewModel(
         dayListLiveData.value = dayList
     }
 
-    fun addNewToList(work: Work){
+    fun addNewToList(work: Work) {
         //add to corresponding list
         Log.i(TAG, "add $work to list and DB")
-        if(work.getTime().dayOfMonth == LocalDateTime.now().dayOfMonth && work.getTime().month == LocalDateTime.now().month){
-            currentWorkList.add(work)
-            allWorkList.add(work)
-            currentWorkListLiveData.value = currentWorkList
-        }else if(work.getTime().month > LocalDateTime.now().month
-            || (work.getTime().month == LocalDateTime.now().month && work.getTime().dayOfMonth > LocalDateTime.now().dayOfMonth)){
-            upcomingWorkList.add(work)
-            upcomingWorkListLiveData.value = upcomingWorkList
-        }
-        allWorkList.add(work)
-        allWorkListLiveData.value = allWorkList     //add to correct list and eventually add to allWorkList
-        indicateRedDot()
 
         //add to database
         val values = ContentValues().apply {
@@ -276,9 +238,11 @@ class MyViewModel(
         }
 
         context.contentResolver.insert(TABLE_URI, values)
+
+        loadWorkList()
     }
 
-    fun removeFromList(work: Work){
+    fun removeFromList(work: Work) {
         //delete from database
         val whereClause = "$KEY_TITLE = ? AND $KEY_CONTENT = ?"
         val whereArgs = arrayOf(work.getTitle(), work.getContent())
@@ -287,21 +251,21 @@ class MyViewModel(
 
         //remove from allWorkList and corresponding list
         for (item in allWorkList)
-            if(item.getTitle() == work.getTitle() && item.getContent() == work.getContent()){
+            if (item.getTitle() == work.getTitle() && item.getContent() == work.getContent()) {
                 allWorkList.remove(item)
                 break
             }
 
-        if(work.getTime().dayOfMonth == LocalDateTime.now().dayOfMonth && work.getTime().month == LocalDateTime.now().month) {
+        if (work.getTime().dayOfMonth == LocalDateTime.now().dayOfMonth && work.getTime().month == LocalDateTime.now().month) {
             currentWorkList.remove(work)
             currentWorkListLiveData.value = currentWorkList
-        }else{
+        } else {
             upcomingWorkList.remove(work)
             upcomingWorkListLiveData.value = upcomingWorkList
         }
     }
 
-    fun updateWorkInList(newWork: Work, work: Work){
+    fun updateWorkInList(newWork: Work, work: Work) {
         val whereClause = "$KEY_TITLE = ? AND $KEY_CONTENT = ?"
         val whereArgs = arrayOf(work.getTitle(), work.getContent())
 
@@ -313,6 +277,8 @@ class MyViewModel(
         }
 
         context.contentResolver.update(TABLE_URI, values, whereClause, whereArgs)
+
+        loadWorkList()
     }
 
     private fun addSampleWorkToSQLite() {

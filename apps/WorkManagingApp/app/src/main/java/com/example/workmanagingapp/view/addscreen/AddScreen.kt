@@ -33,7 +33,6 @@ class AddScreen : AppCompatActivity() {
 
     private lateinit var tvDate: TextView
     private lateinit var tvTime: TextView
-    private lateinit var tvDateNew: TextView
 
     //variables to store selected data
     private lateinit var title: String
@@ -90,9 +89,9 @@ class AddScreen : AppCompatActivity() {
             timeDialog.show(supportFragmentManager, "timeDialog")
         }
 
-        tvDate = findViewById(R.id.tvAddDate1)
-        tvDateNew = findViewById(R.id.tvAddDate)
+        tvDate = findViewById(R.id.tvAddDate)
         tvTime = findViewById(R.id.tvAddTime)
+        tvTime.text = "Time: " + MyViewModel.displayTime(LocalDateTime.now())
         observeChanges()
 
         btnAdd = findViewById(R.id.btnConfirmAdd)
@@ -105,7 +104,6 @@ class AddScreen : AppCompatActivity() {
 
             //TODO: ("add to list and database")
             val newWork = Work(title, time, content)
-
 
             val intent = Intent(this, MainActivity::class.java)
             val bundle = Bundle()

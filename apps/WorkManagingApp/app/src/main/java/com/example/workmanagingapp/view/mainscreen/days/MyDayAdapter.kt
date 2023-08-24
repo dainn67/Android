@@ -15,7 +15,6 @@ class MyDayAdapter(
     private val listener: OnItemClickListener,
     private val context: Context,
     private val myViewModel: MyViewModel
-//    private val list: MutableList<Day>
 ): RecyclerView.Adapter<MyDayViewHolder>() {
     private val list = myViewModel.getDayList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyDayViewHolder {

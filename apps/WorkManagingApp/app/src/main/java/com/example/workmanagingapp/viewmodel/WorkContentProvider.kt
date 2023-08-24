@@ -59,6 +59,7 @@ class WorkContentProvider : ContentProvider() {
 
     override fun update(uri: Uri, newValue: ContentValues?, whereClause: String?, whereArgs: Array<out String>?): Int {
         dbHelper.getWDB().update(TABLE_NAME, newValue, whereClause, whereArgs)
+        Log.i(TAG, "Update successfully")
         return 0
     }
 }

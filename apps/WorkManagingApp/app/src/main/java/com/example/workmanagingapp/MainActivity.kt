@@ -54,9 +54,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         }
 
         //Load data from SQLite using content provider
-//        myViewModel.loadWorkList(LocalDate.now(), Constants.Companion.ViewDetailType.TODAY)
-//        myViewModel.loadWorkList(LocalDate.now(), Constants.Companion.ViewDetailType.UPCOMING)
-        myViewModel.loadWorkList(LocalDate.now(), Constants.Companion.ViewDetailType.ALL)
+        myViewModel.loadWorkList()
 
         //debug: Title: Work managing app
         tvTitle = findViewById(R.id.tvTitle)
