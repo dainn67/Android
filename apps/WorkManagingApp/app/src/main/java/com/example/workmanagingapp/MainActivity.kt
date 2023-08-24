@@ -192,7 +192,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     override fun onItemWorkClick(position: Int, type: Constants.Companion.ViewDetailType) {
-        Log.i(TAG, type.toString())
+        //use type to know which list to pass in
         val dialog =
             if (type == Constants.Companion.ViewDetailType.TODAY) DialogViewDetail(myViewModel.getCurrentWorkList()[position], myViewModel)
             else DialogViewDetail(myViewModel.getUpcomingWorkList()[position], myViewModel)

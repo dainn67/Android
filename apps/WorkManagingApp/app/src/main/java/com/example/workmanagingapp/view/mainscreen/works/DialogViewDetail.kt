@@ -15,17 +15,12 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.example.workmanagingapp.R
 import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.viewmodel.MyViewModel
-import java.sql.Time
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import kotlin.math.min
 
 @RequiresApi(Build.VERSION_CODES.O)
 class DialogViewDetail(
@@ -49,9 +44,7 @@ class DialogViewDetail(
     private var isTimeChanged = false
     private var isContentChanged = false
 
-    private var newDate = LocalDateTime.now()
-    private var newTime = LocalDateTime.now()
-
+    private var currentTime = work.getTime()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val myInflater = requireActivity().layoutInflater
@@ -90,15 +83,15 @@ class DialogViewDetail(
         btnEditDate.setOnClickListener {
             val datePickerDialog =
                 DatePickerDialog(requireContext(), { _, pickedYear, pickedMonth, pickedDay ->
-                    newDate = LocalDateTime.of(
+                    currentTime = LocalDateTime.of(
                         pickedYear,
                         pickedMonth + 1,
                         pickedDay,
-                        work.getTime().hour,
-                        work.getTime().minute
+                        currentTime.hour,
+                        currentTime.minute
                     )
-                    tvDetailDate.text = "Date: ${MyViewModel.displayDate(newDate)}"
-                    isDateChanged = newDate != work.getTime()
+                    tvDetailDate.text = "Date: ${MyViewModel.displayDate(currentTime)}"
+                    isDateChanged = currentTime != work.getTime()
                     checkActionButtons()
                 }, year, month, day)
 
@@ -107,9 +100,15 @@ class DialogViewDetail(
         btnEditTime = view.findViewById(R.id.btnEditTime)
         btnEditTime.setOnClickListener {
             val timePickerDialog = TimePickerDialog(requireContext(), { _, hour, minute ->
-                newTime = LocalDateTime.of(work.getTime().year, work.getTime().month, work.getTime().dayOfMonth, hour, minute)
+                currentTime = LocalDateTime.of(
+                    currentTime.year,
+                    currentTime.month,
+                    currentTime.dayOfMonth,
+                    hour,
+                    minute
+                )
                 tvDetailTime.text = "Time: ${MyViewModel.displayTime(hour, minute)}"
-                isTimeChanged = newTime != work.getTime()
+                isTimeChanged = currentTime != work.getTime()
                 checkActionButtons()
             }, LocalDateTime.now().hour, LocalDateTime.now().minute, true)
             timePickerDialog.show()
@@ -140,14 +139,12 @@ class DialogViewDetail(
         return if (isDateChanged || isTimeChanged || isContentChanged) {
             btnChange.isEnabled = true
             btnChange.setOnClickListener {
-                val newEditedTime = LocalDateTime.of(newDate.year, newDate.month, newDate.dayOfMonth, newTime.hour, newTime.minute)
-                val newWork = Work(work.getTitle(), newEditedTime, etEditContent.text.toString())
+                Log.i(TAG, "NEW TIME: $currentTime")
+                val newWork = Work(work.getTitle(), currentTime, etEditContent.text.toString())
                 viewModel.updateWorkInList(newWork, work)
                 dismiss()
             }
-
             btnOk.text = "Cancel"
-
             true
         } else {
             btnChange.isEnabled = false
