@@ -49,11 +49,15 @@ class MyViewModel(
     private var currentWorkListLiveData = MutableLiveData<MutableList<Work>>()
     private var upcomingWorkListLiveData = MutableLiveData<MutableList<Work>>()
 
+    private var currentDay = dayList[0]
+
     //getters
     fun getAllWorkList() = allWorkList
     fun getCurrentWorkList() = currentWorkList
     fun getUpcomingWorkList() = upcomingWorkList
     fun getDayList() = dayList
+    fun getCurrentDay() = currentDay
+
     fun setAllWorkList(list: MutableList<Work>) {
         allWorkList = list
     }
@@ -124,6 +128,8 @@ class MyViewModel(
     }
 
     fun selectDayAndDisplayWork(position: Int) {
+        currentDay = dayList[position]
+
         //set isSelected
         for (day in dayList) day.setIsSelected(false)
         dayList[position].setIsSelected(true)
@@ -201,7 +207,7 @@ class MyViewModel(
             val day = work.getTime().dayOfMonth
             val month = work.getTime().month.value
 
-            if (day == LocalDateTime.now().dayOfMonth && month == LocalDateTime.now().month.value)
+            if (day == currentDay.getDate().dayOfMonth && month == currentDay.getDate().month.value)
                 currentWorkList.add(work)
             else if (month == LocalDateTime.now().month.value && day > LocalDateTime.now().dayOfMonth)
                 upcomingWorkList.add(work)
