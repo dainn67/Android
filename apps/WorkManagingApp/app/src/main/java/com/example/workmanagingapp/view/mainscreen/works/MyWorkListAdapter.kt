@@ -8,28 +8,29 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.R
 import com.example.workmanagingapp.model.Constants
-import com.example.workmanagingapp.model.Work
+import com.example.workmanagingapp.viewmodel.MyViewModel
 import com.example.workmanagingapp.viewmodel.OnItemClickListener
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MyWorkListAdapter(
     private val listener: OnItemClickListener,
     private val context: Context,
-    private val list: MutableList<Work>,
+    private val viewModel: MyViewModel,
     private val type: Constants.Companion.ViewDetailType
 ) : RecyclerView.Adapter<MyWorkListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyWorkListViewHolder {
         //return the custom viewHolder with the layout view
         return MyWorkListViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.item_layout_work, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.item_layout_work, parent, false),
+            viewModel
         )
     }
 
     override fun onBindViewHolder(holder: MyWorkListViewHolder, position: Int) {
-        if (type == Constants.Companion.ViewDetailType.TODAY)
-            holder.bindTodayLayout(list[position])
+        if (type == Constants.Companion.ViewDetailType.CURRENT)
+            holder.bindCurrentLayout(viewModel.getCurrentWorkList()[position])
         else
-            holder.bindUpcomingLayout(list[position])
+            holder.bindUpcomingLayout(viewModel.getUpcomingWorkList()[position])
 
         holder.itemView.setOnClickListener {
             listener.onItemWorkClick(position, type)
@@ -41,6 +42,6 @@ class MyWorkListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return if (type == Constants.Companion.ViewDetailType.CURRENT) viewModel.getCurrentWorkList().size else viewModel.getUpcomingWorkList().size
     }
 }

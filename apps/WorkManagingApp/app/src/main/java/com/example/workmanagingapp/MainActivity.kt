@@ -57,8 +57,8 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         myViewModel.loadWorkList()
 
         //debug: Title: Work managing app
-        tvTitle = findViewById(R.id.tvTitle)
-        tvTitle.setOnClickListener {}
+//        tvTitle = findViewById(R.id.tvTitle)
+//        tvTitle.setOnClickListener {}
 
         //add new work button
         btnAdd = findViewById(R.id.btnAdd)
@@ -96,8 +96,8 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         recyclerViewCurrent.adapter = MyWorkListAdapter(
             this,
             this,
-            myViewModel.getCurrentWorkList(),
-            Constants.Companion.ViewDetailType.TODAY
+            myViewModel,
+            Constants.Companion.ViewDetailType.CURRENT
         )
 
         //upcoming view
@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         recyclerViewUpcoming.adapter = MyWorkListAdapter(
             this,
             this,
-            myViewModel.getUpcomingWorkList(),
+            myViewModel,
             Constants.Companion.ViewDetailType.UPCOMING
         )
     }
@@ -166,8 +166,8 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             recyclerViewCurrent.adapter = MyWorkListAdapter(
                 this,
                 this,
-                myViewModel.getCurrentWorkList(),
-                Constants.Companion.ViewDetailType.TODAY
+                myViewModel,
+                Constants.Companion.ViewDetailType.CURRENT
             )
         }
         val observerUpcoming = Observer<MutableList<Work>> { newList ->
@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             recyclerViewUpcoming.adapter = MyWorkListAdapter(
                 this,
                 this,
-                myViewModel.getUpcomingWorkList(),
+                myViewModel,
                 Constants.Companion.ViewDetailType.UPCOMING
             )
         }
@@ -194,14 +194,14 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     override fun onItemWorkClick(position: Int, type: Constants.Companion.ViewDetailType) {
         //use type to know which list to pass in
         val dialog =
-            if (type == Constants.Companion.ViewDetailType.TODAY) DialogViewDetail(myViewModel.getCurrentWorkList()[position], myViewModel)
+            if (type == Constants.Companion.ViewDetailType.CURRENT) DialogViewDetail(myViewModel.getCurrentWorkList()[position], myViewModel)
             else DialogViewDetail(myViewModel.getUpcomingWorkList()[position], myViewModel)
         dialog.show(supportFragmentManager, "detailToday")
     }
 
     override fun onItemWorkLongClick(position: Int, type: Constants.Companion.ViewDetailType) {
         val dialog =
-            if (type == Constants.Companion.ViewDetailType.TODAY) DialogDelete(
+            if (type == Constants.Companion.ViewDetailType.CURRENT) DialogDelete(
                 myViewModel.getCurrentWorkList()[position],
                 myViewModel
             )

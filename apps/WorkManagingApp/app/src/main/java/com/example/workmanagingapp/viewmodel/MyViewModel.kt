@@ -135,8 +135,7 @@ class MyViewModel(
         dayList[position].setIsSelected(true)
         dayListLiveData.value = dayList
 
-        //display corresponding title
-        val currentDay = dayList[position]
+        //display corresponding title's text
         if (position == 0)
             currentWorkTitleLiveData.value =
                 "TODAY'S WORK - ${currentDay.getDateFormatted()}"
@@ -209,7 +208,8 @@ class MyViewModel(
 
             if (day == currentDay.getDate().dayOfMonth && month == currentDay.getDate().month.value)
                 currentWorkList.add(work)
-            else if (month == LocalDateTime.now().month.value && day > LocalDateTime.now().dayOfMonth)
+            if (month == LocalDateTime.now().month.value && day > LocalDateTime.now().dayOfMonth
+                || month > LocalDateTime.now().month.value)
                 upcomingWorkList.add(work)
         }
 

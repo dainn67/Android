@@ -12,13 +12,16 @@ class Work(
     private val title: String,
     private val time: LocalDateTime,
     private val content: String,
-    private val isDone: Boolean = false
+    private var isDone: Boolean = false
 ):Serializable {
     fun getTitle() = title
     fun getTime() = time
     fun getContent() = content
     fun getStatus() = isDone
 
+    fun setStatus(status: Boolean){
+        this.isDone = status
+    }
     override fun toString(): String {
         return "$title: ${time.hour}:${time.minute} - $content - $isDone ${formatTime()}"
     }

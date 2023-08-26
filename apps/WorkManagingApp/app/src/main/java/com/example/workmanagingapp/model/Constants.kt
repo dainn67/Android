@@ -1,6 +1,5 @@
 package com.example.workmanagingapp.model
 
-import android.content.Context
 import android.net.Uri
 
 class Constants {
@@ -21,7 +20,7 @@ class Constants {
         val TABLE_URI: Uri = Uri.parse("content://com.example.workmanagingapp/$TABLE_NAME")
 
         enum class ViewDetailType{
-            TODAY, UPCOMING, ALL
+            CURRENT, UPCOMING, ALL
         }
     }
 }
