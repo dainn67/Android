@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <ScrollView
@@ -21,27 +21,34 @@
                 android:id="@+id/ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_margin="5dp"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btnDrawer"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/hamburger_icon"
+                    style="?android:attr/buttonBarButtonStyle"/>
 
                 <TextView
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
+                    android:layout_weight="1"
                     android:text="Work managing app"
                     android:textSize="25dp"
-                    android:textStyle="bold"
-                    android:layout_weight="1"/>
+                    android:textStyle="bold" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/btnAdd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
                     android:src="@drawable/add_icon"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_weight="0.1"/>
+                    app:layout_constraintEnd_toEndOf="parent" />
 
             </LinearLayout>
 
@@ -49,15 +56,15 @@
                 android:id="@+id/materialDivider0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="10dp"/>
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp" />
 
             <!--         date in week    -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recViewDays"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"/>
+                android:orientation="horizontal" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/materialDivider1"
@@ -76,38 +83,29 @@
                     android:id="@+id/dropDownToday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="\u25B2"
                     android:layout_margin="5dp"
-                    android:textSize="18dp"/>
+                    android:text="\u25B2"
+                    android:textSize="18dp" />
 
                 <TextView
                     android:id="@+id/tvCurrent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TODAY'S WORK"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
                     android:layout_margin="10dp"
-                    android:layout_weight="1"/>
-
-<!--                <Button-->
-<!--                    android:id="@+id/btnViewAllToday"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="View all"-->
-<!--                    style="?android:attr/buttonBarButtonStyle"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:textSize="16dp"/>-->
+                    android:layout_weight="1"
+                    android:text="TODAY'S WORK"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent" />
 
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recViewCurrent"
-                android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:orientation="vertical"/>
+                android:layout_margin="10dp"
+                android:orientation="vertical" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/materialDivider2"
@@ -128,27 +126,18 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="\u25B2"
-                    android:textSize="18dp"/>
+                    android:textSize="18dp" />
 
                 <TextView
                     android:id="@+id/tvUpcoming"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="UPCOMING WORK"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
                     android:layout_margin="10dp"
-                    android:layout_weight="1"/>
-
-<!--                <Button-->
-<!--                    android:id="@+id/btnViewAllUpcoming"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="View all"-->
-<!--                    style="?android:attr/buttonBarButtonStyle"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:textSize="16dp"/>-->
+                    android:layout_weight="1"
+                    android:text="UPCOMING WORK"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent" />
 
             </LinearLayout>
 
@@ -157,8 +146,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="500dp"
                 android:layout_margin="10dp"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/nav_drawer_menu" />
+</androidx.drawerlayout.widget.DrawerLayout>

@@ -5,9 +5,13 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +31,7 @@ import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity(), OnItemClickListener {
-    private lateinit var tvTitle: TextView
+    private lateinit var btnToggleMenu: FloatingActionButton
 
     private lateinit var tvTodayWork: TextView
 
@@ -46,6 +50,15 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         myViewModel = MyViewModel(this)
 
+        //drawer
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+        btnToggleMenu = findViewById(R.id.btnDrawer)
+        btnToggleMenu.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)   //the menu icon turn to arrow
+        supportActionBar?.setHomeButtonEnabled(true)
+
         //receive new work from add screen
         val work = intent.getSerializableExtra("new_work") as Work?
         work?.let {
@@ -55,10 +68,6 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         //Load data from SQLite using content provider
         myViewModel.loadWorkList()
-
-        //debug: Title: Work managing app
-//        tvTitle = findViewById(R.id.tvTitle)
-//        tvTitle.setOnClickListener {}
 
         //add new work button
         btnAdd = findViewById(R.id.btnAdd)
@@ -194,7 +203,10 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     override fun onItemWorkClick(position: Int, type: Constants.Companion.ViewDetailType) {
         //use type to know which list to pass in
         val dialog =
-            if (type == Constants.Companion.ViewDetailType.CURRENT) DialogViewDetail(myViewModel.getCurrentWorkList()[position], myViewModel)
+            if (type == Constants.Companion.ViewDetailType.CURRENT) DialogViewDetail(
+                myViewModel.getCurrentWorkList()[position],
+                myViewModel
+            )
             else DialogViewDetail(myViewModel.getUpcomingWorkList()[position], myViewModel)
         dialog.show(supportFragmentManager, "detailToday")
     }
