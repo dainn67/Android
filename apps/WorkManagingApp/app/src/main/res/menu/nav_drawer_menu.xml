@@ -7,7 +7,7 @@
     <item
         android:id="@+id/itemUnfinished"
         android:title="View unfinished works"/>
-    <item
-        android:id="@+id/itemReset"
-        android:title="Reset to default"/>
+<!--    <item-->
+<!--        android:id="@+id/itemReset"-->
+<!--        android:title="Reset to default"/>-->
 </menu>

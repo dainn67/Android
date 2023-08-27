@@ -18,7 +18,6 @@ import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.view.addscreen.AddScreen
-import com.example.workmanagingapp.view.drawerscreens.DialogReset
 import com.example.workmanagingapp.view.drawerscreens.DialogViewAllUnfinished
 import com.example.workmanagingapp.view.mainscreen.works.DialogDelete
 import com.example.workmanagingapp.view.mainscreen.works.DialogViewDetail
@@ -34,7 +33,7 @@ import java.time.LocalDate
 class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var btnToggleMenu: FloatingActionButton
 
-    private lateinit var tvTodayWork: TextView
+    private lateinit var tvCurrentWork: TextView
 
     private lateinit var btnAdd: FloatingActionButton
     private lateinit var dropdownToday: TextView
@@ -78,10 +77,10 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                     )
                     dialogViewUnfinished.show(supportFragmentManager, "dialog_view_unfinished")
                 }
-                R.id.itemReset -> {
-                    val dialogReset = DialogReset(viewModel)
-                    dialogReset.show(supportFragmentManager, "dialog_reset")
-                }
+//                R.id.itemReset -> {
+//                    val dialogReset = DialogReset(viewModel)
+//                    dialogReset.show(supportFragmentManager, "dialog_reset")
+//                }
             }
             true
         }
@@ -104,9 +103,9 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         }
 
         //today's work with current date
-        tvTodayWork = findViewById(R.id.tvCurrent)
-        tvTodayWork.text =
-            "TODAY'S WORK - ${LocalDate.now().dayOfMonth}/${LocalDate.now().month.value}"
+        tvCurrentWork = findViewById(R.id.tvCurrent)
+        tvCurrentWork.text =
+            "TODAY - ${LocalDate.now().dayOfMonth}/${LocalDate.now().month.value}"
 
         //set recyclerViews
         setRecyclerViews()
@@ -187,7 +186,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         val currentTitleLiveData = viewModel.getCurrentTitleLiveData()
 
         val observer = Observer<String> { newTitle ->
-            tvTodayWork.text = newTitle
+            tvCurrentWork.text = newTitle
         }
 
         currentTitleLiveData.observe(this, observer)

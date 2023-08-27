@@ -37,10 +37,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
+                    android:layout_marginTop="20dp"
                     android:layout_weight="1"
                     android:text="Work managing app"
                     android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/btnAdd"
@@ -93,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:text="TODAY'S WORK"
+                    android:text="TODAY"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -134,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:text="UPCOMING WORK"
+                    android:text="UPCOMING"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent" />

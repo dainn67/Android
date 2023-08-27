@@ -103,7 +103,7 @@ class MyViewModel(
 
         currentWorkTitleLiveData = MutableLiveData()
         currentWorkTitleLiveData.value =
-            "TODAY'S WORK - ${LocalDate.now().dayOfMonth}/${LocalDate.now().month.value}"
+            "TODAY - ${LocalDate.now().dayOfMonth}/${LocalDate.now().month.value}"
 
         addNewDateTVLiveData = MutableLiveData()
         addNewDateTVLiveData.value =
@@ -145,7 +145,7 @@ class MyViewModel(
         //display corresponding title's text
         if (position == 0)
             currentWorkTitleLiveData.value =
-                "TODAY'S WORK - ${currentDay.getDateFormatted()}"
+                "TODAY - ${currentDay.getDateFormatted()}"
         else
             currentWorkTitleLiveData.value =
                 "${currentDay.getDayOfWeekFull()} - ${currentDay.getDateFormatted()}"
