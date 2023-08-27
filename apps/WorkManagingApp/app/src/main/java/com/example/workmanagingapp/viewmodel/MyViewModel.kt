@@ -56,7 +56,6 @@ class MyViewModel(
     fun getCurrentWorkList() = currentWorkList
     fun getUpcomingWorkList() = upcomingWorkList
     fun getDayList() = dayList
-    fun getCurrentDay() = currentDay
 
     fun setAllWorkList(list: MutableList<Work>) {
         allWorkList = list

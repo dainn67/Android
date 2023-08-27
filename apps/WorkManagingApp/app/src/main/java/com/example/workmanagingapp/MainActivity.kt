@@ -5,11 +5,9 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -20,6 +18,7 @@ import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.view.addscreen.AddScreen
+import com.example.workmanagingapp.view.drawerscreens.DialogViewAll
 import com.example.workmanagingapp.view.mainscreen.works.DialogDelete
 import com.example.workmanagingapp.view.mainscreen.works.DialogViewDetail
 import com.example.workmanagingapp.view.mainscreen.days.MyDayAdapter
@@ -27,6 +26,7 @@ import com.example.workmanagingapp.viewmodel.OnItemClickListener
 import com.example.workmanagingapp.view.mainscreen.works.MyWorkListAdapter
 import com.example.workmanagingapp.viewmodel.MyViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -42,13 +42,14 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var recyclerViewDays: RecyclerView
     private lateinit var recyclerViewCurrent: RecyclerView
     private lateinit var recyclerViewUpcoming: RecyclerView
-    private lateinit var myViewModel: MyViewModel
+    private lateinit var viewModel: MyViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        myViewModel = MyViewModel(this)
+//        myViewModel = ViewModelProvider(this)[MyViewModel::class.java]
+        viewModel = MyViewModel(this)
 
         //drawer
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
@@ -56,18 +57,34 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         btnToggleMenu.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)   //the menu icon turn to arrow
-        supportActionBar?.setHomeButtonEnabled(true)
+
+        //onClick listener for each item in drawer
+        val navView = findViewById<NavigationView>(R.id.nav_view)
+        navView.setNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.itemAllWork -> {
+                    val dialogViewAll = DialogViewAll(this, this, viewModel)
+                    dialogViewAll.show(supportFragmentManager, "dialog_view_all")
+                }
+                R.id.itemUnfinished -> {
+                    Log.i(TAG, "Unfinished")
+                }
+                R.id.itemReset -> {
+                    Log.i(TAG, "Reset")
+                }
+            }
+            true
+        }
 
         //receive new work from add screen
         val work = intent.getSerializableExtra("new_work") as Work?
         work?.let {
             Log.i(TAG, "Main received: $work")
-            myViewModel.addNewToList(it)
+            viewModel.addNewToList(it)
         }
 
         //Load data from SQLite using content provider
-        myViewModel.loadWorkList()
+        viewModel.loadWorkList()
 
         //add new work button
         btnAdd = findViewById(R.id.btnAdd)
@@ -97,7 +114,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         recyclerViewDays = findViewById(R.id.recViewDays)
         recyclerViewDays.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewDays.adapter = MyDayAdapter(this, this, myViewModel)
+        recyclerViewDays.adapter = MyDayAdapter(this, this, viewModel)
 
         //current view
         recyclerViewCurrent = findViewById(R.id.recViewCurrent)
@@ -105,7 +122,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         recyclerViewCurrent.adapter = MyWorkListAdapter(
             this,
             this,
-            myViewModel,
+            viewModel,
             Constants.Companion.ViewDetailType.CURRENT
         )
 
@@ -115,7 +132,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         recyclerViewUpcoming.adapter = MyWorkListAdapter(
             this,
             this,
-            myViewModel,
+            viewModel,
             Constants.Companion.ViewDetailType.UPCOMING
         )
     }
@@ -144,12 +161,12 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun observeDayList() {
-        val dayListLiveData = myViewModel.getDayListLiveData()
+        val dayListLiveData = viewModel.getDayListLiveData()
 
         val observer = Observer<MutableList<Day>> { newList ->
-            myViewModel.setDayList(newList)
+            viewModel.setDayList(newList)
 
-            recyclerViewDays.adapter = MyDayAdapter(this, this, myViewModel)
+            recyclerViewDays.adapter = MyDayAdapter(this, this, viewModel)
         }
 
         //observe changes
@@ -157,7 +174,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun observeCurrentTitle() {
-        val currentTitleLiveData = myViewModel.getCurrentTitleLiveData()
+        val currentTitleLiveData = viewModel.getCurrentTitleLiveData()
 
         val observer = Observer<String> { newTitle ->
             tvTodayWork.text = newTitle
@@ -167,24 +184,24 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun observeWorkList() {
-        val currentWorkListLiveData = myViewModel.getCurrentWorkListLiveData()
-        val upcomingWorkListLiveData = myViewModel.getUpcomingWorkListLiveData()
+        val currentWorkListLiveData = viewModel.getCurrentWorkListLiveData()
+        val upcomingWorkListLiveData = viewModel.getUpcomingWorkListLiveData()
 
         val observerCurrent = Observer<MutableList<Work>> { newList ->
-            myViewModel.setCurrentWorkList(newList)
+            viewModel.setCurrentWorkList(newList)
             recyclerViewCurrent.adapter = MyWorkListAdapter(
                 this,
                 this,
-                myViewModel,
+                viewModel,
                 Constants.Companion.ViewDetailType.CURRENT
             )
         }
         val observerUpcoming = Observer<MutableList<Work>> { newList ->
-            myViewModel.setUpcomingWorkList(newList)
+            viewModel.setUpcomingWorkList(newList)
             recyclerViewUpcoming.adapter = MyWorkListAdapter(
                 this,
                 this,
-                myViewModel,
+                viewModel,
                 Constants.Companion.ViewDetailType.UPCOMING
             )
         }
@@ -197,27 +214,27 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     //implement the click listener of items
     override fun onItemDayClick(position: Int) {
         //set the selected day to change the background only
-        myViewModel.selectDayAndDisplayWork(position)
+        viewModel.selectDayAndDisplayWork(position)
     }
 
     override fun onItemWorkClick(position: Int, type: Constants.Companion.ViewDetailType) {
         //use type to know which list to pass in
         val dialog =
             if (type == Constants.Companion.ViewDetailType.CURRENT) DialogViewDetail(
-                myViewModel.getCurrentWorkList()[position],
-                myViewModel
+                viewModel.getCurrentWorkList()[position],
+                viewModel
             )
-            else DialogViewDetail(myViewModel.getUpcomingWorkList()[position], myViewModel)
+            else DialogViewDetail(viewModel.getUpcomingWorkList()[position], viewModel)
         dialog.show(supportFragmentManager, "detailToday")
     }
 
     override fun onItemWorkLongClick(position: Int, type: Constants.Companion.ViewDetailType) {
         val dialog =
             if (type == Constants.Companion.ViewDetailType.CURRENT) DialogDelete(
-                myViewModel.getCurrentWorkList()[position],
-                myViewModel
+                viewModel.getCurrentWorkList()[position],
+                viewModel
             )
-            else DialogDelete(myViewModel.getUpcomingWorkList()[position], myViewModel)
+            else DialogDelete(viewModel.getUpcomingWorkList()[position], viewModel)
         dialog.show(supportFragmentManager, "dialog_delete")
     }
 }

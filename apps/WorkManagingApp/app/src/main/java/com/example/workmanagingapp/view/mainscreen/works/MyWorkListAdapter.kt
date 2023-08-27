@@ -2,12 +2,14 @@ package com.example.workmanagingapp.view.mainscreen.works
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.R
 import com.example.workmanagingapp.model.Constants
+import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.viewmodel.MyViewModel
 import com.example.workmanagingapp.viewmodel.OnItemClickListener
 
@@ -27,14 +29,25 @@ class MyWorkListAdapter(
     }
 
     override fun onBindViewHolder(holder: MyWorkListViewHolder, position: Int) {
-        if (type == Constants.Companion.ViewDetailType.CURRENT)
-            holder.bindCurrentLayout(viewModel.getCurrentWorkList()[position])
-        else
-            holder.bindUpcomingLayout(viewModel.getUpcomingWorkList()[position])
+        when (type) {
+            Constants.Companion.ViewDetailType.CURRENT -> {
+                Log.i(TAG, "CURRENT")
+                holder.bindCurrentLayout(viewModel.getCurrentWorkList()[position])
+            }
+            Constants.Companion.ViewDetailType.UPCOMING -> {
+                Log.i(TAG, "UPCOMING")
+                holder.bindUpcomingLayout(viewModel.getUpcomingWorkList()[position])
+            }
+            Constants.Companion.ViewDetailType.ALL -> {
+                Log.i(TAG, "ALL")
+                holder.bindUpcomingLayout(viewModel.getAllWorkList()[position])
+            }
+        }
 
         holder.itemView.setOnClickListener {
             listener.onItemWorkClick(position, type)
         }
+
         holder.itemView.setOnLongClickListener {
             listener.onItemWorkLongClick(position, type)
             true
@@ -42,6 +55,10 @@ class MyWorkListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return if (type == Constants.Companion.ViewDetailType.CURRENT) viewModel.getCurrentWorkList().size else viewModel.getUpcomingWorkList().size
+        return when(type){
+            Constants.Companion.ViewDetailType.CURRENT -> viewModel.getCurrentWorkList().size
+            Constants.Companion.ViewDetailType.UPCOMING -> viewModel.getUpcomingWorkList().size
+            Constants.Companion.ViewDetailType.ALL -> viewModel.getAllWorkList().size
+        }
     }
 }
