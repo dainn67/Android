@@ -42,6 +42,11 @@ class MyWorkListAdapter(
                 Log.i(TAG, "ALL")
                 holder.bindUpcomingLayout(viewModel.getAllWorkList()[position])
             }
+            Constants.Companion.ViewDetailType.UNFINISHED ->{
+                Log.i(TAG, "ALL")
+                holder.bindUpcomingLayout(viewModel.getUnfinishedList()[position])
+            }
+
         }
 
         holder.itemView.setOnClickListener {
@@ -59,6 +64,7 @@ class MyWorkListAdapter(
             Constants.Companion.ViewDetailType.CURRENT -> viewModel.getCurrentWorkList().size
             Constants.Companion.ViewDetailType.UPCOMING -> viewModel.getUpcomingWorkList().size
             Constants.Companion.ViewDetailType.ALL -> viewModel.getAllWorkList().size
+            Constants.Companion.ViewDetailType.UNFINISHED -> viewModel.getUnfinishedList().size
         }
     }
 }

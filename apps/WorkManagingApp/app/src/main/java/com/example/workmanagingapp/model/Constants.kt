@@ -3,10 +3,10 @@ package com.example.workmanagingapp.model
 import android.net.Uri
 
 class Constants {
-    companion object{
+    companion object {
         const val TAG = "aaa"
 
-        object DatabaseContract{
+        object DatabaseContract {
             const val DATABASE_NAME = "work_database.db"
             const val DATABASE_VERSION = 1
         }
@@ -19,8 +19,8 @@ class Constants {
         const val KEY_STATUS = "status"
         val TABLE_URI: Uri = Uri.parse("content://com.example.workmanagingapp/$TABLE_NAME")
 
-        enum class ViewDetailType{
-            CURRENT, UPCOMING, ALL
+        enum class ViewDetailType {
+            CURRENT, UPCOMING, ALL, UNFINISHED
         }
     }
 }

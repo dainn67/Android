@@ -52,10 +52,18 @@ class MyViewModel(
     private var currentDay = dayList[0]
 
     //getters
+    fun getDayList() = dayList
     fun getAllWorkList() = allWorkList
     fun getCurrentWorkList() = currentWorkList
     fun getUpcomingWorkList() = upcomingWorkList
-    fun getDayList() = dayList
+    fun getUnfinishedList(): MutableList<Work>{
+        val tmpList = mutableListOf<Work>()
+        allWorkList.forEach {
+            if(!it.getStatus())
+                tmpList.add(it)
+        }
+        return tmpList
+    }
 
     fun setAllWorkList(list: MutableList<Work>) {
         allWorkList = list
@@ -154,6 +162,10 @@ class MyViewModel(
     fun loadWorkList() {
 //        addSampleWorkToSQLite()
 
+        allWorkList.clear()
+        currentWorkList.clear()
+        upcomingWorkList.clear()
+
         val projection = arrayOf(KEY_TITLE, KEY_TIME, KEY_CONTENT, KEY_STATUS)
         val sortOrder = KEY_TIME
 
@@ -168,7 +180,6 @@ class MyViewModel(
             )
 
         //update the corresponding livedata
-        allWorkList.clear()
         if (cursor?.moveToFirst() == true) {
             do {
                 val title = cursor.getString(cursor.getColumnIndex(KEY_TITLE))
@@ -199,8 +210,7 @@ class MyViewModel(
     }
 
     private fun filterWorks() {
-        currentWorkList.clear()
-        upcomingWorkList.clear()
+        Log.i(TAG, "Filter work")
         allWorkList.forEach { work ->
             val day = work.getTime().dayOfMonth
             val month = work.getTime().month.value
@@ -208,7 +218,8 @@ class MyViewModel(
             if (day == currentDay.getDate().dayOfMonth && month == currentDay.getDate().month.value)
                 currentWorkList.add(work)
             if (month == LocalDateTime.now().month.value && day > LocalDateTime.now().dayOfMonth
-                || month > LocalDateTime.now().month.value)
+                || month > LocalDateTime.now().month.value
+            )
                 upcomingWorkList.add(work)
         }
 
@@ -219,7 +230,9 @@ class MyViewModel(
     }
 
     private fun indicateRedDot() {
+        Log.i(TAG, "Indicate red dot")
         dayList.forEach { day ->
+            day.setHasWork(false)
             allWorkList.forEach { work ->
                 if (day.getDate().dayOfMonth == work.getTime().dayOfMonth && day.getDate().month.value == work.getTime().month.value) {
                     day.setHasWork(true)
@@ -253,21 +266,7 @@ class MyViewModel(
         val whereArgs = arrayOf(work.getTitle(), work.getContent())
 
         context.contentResolver.delete(TABLE_URI, whereClause, whereArgs)
-
-        //remove from allWorkList and corresponding list
-        for (item in allWorkList)
-            if (item.getTitle() == work.getTitle() && item.getContent() == work.getContent()) {
-                allWorkList.remove(item)
-                break
-            }
-
-        if (work.getTime().dayOfMonth == LocalDateTime.now().dayOfMonth && work.getTime().month == LocalDateTime.now().month) {
-            currentWorkList.remove(work)
-            currentWorkListLiveData.value = currentWorkList
-        } else {
-            upcomingWorkList.remove(work)
-            upcomingWorkListLiveData.value = upcomingWorkList
-        }
+        loadWorkList()
     }
 
     fun updateWorkInList(newWork: Work, work: Work) {
@@ -282,7 +281,11 @@ class MyViewModel(
         }
 
         context.contentResolver.update(TABLE_URI, values, whereClause, whereArgs)
+        loadWorkList()
+    }
 
+    fun resetWorks() {
+        context.contentResolver.delete(TABLE_URI, null, null)
         loadWorkList()
     }
 

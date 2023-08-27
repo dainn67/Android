@@ -3,10 +3,10 @@
 
     <item
         android:id="@+id/itemAllWork"
-        android:title="View all work"/>
+        android:title="View all works"/>
     <item
         android:id="@+id/itemUnfinished"
-        android:title="View unfinished work"/>
+        android:title="View unfinished works"/>
     <item
         android:id="@+id/itemReset"
         android:title="Reset to default"/>

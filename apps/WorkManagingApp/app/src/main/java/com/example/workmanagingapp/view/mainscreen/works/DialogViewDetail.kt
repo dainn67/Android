@@ -72,6 +72,7 @@ class DialogViewDetail(
         tvDetailTime.text = "Time: ${MyViewModel.displayTime(work.getTime())}"
 
         tvDetailContent = view.findViewById(R.id.tvDetailContent)
+        tvDetailContent.text = work.getContent()
         etEditContent = view.findViewById(R.id.etEditContent)
 
         //edit buttons
@@ -139,7 +140,7 @@ class DialogViewDetail(
         return if (isDateChanged || isTimeChanged || isContentChanged) {
             btnChange.isEnabled = true
             btnChange.setOnClickListener {
-                Log.i(TAG, "NEW TIME: $currentTime")
+                Log.i(TAG, "NEW TIME: $currentTime\nNEW CONTENT: ${etEditContent.text}")
                 val newWork = Work(work.getTitle(), currentTime, etEditContent.text.toString())
                 viewModel.updateWorkInList(newWork, work)
                 dismiss()

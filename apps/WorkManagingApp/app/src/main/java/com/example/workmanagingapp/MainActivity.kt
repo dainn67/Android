@@ -18,7 +18,8 @@ import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.view.addscreen.AddScreen
-import com.example.workmanagingapp.view.drawerscreens.DialogViewAll
+import com.example.workmanagingapp.view.drawerscreens.DialogReset
+import com.example.workmanagingapp.view.drawerscreens.DialogViewAllUnfinished
 import com.example.workmanagingapp.view.mainscreen.works.DialogDelete
 import com.example.workmanagingapp.view.mainscreen.works.DialogViewDetail
 import com.example.workmanagingapp.view.mainscreen.days.MyDayAdapter
@@ -61,16 +62,25 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         //onClick listener for each item in drawer
         val navView = findViewById<NavigationView>(R.id.nav_view)
         navView.setNavigationItemSelectedListener {
-            when(it.itemId){
+            when (it.itemId) {
                 R.id.itemAllWork -> {
-                    val dialogViewAll = DialogViewAll(this, this, viewModel)
+                    val dialogViewAll = DialogViewAllUnfinished(
+                        this, this, viewModel,
+                        Constants.Companion.ViewDetailType.ALL
+                    )
                     dialogViewAll.show(supportFragmentManager, "dialog_view_all")
                 }
+
                 R.id.itemUnfinished -> {
-                    Log.i(TAG, "Unfinished")
+                    val dialogViewUnfinished = DialogViewAllUnfinished(
+                        this, this, viewModel,
+                        Constants.Companion.ViewDetailType.UNFINISHED
+                    )
+                    dialogViewUnfinished.show(supportFragmentManager, "dialog_view_unfinished")
                 }
                 R.id.itemReset -> {
-                    Log.i(TAG, "Reset")
+                    val dialogReset = DialogReset(viewModel)
+                    dialogReset.show(supportFragmentManager, "dialog_reset")
                 }
             }
             true
