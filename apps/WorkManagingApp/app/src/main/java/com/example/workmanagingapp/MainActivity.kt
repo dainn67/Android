@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.model.Constants
@@ -25,6 +27,7 @@ import com.example.workmanagingapp.view.mainscreen.days.MyDayAdapter
 import com.example.workmanagingapp.viewmodel.OnItemClickListener
 import com.example.workmanagingapp.view.mainscreen.works.MyWorkListAdapter
 import com.example.workmanagingapp.viewmodel.MyViewModel
+import com.example.workmanagingapp.viewmodel.MyViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import java.time.LocalDate
@@ -42,14 +45,14 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var recyclerViewDays: RecyclerView
     private lateinit var recyclerViewCurrent: RecyclerView
     private lateinit var recyclerViewUpcoming: RecyclerView
-    private lateinit var viewModel: MyViewModel
+
+    private val viewModel: MyViewModel by viewModels {
+        MyViewModelFactory(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-//        myViewModel = ViewModelProvider(this)[MyViewModel::class.java]
-        viewModel = MyViewModel(this)
 
         //drawer
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
@@ -77,10 +80,6 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                     )
                     dialogViewUnfinished.show(supportFragmentManager, "dialog_view_unfinished")
                 }
-//                R.id.itemReset -> {
-//                    val dialogReset = DialogReset(viewModel)
-//                    dialogReset.show(supportFragmentManager, "dialog_reset")
-//                }
             }
             true
         }

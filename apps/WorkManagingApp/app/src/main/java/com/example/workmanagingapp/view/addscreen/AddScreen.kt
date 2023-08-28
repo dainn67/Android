@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -17,6 +18,7 @@ import com.example.workmanagingapp.R
 import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.viewmodel.MyViewModel
+import com.example.workmanagingapp.viewmodel.MyViewModelFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -35,23 +37,20 @@ class AddScreen : AppCompatActivity() {
     private lateinit var tvTime: TextView
 
     //variables to store selected data
-    private lateinit var title: String
-    private lateinit var content: String
+    private var title = ""
+    private var content = ""
     private lateinit var time: LocalDateTime
 
-    private lateinit var newViewModel: MyViewModel
+    private val viewModel: MyViewModel by viewModels {
+        MyViewModelFactory(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_new_work_layout)
 
-        newViewModel = MyViewModel(this)
-
         btnBack = findViewById(R.id.btnBack)
         btnBack.setOnClickListener { onBackPressed() }
-
-        title = ""
-        content = ""
 
         etName = findViewById(R.id.etName)
         etName.addTextChangedListener(
@@ -79,13 +78,13 @@ class AddScreen : AppCompatActivity() {
 
         btnChooseDate = findViewById(R.id.btnChooseDate)
         btnChooseDate.setOnClickListener {
-            val dateDialog = DialogChooseDate(newViewModel)
+            val dateDialog = DialogChooseDate(viewModel)
             dateDialog.show(supportFragmentManager, "dateDialog")
         }
 
         btnChooseTime = findViewById(R.id.btnChooseTime)
         btnChooseTime.setOnClickListener {
-            val timeDialog = DialogChooseTime(newViewModel)
+            val timeDialog = DialogChooseTime(viewModel)
             timeDialog.show(supportFragmentManager, "timeDialog")
         }
 
@@ -102,28 +101,21 @@ class AddScreen : AppCompatActivity() {
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
             time = LocalDateTime.parse(timeString, formatter)
 
-            //TODO: ("add to list and database")
             val newWork = Work(title, time, content)
 
-            val intent = Intent(this, MainActivity::class.java)
-            val bundle = Bundle()
-            bundle.putSerializable("new_work", newWork)
-            intent.putExtras(bundle)
-
-            startActivity(intent)
-
+            viewModel.addNewToList(newWork)
             finish()
         }
     }
 
     private fun observeChanges(){
-        val tvDateLiveData = newViewModel.getAddNewDateTVLiveData()
+        val tvDateLiveData = viewModel.getAddNewDateTVLiveData()
         val dateObserver = Observer<String>{newValue ->
             tvDate.text = newValue
         }
         tvDateLiveData.observe(this, dateObserver)
 
-        val tvTimeLiveData = newViewModel.getAddNewTimeTVLiveData()
+        val tvTimeLiveData = viewModel.getAddNewTimeTVLiveData()
         val timeObserver = Observer<String>{newValue ->
             tvTime.text = newValue
         }

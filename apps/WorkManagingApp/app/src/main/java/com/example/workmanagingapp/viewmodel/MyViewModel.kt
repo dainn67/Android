@@ -293,47 +293,47 @@ class MyViewModel(
         context.contentResolver.delete(TABLE_URI, null, null)
 
         var values = ContentValues().apply {
-            put(KEY_TITLE, "Today")
+            put(KEY_TITLE, "Go to school")
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             LocalDateTime.now().format(formatter)
             put(KEY_TIME, LocalDateTime.now().format(formatter))
-            put(KEY_CONTENT, "Content today")
+            put(KEY_CONTENT, "Go to school now")
             put(KEY_STATUS, 0)
         }
         context.contentResolver.insert(TABLE_URI, values)
         values = ContentValues().apply {
-            put(KEY_TITLE, "Still Today")
+            put(KEY_TITLE, "Go to the movie")
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             val time = LocalDateTime.now().plusMinutes(30).format(formatter)
             put(KEY_TIME, time)
-            put(KEY_CONTENT, "Still content today")
+            put(KEY_CONTENT, "Remember to buy the ticket")
             put(KEY_STATUS, 1)
         }
         context.contentResolver.insert(TABLE_URI, values)
         values = ContentValues().apply {
-            put(KEY_TITLE, "Tomorrow")
+            put(KEY_TITLE, "Go buy food")
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             val time = LocalDateTime.now().plusDays(1).format(formatter)
             put(KEY_TIME, time)
-            put(KEY_CONTENT, "Content tomorrow")
+            put(KEY_CONTENT, "Go to Winmart to buy some meat")
             put(KEY_STATUS, 0)
         }
         context.contentResolver.insert(TABLE_URI, values)
         values = ContentValues().apply {
-            put(KEY_TITLE, "The day after tomorrow")
+            put(KEY_TITLE, "Go to see the doctor")
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             val time = LocalDateTime.now().plusDays(2).format(formatter)
             put(KEY_TIME, time)
-            put(KEY_CONTENT, "Content the day after tomorrow")
+            put(KEY_CONTENT, "Go see your therapist")
             put(KEY_STATUS, 1)
         }
         context.contentResolver.insert(TABLE_URI, values)
         values = ContentValues().apply {
-            put(KEY_TITLE, "Still Tomorrow")
+            put(KEY_TITLE, "Go to the gym")
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
             val time = LocalDateTime.now().plusDays(1).format(formatter)
             put(KEY_TIME, time)
-            put(KEY_CONTENT, "Content the day after tomorrow")
+            put(KEY_CONTENT, "Leg day")
             put(KEY_STATUS, 1)
         }
         context.contentResolver.insert(TABLE_URI, values)
