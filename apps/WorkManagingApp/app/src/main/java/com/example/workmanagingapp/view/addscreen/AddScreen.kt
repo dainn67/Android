@@ -1,6 +1,5 @@
 package com.example.workmanagingapp.view.addscreen
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -13,7 +12,6 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.example.workmanagingapp.MainActivity
 import com.example.workmanagingapp.R
 import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work

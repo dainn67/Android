@@ -2,7 +2,6 @@ package com.example.workmanagingapp.view.drawerscreens
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.widget.Button

@@ -1,14 +1,12 @@
 package com.example.workmanagingapp.view.mainscreen.works
 
 import android.os.Build
-import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.R
-import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.viewmodel.MyViewModel
 

@@ -2,7 +2,6 @@ package com.example.workmanagingapp.view.mainscreen.works
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.widget.Button
@@ -10,9 +9,6 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.example.workmanagingapp.R
-import com.example.workmanagingapp.model.Constants.Companion.KEY_CONTENT
-import com.example.workmanagingapp.model.Constants.Companion.KEY_TITLE
-import com.example.workmanagingapp.model.Constants.Companion.TABLE_URI
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.viewmodel.MyViewModel
 import com.example.workmanagingapp.viewmodel.MyViewModel.Companion.displayDate

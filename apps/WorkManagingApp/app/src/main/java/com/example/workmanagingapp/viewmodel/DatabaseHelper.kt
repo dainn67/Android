@@ -18,10 +18,8 @@ import com.example.workmanagingapp.model.Constants.Companion.KEY_TITLE
 import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
 import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
 import java.util.Locale
 
 class DatabaseHelper(

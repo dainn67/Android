@@ -36,7 +36,6 @@ class WorkContentProvider : ContentProvider() {
     }
 
     override fun getType(p0: Uri): String? {
-        //TODO: "Not yet implemented"
         return ""
     }
 
