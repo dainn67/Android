@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.workmanagingapp.model.Constants
 import com.example.workmanagingapp.model.Constants.Companion.KEY_CONTENT
 import com.example.workmanagingapp.model.Constants.Companion.KEY_STATUS
 import com.example.workmanagingapp.model.Constants.Companion.KEY_TIME
@@ -21,7 +20,6 @@ import com.example.workmanagingapp.model.Work
 import java.text.ParseException
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.Month
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -56,10 +54,10 @@ class MyViewModel(
     fun getAllWorkList() = allWorkList
     fun getCurrentWorkList() = currentWorkList
     fun getUpcomingWorkList() = upcomingWorkList
-    fun getUnfinishedList(): MutableList<Work>{
+    fun getUnfinishedList(): MutableList<Work> {
         val tmpList = mutableListOf<Work>()
         allWorkList.forEach {
-            if(!it.getStatus())
+            if (!it.getStatus())
                 tmpList.add(it)
         }
         return tmpList
@@ -81,7 +79,7 @@ class MyViewModel(
         dayList = list
     }
 
-    //livedata
+    //livedata getters
     fun getAllWorkListLiveData() = allWorkListLiveData
     fun getCurrentWorkListLiveData() = currentWorkListLiveData
     fun getUpcomingWorkListLiveData() = upcomingWorkListLiveData
@@ -135,6 +133,7 @@ class MyViewModel(
     }
 
     fun selectDayAndDisplayWork(position: Int) {
+        Log.i(TAG, "Select day & display works")
         currentDay = dayList[position]
 
         //set isSelected
@@ -160,6 +159,7 @@ class MyViewModel(
     }
 
     fun loadWorkList() {
+        Log.i(TAG, "Load work list")
 //        addSampleWorkToSQLite()
 
         allWorkList.clear()
@@ -245,7 +245,7 @@ class MyViewModel(
 
     fun addNewToList(work: Work) {
         //add to corresponding list
-        Log.i(TAG, "add $work to list and DB")
+        Log.i(TAG, "adding $work")
 
         //add to database
         val values = ContentValues().apply {
@@ -257,11 +257,12 @@ class MyViewModel(
 
         context.contentResolver.insert(TABLE_URI, values)
 
-        loadWorkList()
+//        loadWorkList()
     }
 
     fun removeFromList(work: Work) {
         //delete from database
+        Log.i(TAG, "Deleting $work")
         val whereClause = "$KEY_TITLE = ? AND $KEY_CONTENT = ?"
         val whereArgs = arrayOf(work.getTitle(), work.getContent())
 
@@ -270,6 +271,7 @@ class MyViewModel(
     }
 
     fun updateWorkInList(newWork: Work, work: Work) {
+        Log.i(TAG, "Updating $work")
         val whereClause = "$KEY_TITLE = ? AND $KEY_CONTENT = ?"
         val whereArgs = arrayOf(work.getTitle(), work.getContent())
 
@@ -281,11 +283,6 @@ class MyViewModel(
         }
 
         context.contentResolver.update(TABLE_URI, values, whereClause, whereArgs)
-        loadWorkList()
-    }
-
-    fun resetWorks() {
-        context.contentResolver.delete(TABLE_URI, null, null)
         loadWorkList()
     }
 

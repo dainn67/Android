@@ -1,5 +1,7 @@
 package com.example.workmanagingapp.view.addscreen
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -19,6 +21,7 @@ import com.example.workmanagingapp.viewmodel.MyViewModel
 import com.example.workmanagingapp.viewmodel.MyViewModelFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
 class AddScreen : AppCompatActivity() {
@@ -37,7 +40,7 @@ class AddScreen : AppCompatActivity() {
     //variables to store selected data
     private var title = ""
     private var content = ""
-    private lateinit var time: LocalDateTime
+    private var newTime = LocalDateTime.now()
 
     private val viewModel: MyViewModel by viewModels {
         MyViewModelFactory(this)
@@ -46,6 +49,13 @@ class AddScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_new_work_layout)
+
+        Log.i(TAG, viewModel.getAllWorkList().size.toString())
+
+        tvDate = findViewById(R.id.tvAddDate)
+        tvDate.text = "Date: " + MyViewModel.displayDate(LocalDateTime.now())
+        tvTime = findViewById(R.id.tvAddTime)
+        tvTime.text = "Time: " + MyViewModel.displayTime(LocalDateTime.now())
 
         btnBack = findViewById(R.id.btnBack)
         btnBack.setOnClickListener { onBackPressed() }
@@ -74,47 +84,72 @@ class AddScreen : AppCompatActivity() {
             }
         )
 
+        val calendar = Calendar.getInstance()
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val month = calendar.get(Calendar.MONTH)
+        val year = calendar.get(Calendar.YEAR)
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
         btnChooseDate = findViewById(R.id.btnChooseDate)
         btnChooseDate.setOnClickListener {
-            val dateDialog = DialogChooseDate(viewModel)
-            dateDialog.show(supportFragmentManager, "dateDialog")
+            val dateDialog =
+                DatePickerDialog(this, { _, pickedYear, pickedMonth, pickedDay ->
+                    //month is 0-based
+
+                }, year, month, day)
+            dateDialog.show()
+
+            val datePickerDialog =
+                DatePickerDialog(this, { _, pickedYear, pickedMonth, pickedDay ->
+                    newTime = LocalDateTime.of(
+                        pickedYear,
+                        pickedMonth + 1,
+                        pickedDay,
+                        newTime.hour,
+                        newTime.minute
+                    )
+                    tvDate.text = "Date: ${MyViewModel.displayDate(newTime)}"
+                }, year, month, day)
+
+            datePickerDialog.show()
         }
 
         btnChooseTime = findViewById(R.id.btnChooseTime)
         btnChooseTime.setOnClickListener {
-            val timeDialog = DialogChooseTime(viewModel)
-            timeDialog.show(supportFragmentManager, "timeDialog")
+            val timeDialog = TimePickerDialog(this, { _, pickedHour, pickedMinute ->
+                newTime = LocalDateTime.of(
+                    newTime.year,
+                    newTime.month,
+                    newTime.dayOfMonth,
+                    pickedHour,
+                    pickedMinute
+                )
+                tvTime.text = "Time: ${MyViewModel.displayTime(newTime)}"
+            }, hour, minute, true)
+            timeDialog.show()
         }
 
-        tvDate = findViewById(R.id.tvAddDate)
-        tvTime = findViewById(R.id.tvAddTime)
-        tvTime.text = "Time: " + MyViewModel.displayTime(LocalDateTime.now())
         observeChanges()
 
         btnAdd = findViewById(R.id.btnConfirmAdd)
-        btnAdd.setOnClickListener{
-            val tvDateString = tvDate.text.toString()
-            val tvTimeString = tvTime.text.toString()
-            val timeString = "${tvDateString.replace("Date: ", "")} ${tvTimeString.replace("Time: ", "")}:00".replace("/", "-")
-            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-            time = LocalDateTime.parse(timeString, formatter)
-
-            val newWork = Work(title, time, content)
+        btnAdd.setOnClickListener {
+            val newWork = Work(title, newTime, content)
 
             viewModel.addNewToList(newWork)
             finish()
         }
     }
 
-    private fun observeChanges(){
+    private fun observeChanges() {
         val tvDateLiveData = viewModel.getAddNewDateTVLiveData()
-        val dateObserver = Observer<String>{newValue ->
+        val dateObserver = Observer<String> { newValue ->
             tvDate.text = newValue
         }
         tvDateLiveData.observe(this, dateObserver)
 
         val tvTimeLiveData = viewModel.getAddNewTimeTVLiveData()
-        val timeObserver = Observer<String>{newValue ->
+        val timeObserver = Observer<String> { newValue ->
             tvTime.text = newValue
         }
         tvTimeLiveData.observe(this, timeObserver)

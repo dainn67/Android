@@ -12,7 +12,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workmanagingapp.model.Constants
@@ -50,6 +49,11 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         MyViewModelFactory(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadWorkList()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -61,35 +65,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        //onClick listener for each item in drawer
-        val navView = findViewById<NavigationView>(R.id.nav_view)
-        navView.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.itemAllWork -> {
-                    val dialogViewAll = DialogViewAllUnfinished(
-                        this, this, viewModel,
-                        Constants.Companion.ViewDetailType.ALL
-                    )
-                    dialogViewAll.show(supportFragmentManager, "dialog_view_all")
-                }
-
-                R.id.itemUnfinished -> {
-                    val dialogViewUnfinished = DialogViewAllUnfinished(
-                        this, this, viewModel,
-                        Constants.Companion.ViewDetailType.UNFINISHED
-                    )
-                    dialogViewUnfinished.show(supportFragmentManager, "dialog_view_unfinished")
-                }
-            }
-            true
-        }
-
-        //receive new work from add screen
-        val work = intent.getSerializableExtra("new_work") as Work?
-        work?.let {
-            Log.i(TAG, "Main received: $work")
-            viewModel.addNewToList(it)
-        }
+        listenToDrawerItems()
 
         //Load data from SQLite using content provider
         viewModel.loadWorkList()
@@ -115,6 +91,30 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         observeDayList()
         observeCurrentTitle()
         observeWorkList()
+    }
+
+    private fun listenToDrawerItems(){
+        val navView = findViewById<NavigationView>(R.id.nav_view)
+        navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.itemAllWork -> {
+                    val dialogViewAll = DialogViewAllUnfinished(
+                        this, this, viewModel,
+                        Constants.Companion.ViewDetailType.ALL
+                    )
+                    dialogViewAll.show(supportFragmentManager, "dialog_view_all")
+                }
+
+                R.id.itemUnfinished -> {
+                    val dialogViewUnfinished = DialogViewAllUnfinished(
+                        this, this, viewModel,
+                        Constants.Companion.ViewDetailType.UNFINISHED
+                    )
+                    dialogViewUnfinished.show(supportFragmentManager, "dialog_view_unfinished")
+                }
+            }
+            true
+        }
     }
 
     private fun setRecyclerViews() {
