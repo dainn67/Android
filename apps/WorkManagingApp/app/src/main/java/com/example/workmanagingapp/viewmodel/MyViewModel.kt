@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,6 @@ import com.example.workmanagingapp.model.Constants.Companion.KEY_STATUS
 import com.example.workmanagingapp.model.Constants.Companion.KEY_TIME
 import com.example.workmanagingapp.model.Constants.Companion.KEY_TITLE
 import com.example.workmanagingapp.model.Constants.Companion.TABLE_URI
-import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Data
 import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
@@ -61,10 +59,6 @@ class MyViewModel(
                 tmpList.add(it)
         }
         return tmpList
-    }
-
-    fun setAllWorkList(list: MutableList<Work>) {
-        allWorkList = list
     }
 
     fun setCurrentWorkList(list: MutableList<Work>) {
@@ -133,7 +127,6 @@ class MyViewModel(
     }
 
     fun selectDayAndDisplayWork(position: Int) {
-        Log.i(TAG, "Select day & display works")
         currentDay = dayList[position]
 
         //set isSelected
@@ -159,7 +152,6 @@ class MyViewModel(
     }
 
     fun loadWorkList() {
-        Log.i(TAG, "Load work list")
 //        addSampleWorkToSQLite()
 
         allWorkList.clear()
@@ -199,18 +191,15 @@ class MyViewModel(
                 allWorkList.add(Work(title, time, content, status))
 
             } while (cursor.moveToNext())
-            allWorkListLiveData.value = tmpList
-
-            //strftime not working so I only query without whereClause
-            filterWorks()
-            indicateRedDot()
-        } else {
-            Log.i(TAG, "Not found")
         }
+
+        //strftime not working so I only query without whereClause
+        allWorkListLiveData.value = tmpList
+        filterWorks()
+        indicateRedDot()
     }
 
     private fun filterWorks() {
-        Log.i(TAG, "Filter work")
         allWorkList.forEach { work ->
             val day = work.getTime().dayOfMonth
             val month = work.getTime().month.value
@@ -230,7 +219,6 @@ class MyViewModel(
     }
 
     private fun indicateRedDot() {
-        Log.i(TAG, "Indicate red dot")
         dayList.forEach { day ->
             day.setHasWork(false)
             allWorkList.forEach { work ->
@@ -244,9 +232,6 @@ class MyViewModel(
     }
 
     fun addNewToList(work: Work) {
-        //add to corresponding list
-        Log.i(TAG, "adding $work")
-
         //add to database
         val values = ContentValues().apply {
             put(KEY_TITLE, work.getTitle())
@@ -256,13 +241,10 @@ class MyViewModel(
         }
 
         context.contentResolver.insert(TABLE_URI, values)
-
-//        loadWorkList()
     }
 
     fun removeFromList(work: Work) {
         //delete from database
-        Log.i(TAG, "Deleting $work")
         val whereClause = "$KEY_TITLE = ? AND $KEY_CONTENT = ?"
         val whereArgs = arrayOf(work.getTitle(), work.getContent())
 
@@ -271,7 +253,6 @@ class MyViewModel(
     }
 
     fun updateWorkInList(newWork: Work, work: Work) {
-        Log.i(TAG, "Updating $work")
         val whereClause = "$KEY_TITLE = ? AND $KEY_CONTENT = ?"
         val whereArgs = arrayOf(work.getTitle(), work.getContent())
 

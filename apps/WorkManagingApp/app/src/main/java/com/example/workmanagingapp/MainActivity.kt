@@ -45,11 +45,14 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var recyclerViewCurrent: RecyclerView
     private lateinit var recyclerViewUpcoming: RecyclerView
 
+    private val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
     private val viewModel: MyViewModel by viewModels {
         MyViewModelFactory(this)
     }
 
     override fun onResume() {
+        //update the list when back from 2nd screen
         super.onResume()
         viewModel.loadWorkList()
     }
@@ -120,9 +123,9 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private fun setRecyclerViews() {
         //days tab
         recyclerViewDays = findViewById(R.id.recViewDays)
-        recyclerViewDays.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerViewDays.layoutManager = linearLayoutManager
         recyclerViewDays.adapter = MyDayAdapter(this, this, viewModel)
+
 
         //current view
         recyclerViewCurrent = findViewById(R.id.recViewCurrent)
@@ -223,6 +226,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     override fun onItemDayClick(position: Int) {
         //set the selected day to change the background only
         viewModel.selectDayAndDisplayWork(position)
+        linearLayoutManager.smoothScrollToPosition(recyclerViewDays, null, position)
     }
 
     override fun onItemWorkClick(position: Int, type: Constants.Companion.ViewDetailType) {

@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -15,12 +14,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.example.workmanagingapp.R
-import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.viewmodel.MyViewModel
 import com.example.workmanagingapp.viewmodel.MyViewModelFactory
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -50,8 +47,6 @@ class AddScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_new_work_layout)
 
-        Log.i(TAG, viewModel.getAllWorkList().size.toString())
-
         tvDate = findViewById(R.id.tvAddDate)
         tvDate.text = "Date: " + MyViewModel.displayDate(LocalDateTime.now())
         tvTime = findViewById(R.id.tvAddTime)
@@ -66,7 +61,6 @@ class AddScreen : AppCompatActivity() {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun afterTextChanged(p0: Editable?) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    Log.i(TAG, s.toString())
                     title = s.toString()
                 }
             }
@@ -78,7 +72,6 @@ class AddScreen : AppCompatActivity() {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun afterTextChanged(p0: Editable?) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    Log.i(TAG, s.toString())
                     content = s.toString()
                 }
             }

@@ -6,9 +6,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.SQLException
 import android.net.Uri
-import android.util.Log
 import com.example.workmanagingapp.model.Constants.Companion.TABLE_NAME
-import com.example.workmanagingapp.model.Constants.Companion.TAG
 
 class WorkContentProvider : ContentProvider() {
     private lateinit var dbHelper: DatabaseHelper
@@ -42,23 +40,19 @@ class WorkContentProvider : ContentProvider() {
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
         val id = dbHelper.getWDB().insert(TABLE_NAME, null, values)
         if (id == -1L){
-            Log.i(TAG, "Failed to insert")
             throw SQLException("Failed to insert")
         }
         context?.contentResolver?.notifyChange(uri, null)
-        Log.i(TAG, "Insert successfully")
         return ContentUris.withAppendedId(uri, id)
     }
 
     override fun delete(uri: Uri, whereClause: String?, whereArgs: Array<out String>?): Int {
         dbHelper.getWDB().delete(TABLE_NAME, whereClause, whereArgs)
-        Log.i(TAG, "Delete successfully")
         return  0
     }
 
     override fun update(uri: Uri, newValue: ContentValues?, whereClause: String?, whereArgs: Array<out String>?): Int {
         dbHelper.getWDB().update(TABLE_NAME, newValue, whereClause, whereArgs)
-        Log.i(TAG, "Update successfully")
         return 0
     }
 }

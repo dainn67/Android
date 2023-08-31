@@ -8,7 +8,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -16,7 +15,6 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.example.workmanagingapp.R
-import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.viewmodel.MyViewModel
 import java.time.LocalDateTime
@@ -140,7 +138,6 @@ class DialogViewDetail(
         return if (isDateChanged || isTimeChanged || isContentChanged) {
             btnChange.isEnabled = true
             btnChange.setOnClickListener {
-                Log.i(TAG, "NEW TIME: $currentTime\nNEW CONTENT: ${etEditContent.text}")
                 val newWork = Work(work.getTitle(), currentTime, etEditContent.text.toString())
                 viewModel.updateWorkInList(newWork, work)
                 dismiss()
