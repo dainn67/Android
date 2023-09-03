@@ -11,6 +11,8 @@ class Constants {
             const val DATABASE_VERSION = 1
         }
 
+        const val CHANNEL_ID = "ChannelID"
+
         const val TABLE_NAME = "WORK_TABLE"
         const val KEY_ID = "id"
         const val KEY_TITLE = "title"

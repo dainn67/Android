@@ -1,10 +1,12 @@
 package com.example.workmanagingapp
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -14,8 +16,12 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.workmanagingapp.model.Constants
-import com.example.workmanagingapp.model.Constants.Companion.TAG
+import com.example.workmanagingapp.model.Constants.Companion.CHANNEL_ID
 import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
 import com.example.workmanagingapp.view.addscreen.AddScreen
@@ -27,9 +33,14 @@ import com.example.workmanagingapp.viewmodel.OnItemClickListener
 import com.example.workmanagingapp.view.mainscreen.works.MyWorkListAdapter
 import com.example.workmanagingapp.viewmodel.MyViewModel
 import com.example.workmanagingapp.viewmodel.MyViewModelFactory
+import com.example.workmanagingapp.viewmodel.MyWorker
+import com.example.workmanagingapp.viewmodel.WorkJsonAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.google.gson.GsonBuilder
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity(), OnItemClickListener {
@@ -45,7 +56,8 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var recyclerViewCurrent: RecyclerView
     private lateinit var recyclerViewUpcoming: RecyclerView
 
-    private val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+    private val linearLayoutManager =
+        LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
     private val viewModel: MyViewModel by viewModels {
         MyViewModelFactory(this)
@@ -60,6 +72,8 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        createNotificationChannel()
 
         //drawer
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
@@ -94,9 +108,51 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         observeDayList()
         observeCurrentTitle()
         observeWorkList()
+
+        //set workManager
+        setWorkManager()
     }
 
-    private fun listenToDrawerItems(){
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "Foreground Service Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            channel.setSound(null, null)
+            val manager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun setWorkManager() {
+        val gson = GsonBuilder()
+            .registerTypeAdapter(Work::class.java, WorkJsonAdapter())
+            .create()
+        val json = gson.toJson(viewModel.filterCurrentWorks())
+
+        val inputData = Data.Builder()
+            .putString("serialized_list", json)
+            .putInt("int", 69)
+            .build()
+
+        val periodicWorkRequest = PeriodicWorkRequestBuilder<MyWorker>(
+            10,
+            TimeUnit.SECONDS
+        )
+            .setInputData(inputData)
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "daily_reminder",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            periodicWorkRequest
+        )
+    }
+
+    private fun listenToDrawerItems() {
         val navView = findViewById<NavigationView>(R.id.nav_view)
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {

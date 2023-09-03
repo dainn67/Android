@@ -1,0 +1,42 @@
+package com.example.workmanagingapp.viewmodel
+
+import android.content.Context
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.work.Worker
+import androidx.work.WorkerParameters
+import com.example.workmanagingapp.model.Constants.Companion.TAG
+import com.example.workmanagingapp.model.Work
+import com.example.workmanagingapp.viewmodel.alarmscheduler.AlarmScheduler
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import java.time.LocalDateTime
+import java.util.Calendar
+
+@RequiresApi(Build.VERSION_CODES.O)
+class MyWorker(
+    private val context: Context,
+    private val params: WorkerParameters
+) : Worker(context, params) {
+    private val alarmScheduler = AlarmScheduler(context)
+
+    override fun doWork(): Result {
+        Log.i(TAG, "doWork")
+
+        //receive the worklist
+        val json = params.inputData.getString("serialized_list")
+
+        //schedule and send to BR to display the notification
+        val calendar = Calendar.getInstance()
+        if (calendar.get(Calendar.HOUR_OF_DAY) > 6 || (calendar.get(Calendar.DAY_OF_MONTH) == 6 && calendar.get(Calendar.MINUTE) > 0)){
+            Log.i(TAG, "Past 6AM")
+            alarmScheduler.schedule(json!!)
+        }else{
+            Log.i(TAG, "Before 6AM")
+            alarmScheduler.schedule(json!!)
+        }
+
+        return Result.success()
+    }
+}

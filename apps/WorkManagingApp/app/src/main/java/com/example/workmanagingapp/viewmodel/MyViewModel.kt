@@ -218,6 +218,13 @@ class MyViewModel(
         upcomingWorkListLiveData.value = upcomingWorkList
     }
 
+    fun filterCurrentWorks(): List<Work>{
+        return allWorkList.filter{
+            it.getTime().dayOfMonth == LocalDateTime.now().dayOfMonth
+                    && it.getTime().month == LocalDateTime.now().month
+                    && it.getTime().year == LocalDateTime.now().year
+        }
+    }
     private fun indicateRedDot() {
         dayList.forEach { day ->
             day.setHasWork(false)

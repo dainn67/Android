@@ -30,4 +30,6 @@ class Work(
         return "${time.year}-${time.month.value}-${time.dayOfMonth} ${time.hour}:${time.minute}"
     }
 
+    fun toJsonString() = "$title/$content/${formatTime()}"
+
 }
