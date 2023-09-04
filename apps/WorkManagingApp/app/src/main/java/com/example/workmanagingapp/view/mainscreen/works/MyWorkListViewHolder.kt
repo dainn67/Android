@@ -47,7 +47,7 @@ class MyWorkListViewHolder(
     private fun listenToCheckBox(work: Work){
         cbCheckDone.setOnClickListener {
             for (item in viewModel.getAllWorkList()) {
-                if (item == work) {
+                if (item.getTitle() == work.getTitle() && item.getContent() == work.getContent()) {
                     val newWork = Work(item.getTitle(), item.getTime(), item.getContent(), cbCheckDone.isChecked)
                     viewModel.updateWorkInList(newWork, item)
                     break

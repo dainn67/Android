@@ -28,14 +28,7 @@ class MyWorker(
         val json = params.inputData.getString("serialized_list")
 
         //schedule and send to BR to display the notification
-        val calendar = Calendar.getInstance()
-        if (calendar.get(Calendar.HOUR_OF_DAY) > 6 || (calendar.get(Calendar.DAY_OF_MONTH) == 6 && calendar.get(Calendar.MINUTE) > 0)){
-            Log.i(TAG, "Past 6AM")
-            alarmScheduler.schedule(json!!)
-        }else{
-            Log.i(TAG, "Before 6AM")
-            alarmScheduler.schedule(json!!)
-        }
+        alarmScheduler.schedule(json!!)
 
         return Result.success()
     }

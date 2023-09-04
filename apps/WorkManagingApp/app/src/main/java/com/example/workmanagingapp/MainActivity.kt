@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         //update the list when back from 2nd screen
         super.onResume()
         viewModel.loadWorkList()
+        viewModel.setWorkManager()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,7 +111,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         observeWorkList()
 
         //set workManager
-        setWorkManager()
+        viewModel.setWorkManager()
     }
 
     private fun createNotificationChannel() {
@@ -125,31 +126,6 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
         }
-    }
-
-    private fun setWorkManager() {
-        val gson = GsonBuilder()
-            .registerTypeAdapter(Work::class.java, WorkJsonAdapter())
-            .create()
-        val json = gson.toJson(viewModel.filterCurrentWorks())
-
-        val inputData = Data.Builder()
-            .putString("serialized_list", json)
-            .putInt("int", 69)
-            .build()
-
-        val periodicWorkRequest = PeriodicWorkRequestBuilder<MyWorker>(
-            10,
-            TimeUnit.SECONDS
-        )
-            .setInputData(inputData)
-            .build()
-
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            "daily_reminder",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            periodicWorkRequest
-        )
     }
 
     private fun listenToDrawerItems() {

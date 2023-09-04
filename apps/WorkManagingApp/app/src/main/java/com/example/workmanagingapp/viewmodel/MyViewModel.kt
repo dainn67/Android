@@ -7,6 +7,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.workmanagingapp.model.Constants.Companion.KEY_CONTENT
 import com.example.workmanagingapp.model.Constants.Companion.KEY_STATUS
 import com.example.workmanagingapp.model.Constants.Companion.KEY_TIME
@@ -15,11 +18,13 @@ import com.example.workmanagingapp.model.Constants.Companion.TABLE_URI
 import com.example.workmanagingapp.model.Data
 import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
+import com.google.gson.GsonBuilder
 import java.text.ParseException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("Range")
@@ -218,13 +223,6 @@ class MyViewModel(
         upcomingWorkListLiveData.value = upcomingWorkList
     }
 
-    fun filterCurrentWorks(): List<Work>{
-        return allWorkList.filter{
-            it.getTime().dayOfMonth == LocalDateTime.now().dayOfMonth
-                    && it.getTime().month == LocalDateTime.now().month
-                    && it.getTime().year == LocalDateTime.now().year
-        }
-    }
     private fun indicateRedDot() {
         dayList.forEach { day ->
             day.setHasWork(false)
@@ -248,6 +246,7 @@ class MyViewModel(
         }
 
         context.contentResolver.insert(TABLE_URI, values)
+        //NOTE: loadWorkList and setWorkManager is called in onResume of MainActivity, after finish() is called from 2nd screen
     }
 
     fun removeFromList(work: Work) {
@@ -257,6 +256,7 @@ class MyViewModel(
 
         context.contentResolver.delete(TABLE_URI, whereClause, whereArgs)
         loadWorkList()
+        setWorkManager()
     }
 
     fun updateWorkInList(newWork: Work, work: Work) {
@@ -272,6 +272,31 @@ class MyViewModel(
 
         context.contentResolver.update(TABLE_URI, values, whereClause, whereArgs)
         loadWorkList()
+        setWorkManager()
+    }
+
+    fun setWorkManager(){
+        val gson = GsonBuilder()
+            .registerTypeAdapter(Work::class.java, WorkJsonAdapter())
+            .create()
+        val json = gson.toJson(allWorkList)
+
+        val inputData = androidx.work.Data.Builder()
+            .putString("serialized_list", json)
+            .build()
+
+        val periodicWorkRequest = PeriodicWorkRequestBuilder<MyWorker>(
+            1,
+            TimeUnit.DAYS
+        )
+            .setInputData(inputData)
+            .build()
+
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "daily_reminder",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            periodicWorkRequest
+        )
     }
 
     private fun addSampleWorkToSQLite() {
@@ -292,6 +317,33 @@ class MyViewModel(
             val time = LocalDateTime.now().plusMinutes(30).format(formatter)
             put(KEY_TIME, time)
             put(KEY_CONTENT, "Remember to buy the ticket")
+            put(KEY_STATUS, 1)
+        }
+        context.contentResolver.insert(TABLE_URI, values)
+        values = ContentValues().apply {
+            put(KEY_TITLE, "Buy food for the movie")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val time = LocalDateTime.now().plusMinutes(45).format(formatter)
+            put(KEY_TIME, time)
+            put(KEY_CONTENT, "Remember to buy the popcorn also")
+            put(KEY_STATUS, 1)
+        }
+        context.contentResolver.insert(TABLE_URI, values)
+        values = ContentValues().apply {
+            put(KEY_TITLE, "Buy drink for the movie")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val time = LocalDateTime.now().plusMinutes(50).format(formatter)
+            put(KEY_TIME, time)
+            put(KEY_CONTENT, "And never forget to buy Coke")
+            put(KEY_STATUS, 1)
+        }
+        context.contentResolver.insert(TABLE_URI, values)
+        values = ContentValues().apply {
+            put(KEY_TITLE, "Skincare")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val time = LocalDateTime.now().plusMinutes(55).format(formatter)
+            put(KEY_TIME, time)
+            put(KEY_CONTENT, "Lotion, moisture, ...")
             put(KEY_STATUS, 1)
         }
         context.contentResolver.insert(TABLE_URI, values)

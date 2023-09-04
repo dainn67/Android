@@ -39,7 +39,7 @@ class AlarmScheduler(
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            convertToMillis(LocalDateTime.now().hour, LocalDateTime.now().minute + 1),
+            convertToMillis(6, 0),
             PendingIntent.getBroadcast(
                 context,
                 json.hashCode(),
@@ -48,7 +48,7 @@ class AlarmScheduler(
             )
         )
 
-        Log.i(TAG, "Schedule at ${LocalDateTime.now().hour}:${LocalDateTime.now().minute + 1}\nwith data: $json")
+        Log.i(TAG, "Schedule with data: $json")
     }
 
     override fun cancel(json: String) {
