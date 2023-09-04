@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,7 @@ import com.example.workmanagingapp.model.Constants.Companion.KEY_STATUS
 import com.example.workmanagingapp.model.Constants.Companion.KEY_TIME
 import com.example.workmanagingapp.model.Constants.Companion.KEY_TITLE
 import com.example.workmanagingapp.model.Constants.Companion.TABLE_URI
+import com.example.workmanagingapp.model.Constants.Companion.TAG
 import com.example.workmanagingapp.model.Data
 import com.example.workmanagingapp.model.Day
 import com.example.workmanagingapp.model.Work
@@ -208,11 +210,13 @@ class MyViewModel(
         allWorkList.forEach { work ->
             val day = work.getTime().dayOfMonth
             val month = work.getTime().month.value
+            val year = work.getTime().year
 
-            if (day == currentDay.getDate().dayOfMonth && month == currentDay.getDate().month.value)
+            if (day == currentDay.getDate().dayOfMonth && month == currentDay.getDate().month.value && year == currentDay.getDate().year)
                 currentWorkList.add(work)
-            if (month == LocalDateTime.now().month.value && day > LocalDateTime.now().dayOfMonth
-                || month > LocalDateTime.now().month.value
+            if (year > LocalDateTime.now().year
+                || year == LocalDateTime.now().year && month > LocalDateTime.now().month.value
+                || year == LocalDateTime.now().year && month == LocalDateTime.now().month.value && day > LocalDateTime.now().dayOfMonth
             )
                 upcomingWorkList.add(work)
         }
@@ -275,7 +279,7 @@ class MyViewModel(
         setWorkManager()
     }
 
-    fun setWorkManager(){
+    fun setWorkManager() {
         val gson = GsonBuilder()
             .registerTypeAdapter(Work::class.java, WorkJsonAdapter())
             .create()

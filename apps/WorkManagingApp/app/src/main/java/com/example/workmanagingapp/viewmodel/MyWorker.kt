@@ -16,14 +16,12 @@ import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MyWorker(
-    private val context: Context,
+    context: Context,
     private val params: WorkerParameters
 ) : Worker(context, params) {
     private val alarmScheduler = AlarmScheduler(context)
 
     override fun doWork(): Result {
-        Log.i(TAG, "doWork")
-
         //receive the worklist
         val json = params.inputData.getString("serialized_list")
 

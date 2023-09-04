@@ -29,18 +29,20 @@ class MyWorkListAdapter(
     override fun onBindViewHolder(holder: MyWorkListViewHolder, position: Int) {
         when (type) {
             Constants.Companion.ViewDetailType.CURRENT -> holder.bindCurrentLayout(viewModel.getCurrentWorkList()[position])
-            Constants.Companion.ViewDetailType.UPCOMING -> holder.bindUpcomingLayout(viewModel.getUpcomingWorkList()[position])
-            Constants.Companion.ViewDetailType.ALL -> holder.bindUpcomingLayout(viewModel.getAllWorkList()[position])
-            Constants.Companion.ViewDetailType.UNFINISHED -> holder.bindUpcomingLayout(viewModel.getUnfinishedList()[position])
+            Constants.Companion.ViewDetailType.UPCOMING -> holder.bindGeneralLayout(viewModel.getUpcomingWorkList()[position])
+            Constants.Companion.ViewDetailType.ALL -> holder.bindGeneralLayout(viewModel.getAllWorkList()[position])
+            Constants.Companion.ViewDetailType.UNFINISHED -> holder.bindGeneralLayout(viewModel.getUnfinishedList()[position])
         }
 
-        holder.itemView.setOnClickListener {
-            listener.onItemWorkClick(position, type)
-        }
+        if(type != Constants.Companion.ViewDetailType.ALL && type != Constants.Companion.ViewDetailType.UNFINISHED){
+            holder.itemView.setOnClickListener {
+                listener.onItemWorkClick(position, type)
+            }
 
-        holder.itemView.setOnLongClickListener {
-            listener.onItemWorkLongClick(position, type)
-            true
+            holder.itemView.setOnLongClickListener {
+                listener.onItemWorkLongClick(position, type)
+                true
+            }
         }
     }
 

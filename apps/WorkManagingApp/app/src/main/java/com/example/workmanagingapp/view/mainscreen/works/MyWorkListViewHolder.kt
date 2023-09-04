@@ -33,13 +33,14 @@ class MyWorkListViewHolder(
         listenToCheckBox(work)
     }
 
-    fun bindUpcomingLayout(work: Work) {
+    fun bindGeneralLayout(work: Work) {
         val displayTime = MyViewModel.displayTime(work.getTime())
         val day = work.getTime().dayOfMonth
         val month = work.getTime().month.value
+        val year = work.getTime().year
 
         tvTitle.text = work.getTitle()
-        tvTime.text = "$day/$month - $displayTime"
+        tvTime.text = "$day/$month/$year - $displayTime"
         cbCheckDone.isChecked = work.getStatus()
         listenToCheckBox(work)
     }
