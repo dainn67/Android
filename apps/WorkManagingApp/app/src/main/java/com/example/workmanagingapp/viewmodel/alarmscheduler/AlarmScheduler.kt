@@ -16,10 +16,10 @@ import java.util.Calendar
 @RequiresApi(Build.VERSION_CODES.O)
 class AlarmScheduler(
     private val context: Context
-): IAlarmScheduler {
+) : IAlarmScheduler {
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
-    companion object{
+    companion object {
         fun convertToMillis(hour: Int, minute: Int): Long {
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.HOUR_OF_DAY, hour)
@@ -37,9 +37,20 @@ class AlarmScheduler(
         bundle.putString("json", json)
         intent.putExtras(bundle)
 
+        var calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 6)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        var desiredTime = calendar
+        if (calendar.timeInMillis <= System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+            desiredTime = calendar
+        }
+
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            convertToMillis(6, 0),
+            desiredTime.timeInMillis,
             PendingIntent.getBroadcast(
                 context,
                 json.hashCode(),
