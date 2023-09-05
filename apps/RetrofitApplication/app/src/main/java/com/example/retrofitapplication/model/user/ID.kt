@@ -1,4 +1,4 @@
-package com.example.retrofitapplication.model
+package com.example.retrofitapplication.model.user
 
 class ID(
     private val name: String,

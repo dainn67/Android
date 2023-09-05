@@ -1,4 +1,4 @@
-package com.example.retrofitapplication.model
+package com.example.retrofitapplication.model.user
 
 import com.example.retrofitapplication.model.location.Location
 import java.io.Serializable
