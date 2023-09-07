@@ -19,20 +19,19 @@ class MainActivity : AppCompatActivity(), OnClickItemListener {
     private lateinit var recView: RecyclerView
     private lateinit var btnLoad: FloatingActionButton
 
-    private lateinit var userListLiveData: MutableLiveData<List<User>>
+    private lateinit var userListLiveData: MutableLiveData<MutableList<User>>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel = MyViewModel()
+        viewModel = MyViewModel(this)
 
         recView = findViewById(R.id.rvUserList)
         recView.layoutManager = LinearLayoutManager(this)
         recView.adapter = MyAdapter(this, viewModel.getUserList(), this)
 
         userListLiveData = viewModel.getUserListLiveData()
-        val observer = Observer<List<User>>{newList ->
-//            viewModel.setUserList(newList)
+        val observer = Observer<MutableList<User>>{newList ->
             recView.adapter = MyAdapter(this, newList, this)
         }
         userListLiveData.observe(this, observer)

@@ -4,5 +4,5 @@ import com.example.retrofitapplication.model.User
 
 
 data class UserResponse(
-    val results: List<User>,
+    val results: MutableList<User>,
 )
