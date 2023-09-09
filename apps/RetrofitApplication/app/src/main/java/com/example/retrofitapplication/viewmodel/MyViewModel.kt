@@ -56,6 +56,8 @@ class MyViewModel(
                     userList = userResponse?.results!!
                     userListLiveData.value = userList
                     Toast.makeText(context, "Loading successfully", Toast.LENGTH_SHORT).show()
+
+                    Log.i(TAG, "${userResponse.info.seed}\n${userResponse.info.page}\n${userResponse.info.results}\n${userResponse.info.version}")
                 } else {
                     val errorResponseBody = response.errorBody()?.string()
                     Log.e(TAG,"HTTP Error Code: ${response.code()}\nError Response Body: $errorResponseBody")
