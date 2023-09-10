@@ -5,24 +5,15 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.retrofitapplication.api.ApiService
+import com.example.retrofitapplication.api.ApiUser
 import com.example.retrofitapplication.api.UserResponse
 import com.example.retrofitapplication.model.Constants.Companion.TAG
 import com.example.retrofitapplication.model.User
-import com.example.retrofitapplication.model.UserDob
-import com.example.retrofitapplication.model.UserId
-import com.example.retrofitapplication.model.UserLocation
-import com.example.retrofitapplication.model.UserLogin
-import com.example.retrofitapplication.model.UserName
-import com.example.retrofitapplication.model.UserRegistered
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 class MyViewModel(
     private val context: Context
@@ -35,7 +26,7 @@ class MyViewModel(
         .baseUrl("https://randomuser.me/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    private val apiService = retrofit.create(ApiService::class.java)
+    private val apiUser = retrofit.create(ApiUser::class.java)
 
     init {
         userList = mutableListOf()
@@ -48,7 +39,7 @@ class MyViewModel(
     fun getUserListLiveData() = userListLiveData
 
     fun getUsersFromURL(amount: Int) {
-        val call = apiService.getUsers(amount)
+        val call = apiUser.getUsers(amount)
         call.enqueue(object : Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 if (response.isSuccessful) {
