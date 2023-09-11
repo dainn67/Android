@@ -1,10 +1,11 @@
 package com.example.retrofitapplication.di
 
-import com.example.retrofitapplication.api.ApiUser
+import com.example.retrofitapplication.viewmodel.MyViewModel
 import dagger.Component
 
-@Component(modules = [MyModule::class])
+@Component(modules = [NetworkModule::class])
 interface AppComponent {
 
-    fun injectActivity(): ApiUser
+    //inject into viewModel
+    fun injectActivity(viewModel: MyViewModel)
 }

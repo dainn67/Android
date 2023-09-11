@@ -2,23 +2,18 @@ package com.example.retrofitapplication.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.retrofitapplication.R
-import com.example.retrofitapplication.model.Constants.Companion.TAG
+import com.example.retrofitapplication.di.MyApplication
 import com.example.retrofitapplication.model.User
 import com.example.retrofitapplication.viewmodel.MyViewModel
 import com.example.retrofitapplication.viewmodel.OnClickItemListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), OnClickItemListener {
-    @Inject
-    lateinit var viewmodelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: MyViewModel
     private lateinit var recView: RecyclerView
     private lateinit var btnLoad: FloatingActionButton
@@ -28,8 +23,10 @@ class MainActivity : AppCompatActivity(), OnClickItemListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProvider(this, viewmodelFactory)[MyViewModel::class.java]
-//        viewModel = MyViewModel(this)
+//        viewModel = ViewModelProvider(this, viewmodelFactory)[MyViewModel::class.java]
+        viewModel = MyViewModel(this)
+        val appComponent = (application as MyApplication).appComponent
+        appComponent.injectActivity(viewModel)
 
         recView = findViewById(R.id.rvUserList)
         recView.layoutManager = LinearLayoutManager(this)

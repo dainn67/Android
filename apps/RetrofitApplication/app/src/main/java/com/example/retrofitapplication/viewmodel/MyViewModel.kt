@@ -14,19 +14,15 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
 class MyViewModel(
     private val context: Context
 ) : ViewModel() {
+    @Inject
+    lateinit var apiUser: ApiUser
     private var userList: MutableList<User>
     private var userListLiveData = MutableLiveData<MutableList<User>>()
-
-    //create the service
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://randomuser.me/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val apiUser = retrofit.create(ApiUser::class.java)
 
     init {
         userList = mutableListOf()
